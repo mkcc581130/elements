@@ -1,0 +1,447 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AR化学元素周期表</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        ul,li{
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        *{
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #000000;
+            margin: 0;
+            font-family: Helvetica, sans-serif;;
+            overflow: hidden;
+        }
+
+        a {
+            color: #ffffff;
+        }
+
+        #info {
+            position: absolute;
+            width: 100%;
+            color: #ffffff;
+            padding: 5px;
+            font-family: Monospace;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 1;
+        }
+
+        #menu {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .element {
+            width: 120px;
+            height: 160px;
+            box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.5);
+            border: 1px solid rgba(127, 255, 255, 0.25);
+            text-align: center;
+            cursor: default;
+        }
+
+        .element:hover {
+            box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.75);
+            border: 1px solid rgba(127, 255, 255, 0.75);
+        }
+
+        .element .number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: rgba(127, 255, 255, 0.75);
+        }
+
+        .element .symbol {
+            position: absolute;
+            top: 40px;
+            left: 0px;
+            right: 0px;
+            font-size: 60px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.75);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
+        }
+
+        .element .details {
+            position: absolute;
+            bottom: 15px;
+            left: 0px;
+            right: 0px;
+            font-size: 12px;
+            color: rgba(127, 255, 255, 0.75);
+        }
+
+        button {
+            color: rgba(127, 255, 255, 0.75);
+            background: transparent;
+            outline: 1px solid rgba(127, 255, 255, 0.75);
+            border: 0px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgba(0, 255, 255, 0.5);
+        }
+
+        button:active {
+            color: #000000;
+            background-color: rgba(0, 255, 255, 0.75);
+        }
+        #shadow{
+            position: fixed;
+            width: 100%;
+            height: 2000px;
+            background-color: #000;
+            z-index: 100;
+        }
+        #shadow p{
+            position: absolute;
+            top: 300px;
+            left: 50%;
+            color: #fff;
+            margin-left: -88px;
+        }
+        .dropup{
+            display: inline-block;
+            position: relative;
+            width: 100px;
+        }
+        .dropup-title{
+            display: inline-block;
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            color: rgba(127, 255, 255, 0.75);
+            background: transparent;
+            border: 1px solid rgba(127, 255, 255, 0.75);
+            cursor: pointer;
+        }
+        .dropup-menu{
+            list-style: none;
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            display: none;
+            width: 100px;
+        }
+        .dropup-menu li{
+            display: inline-block;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            color: rgba(127, 255, 255, 0.75);
+            background: transparent;
+            border: 1px solid rgba(127, 255, 255, 0.75);
+            border-bottom: none;
+        }
+        #return{
+            display: inline-block;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            color: rgba(127, 255, 255, 0.75);
+            background: transparent;
+            border: 1px solid rgba(127, 255, 255, 0.75);
+            font-style: normal;
+            text-decoration: none;
+        }
+        .clear{
+            clear: both;
+            content: '';
+            visibility: hidden;
+            height: 0;
+            display: block;
+        }
+        .ele{
+            width: 1000px;
+            height: 540px;
+            padding: 50px 20px;
+            color: #ffffff;
+            display: none;
+        }
+        .ele_title{
+            display: inline-block;
+            margin-left: 32%;
+            padding: 5px 0 5px 10px ;
+            width: 48%;
+            margin-top: 0;
+            margin-bottom: 0;
+            background-color: rgba(0, 127, 127, 0.518);
+        }
+        .ele_main{
+            width: 100%;
+            margin-top: 5px;
+        }
+        .ele_left{
+            width: 80%;
+            float: left;
+            padding: 10px;
+            background-color: rgba(0, 127, 127, 0.74);
+        }
+        .ele_right{
+            width: 20%;
+            float: right;
+            padding: 50px 0 0 20px;
+        }
+        .ele_info{
+            width: 40%;
+            float: left;
+            padding: 100px 10px 10px 10px;
+        }
+        .ele_info li{
+            margin-bottom: 10px;
+        }
+        .ele_intr{
+            width: 60%;
+            float: right;
+            padding: 0 10px 20px 10px;
+        }
+        .ele_intr .title{
+            margin-right: 50px;
+            border-bottom: 1px solid rgba(127, 255, 255, 0.75);
+        }
+        .ele_intr .content{
+            line-height: 36px;
+        }
+        .ele_img{
+            border: 1px solid rgba(127, 255, 255, 0.75);
+        }
+        .ele_extra{
+            font-size: 16px;
+            line-height: 26px;
+            margin-top: 20px;
+            {#color: rgba(127, 255, 255, 0.75);#}
+        }
+    </style>
+</head>
+<body>
+<script src="{% static 'js/three.min.js' %}"></script>
+<script src="{% static 'js/libs/tween.min.js' %}"></script>
+<script src="{% static 'js/controls/TrackballControls.js' %}"></script>
+<script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<div id="shadow"><p>请横屏使用，效果更佳！</p></div>
+<div id="container">
+
+</div>
+<div class="ele" id="ele">
+        <h2 class="ele_title">元素资料</h2>
+        <div class="ele_main">
+            <div class="ele_left">
+                <div class="ele_info">
+                    <ul>
+                        <li>● 原子序数：1</li>
+                        <li>● 相对原子质量：1.01</li>
+                        <li>● 原子半径：30pm</li>
+                        <li>● 电负性：2.20</li>
+                        <li>● 电离能：1312KJ/mol</li>
+                        <li>● 电子亲和能：-72.77KJ/mol</li>
+                        <li>● 同位素：3种天然同位素</li>
+                    </ul>
+                </div>
+                <div class="ele_intr">
+                    <h2 class="title">氢</h2>
+                    <div class="content">
+                        拉瓦锡将其命名为Hydrogen（氢，读作qīng)，词根的原意是“水之源，组成水的化学元素”。在地球上，氢元素通常会与其他元素结合起来。特别是氧元素——形成了云彩、海洋、湖泊和河流（水）。另外，它和碳(C)、氮(N)、氧(O)元素结合在一起构成所有生物的血液和肉体。氢是元素周期表中的第一个元素，位于元素大厦第1单元的顶层，元素符号为H，
+它是宇宙中最丰富的元素。
+
+                    </div>
+                </div>
+            </div>
+            <div class="ele_right">
+                <div class="ele_img"><img src="{% static 'img/H_2.JPG' %}" width="100%" alt=""></div>
+                <div class="ele_extra">哈勃望远镜看到的位于巨蛇座的鹰状星云，是由太空中大量氢元素吸收太阳光形成的。</div>
+            </div>
+            <div class="clear"></div>
+            <div class="ele_slice"></div>
+        </div>
+    </div>
+<div id="menu">
+    <div class="dropup">
+        <div class="dropup-title">原子</div>
+        <ul class="dropup-menu">
+            <li>2D模型</li>
+            <li>3D模型</li>
+            <li>应用</li>
+        </ul>
+    </div>
+    <div class="dropup">
+        <div class="dropup-title">元素</div>
+        <ul class="dropup-menu">
+            <li>基本资料</li>
+            <li>嗨元素漫画</li>
+            <li>发现史</li>
+            <li>学者代言</li>
+            <li>应用</li>
+        </ul>
+    </div>
+    <div class="dropup">
+        <div class="dropup-title">物质</div>
+        <ul class="dropup-menu">
+            <li>单质</li>
+            <li>化合物</li>
+        </ul>
+    </div>
+    <a href="/" id="return">
+        周期表
+    </a>
+</div>
+<script>
+    $(function () {
+        $('.dropup-title').click(function () {
+            $(this).next().toggle();
+        })
+    })
+</script>
+<script>
+var camera, scene, renderer;
+var controls;
+
+
+var objects = [];
+
+init();
+animate();
+
+function init() {
+
+	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+	camera.position.z = 800;
+  	var dragging = false;
+	scene = new THREE.Scene();
+	var ele = document.getElementById('ele');
+	ele.style.display = 'block';
+	console.info(ele);
+	var object = new THREE.CSS3DObject( ele );
+	object.position.x = 0;
+	object.position.y = 0;
+    scene.add( object );
+
+	renderer = new THREE.CSS3DRenderer();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.getElementById( 'container' ).appendChild( renderer.domElement );
+
+	//
+
+	controls = new THREE.TrackballControls( camera, renderer.domElement );
+	controls.rotateSpeed = 1;
+	controls.minDistance = 500;
+	controls.maxDistance = 6000;
+	controls.addEventListener( 'change', render );
+
+	function scaleCamera() {
+
+		camera.fov = 5000;
+		camera.updateProjectionMatrix();
+		renderer.render( scene, camera );
+
+	}
+    orientationchange();
+	const evt = "onorientationchange" in window ? "orientationchange" : "resize";
+      window.addEventListener( evt, orientationchange, false );
+
+	window.addEventListener( 'resize', onWindowResize, false );
+
+}
+
+function orientationchange() {
+    const width = document.documentElement.clientWidth;
+  	const height = document.documentElement.clientHeight;
+  	if ( width > height ) { // 横屏
+
+  		document.getElementById( 'shadow' ).style.display = 'none';
+
+	} else {
+
+  		document.getElementById( 'shadow' ).style.display = 'block';
+
+	}
+}
+function transform( targets, duration ) {
+
+	TWEEN.removeAll();
+
+	for ( var i = 0; i < objects.length; i ++ ) {
+
+		var object = objects[ i ];
+		var target = targets[ i ];
+
+		new TWEEN.Tween( object.position )
+			.to( {
+				x: target.position.x,
+				y: target.position.y,
+				z: target.position.z
+			}, Math.random() * duration + duration )
+			.easing( TWEEN.Easing.Exponential.InOut )
+			.start();
+
+		new TWEEN.Tween( object.rotation )
+			.to( {
+				x: target.rotation.x,
+				y: target.rotation.y,
+				z: target.rotation.z
+			}, Math.random() * duration + duration )
+			.easing( TWEEN.Easing.Exponential.InOut )
+			.start();
+
+	}
+
+	new TWEEN.Tween( this )
+		.to( {}, duration * 2 )
+		.onUpdate( render )
+		.start();
+
+}
+
+function onWindowResize() {
+
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
+	render();
+
+}
+
+function animate() {
+
+	requestAnimationFrame( animate );
+
+	// TWEEN.update();
+
+	controls.update();
+
+}
+
+function render() {
+
+	renderer.render( scene, camera );
+
+}
+
+</script>
+</body>
+</html>
+
