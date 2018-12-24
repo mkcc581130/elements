@@ -5,180 +5,14 @@
     <title>AR化学元素周期表</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/comm.css' %}">
     <style>
-        html, body {
-            height: 100%;
-        }
-        ul,li{
-            padding: 0;
-            margin: 0;
-            list-style: none;
-        }
-        *{
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-        }
-        body {
-            background-color: #000000;
-            margin: 0;
-            font-family: Helvetica, sans-serif;;
-            overflow: hidden;
-        }
-
-        a {
-            color: #ffffff;
-        }
-
-        #info {
-            position: absolute;
-            width: 100%;
-            color: #ffffff;
-            padding: 5px;
-            font-family: Monospace;
-            font-size: 13px;
-            font-weight: bold;
-            text-align: center;
-            z-index: 1;
-        }
-
-        #menu {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .element {
-            width: 120px;
-            height: 160px;
-            box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.5);
-            border: 1px solid rgba(127, 255, 255, 0.25);
-            text-align: center;
-            cursor: default;
-        }
-
-        .element:hover {
-            box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.75);
-            border: 1px solid rgba(127, 255, 255, 0.75);
-        }
-
-        .element .number {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 12px;
-            color: rgba(127, 255, 255, 0.75);
-        }
-
-        .element .symbol {
-            position: absolute;
-            top: 40px;
-            left: 0px;
-            right: 0px;
-            font-size: 60px;
-            font-weight: bold;
-            color: rgba(255, 255, 255, 0.75);
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
-        }
-
-        .element .details {
-            position: absolute;
-            bottom: 15px;
-            left: 0px;
-            right: 0px;
-            font-size: 12px;
-            color: rgba(127, 255, 255, 0.75);
-        }
-
-        button {
-            color: rgba(127, 255, 255, 0.75);
-            background: transparent;
-            outline: 1px solid rgba(127, 255, 255, 0.75);
-            border: 0px;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: rgba(0, 255, 255, 0.5);
-        }
-
-        button:active {
-            color: #000000;
-            background-color: rgba(0, 255, 255, 0.75);
-        }
-        #shadow{
-            position: fixed;
-            width: 100%;
-            height: 2000px;
-            background-color: #000;
-            z-index: 100;
-        }
-        #shadow p{
-            position: absolute;
-            top: 300px;
-            left: 50%;
-            color: #fff;
-            margin-left: -88px;
-        }
-        .dropup{
-            display: inline-block;
-            position: relative;
-            width: 100px;
-        }
-        .dropup-title{
-            display: inline-block;
-            width: 100%;
-            height: 30px;
-            line-height: 30px;
-            color: rgba(127, 255, 255, 0.75);
-            background: transparent;
-            border: 1px solid rgba(127, 255, 255, 0.75);
-            cursor: pointer;
-        }
-        .dropup-menu{
-            list-style: none;
-            position: absolute;
-            bottom: 30px;
-            left: 0;
-            display: none;
-            width: 100px;
-        }
-        .dropup-menu li{
-            display: inline-block;
-            width: 100px;
-            height: 30px;
-            line-height: 30px;
-            color: rgba(127, 255, 255, 0.75);
-            background: transparent;
-            border: 1px solid rgba(127, 255, 255, 0.75);
-            border-bottom: none;
-        }
-        #return{
-            display: inline-block;
-            width: 100px;
-            height: 30px;
-            line-height: 30px;
-            color: rgba(127, 255, 255, 0.75);
-            background: transparent;
-            border: 1px solid rgba(127, 255, 255, 0.75);
-            font-style: normal;
-            text-decoration: none;
-        }
-        .clear{
-            clear: both;
-            content: '';
-            visibility: hidden;
-            height: 0;
-            display: block;
-        }
         .ele{
             width: 1000px;
             height: 540px;
             padding: 50px 20px;
             color: #ffffff;
-            display: none;
+            display: block;
         }
         .ele_title{
             display: inline-block;
@@ -197,6 +31,7 @@
             width: 80%;
             float: left;
             padding: 10px;
+            min-height: 350px;
             background-color: rgba(0, 127, 127, 0.74);
         }
         .ele_right{
@@ -210,6 +45,7 @@
             padding: 100px 10px 10px 10px;
         }
         .ele_info li{
+            line-height: 22px;
             margin-bottom: 10px;
         }
         .ele_intr{
@@ -218,7 +54,7 @@
             padding: 0 10px 20px 10px;
         }
         .ele_intr .title{
-            margin-right: 50px;
+            margin: 20px 50px 20px 0;
             border-bottom: 1px solid rgba(127, 255, 255, 0.75);
         }
         .ele_intr .content{
@@ -233,6 +69,40 @@
             margin-top: 20px;
             {#color: rgba(127, 255, 255, 0.75);#}
         }
+        .ele_slice{
+            width: 150px;
+            height: 170px;
+            position: absolute;
+            top: 10px;
+            left: 70px;
+            padding: 10px;
+            font-size: 24px;
+            background-color: rgba(60, 144, 144, 1);
+            transform:rotate(-10deg);
+            border: 1px solid #ffffff;
+        }
+        .ele_slice .top{
+            height: 30px;
+        }
+        .ele_slice .top_left{
+            float: left;
+        }
+        .ele_slice .top_right{
+            float: right;
+        }
+        .ele_slice .middle{
+            font-size: 60px;
+            text-align: center;
+            line-height: 80px;
+            font-weight: bold;
+        }
+        .ele_slice .bottom {
+            margin: 0 auto;
+            width: 60px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ffffff;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -241,6 +111,7 @@
 <script src="{% static 'js/controls/TrackballControls.js' %}"></script>
 <script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
 <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script src="{% static 'js/comm.js' %}"></script>
 <div id="shadow"><p>请横屏使用，效果更佳！</p></div>
 <div id="container">
 
@@ -251,30 +122,37 @@
             <div class="ele_left">
                 <div class="ele_info">
                     <ul>
-                        <li>● 原子序数：1</li>
-                        <li>● 相对原子质量：1.01</li>
-                        <li>● 原子半径：30pm</li>
-                        <li>● 电负性：2.20</li>
-                        <li>● 电离能：1312KJ/mol</li>
-                        <li>● 电子亲和能：-72.77KJ/mol</li>
-                        <li>● 同位素：3种天然同位素</li>
+                        <li>● 原子序数：{{ ele.atomic_number }}</li>
+                        <li>● 相对原子质量：{{ ele.relative_atomic_mass }}</li>
+                        <li>● 原子半径：{{ ele.atomic_radius }}</li>
+                        <li>● 电负性：{{ ele.electronegativity }}</li>
+                        {% for i in ie_list %}
+                        <li>● {{ i.label }}：{{ i.energy }}</li>
+                        {% endfor %}
+                        {% if ele.electronic_affinity %}<li>● 电子亲和能：{{ ele.electronic_affinity }}</li>{% endif %}
                     </ul>
                 </div>
                 <div class="ele_intr">
-                    <h2 class="title">氢</h2>
+                    <h2 class="title">{{ ele.symbol }}</h2>
                     <div class="content">
-                        拉瓦锡将其命名为Hydrogen（氢，读作qīng)，词根的原意是“水之源，组成水的化学元素”。在地球上，氢元素通常会与其他元素结合起来。特别是氧元素——形成了云彩、海洋、湖泊和河流（水）。另外，它和碳(C)、氮(N)、氧(O)元素结合在一起构成所有生物的血液和肉体。氢是元素周期表中的第一个元素，位于元素大厦第1单元的顶层，元素符号为H，
-它是宇宙中最丰富的元素。
+                        {{ ele.introduction }}
 
                     </div>
                 </div>
             </div>
             <div class="ele_right">
-                <div class="ele_img"><img src="{% static 'img/H_2.JPG' %}" width="100%" alt=""></div>
-                <div class="ele_extra">哈勃望远镜看到的位于巨蛇座的鹰状星云，是由太空中大量氢元素吸收太阳光形成的。</div>
+                <div class="ele_img"><img src="/static/img/{{ ele.symbol }}_1.JPG" width="100%" alt=""></div>
+                <div class="ele_extra">{{ ele.extra }}</div>
             </div>
             <div class="clear"></div>
-            <div class="ele_slice"></div>
+            <div class="ele_slice">
+                <div class="top">
+                    <div class="top_left">{{ ele.atomic_number }}</div>
+                    <div class="top_right">{{ ele.relative_atomic_mass }}</div>
+                </div>
+                <div class="middle">{{ ele.symbol }}</div>
+                <div class="bottom">{{ ele.cn_name }}</div>
+            </div>
         </div>
     </div>
 <div id="menu">
@@ -308,6 +186,7 @@
     </a>
 </div>
 <script>
+
     $(function () {
         $('.dropup-title').click(function () {
             $(this).next().toggle();
@@ -331,8 +210,6 @@ function init() {
   	var dragging = false;
 	scene = new THREE.Scene();
 	var ele = document.getElementById('ele');
-	ele.style.display = 'block';
-	console.info(ele);
 	var object = new THREE.CSS3DObject( ele );
 	object.position.x = 0;
 	object.position.y = 0;
@@ -357,27 +234,10 @@ function init() {
 		renderer.render( scene, camera );
 
 	}
-    orientationchange();
-	const evt = "onorientationchange" in window ? "orientationchange" : "resize";
-      window.addEventListener( evt, orientationchange, false );
-
 	window.addEventListener( 'resize', onWindowResize, false );
-
+    render();
 }
 
-function orientationchange() {
-    const width = document.documentElement.clientWidth;
-  	const height = document.documentElement.clientHeight;
-  	if ( width > height ) { // 横屏
-
-  		document.getElementById( 'shadow' ).style.display = 'none';
-
-	} else {
-
-  		document.getElementById( 'shadow' ).style.display = 'block';
-
-	}
-}
 function transform( targets, duration ) {
 
 	TWEEN.removeAll();

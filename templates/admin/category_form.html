@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑{{ list_name }}列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <style>
+        .layui-upload-list {
+            margin: 10px 0;
+        }
+        .layui-upload-img {
+            width: 92px;
+            height: 92px;
+            margin: 0 10px 10px 0;
+        }
+        .check-img {
+            height: 100px;
+            width: 100px;
+            border: 1px solid #ccc;
+        }
+        #upload-normal{
+            margin-left: 20px;
+        }
+        .layui-input-block {
+            padding-right: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<form method="post" enctype="multipart/form-data" class="layui-form" id="layuiadmin-form-useradmin" style="padding: 20px 0 0 0;">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">类别名</label>
+            <div class="layui-input-block">
+                <input type="text" name="label" value="{% if data.label %}{{ data.label }}{% endif %}" lay-verify="required" placeholder="请输入类别名" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">模板图片</label>
+        <div class="layui-input-block">
+            <img alt="" class="check-img" {% if data.img %}src="{{ data.img }}"{% endif %}>
+            <button type="button" class="layui-btn" id="upload-normal">上传图片</button>
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <button class="layui-btn layuiadmin-btn-useradmin" lay-submit id="user-mod-submit" lay-filter="user-mod-submit">提交</button>
+    </div>
+</form>
+
+<script src="/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'upload'], function () {
+        var $ = layui.$, form = layui.form, upload = layui.upload;
+        var uploadInst = upload.render({
+            elem: '#upload-normal'
+            , url: '?source=template&id={{ template_id }}'
+            , auto: false
+            , choose: function (obj) {
+                //预读本地文件,不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('.check-img').attr('src', result); //图片链接（base64）
+                });
+            }, done: function (res) {
+
+            }
+        });
+        $('img').click(function () {
+            layer.photos({
+                photos: 'form'
+                , anim: 5
+            });
+        })
+    })
+</script>
+</body>
+</html>

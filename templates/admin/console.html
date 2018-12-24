@@ -1,0 +1,599 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>asto后台主页</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="{% static 'admin/layui/css/layui.css' %}" media="all">
+    <link rel="stylesheet" href="{% static 'admin/css/admin.css' %}" media="all">
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+
+        <div class="layui-col-sm6 layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    访问量(PV)
+                    <div class="layui-btn-group layuiadmin-btn-group">
+                        <a class="layui-btn layui-btn-xs" data-date="1" data-type="pv">日</a>
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" data-date="2" data-type="pv">周</a>
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" data-date="3" data-type="pv">月</a>
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" data-date="4" data-type="pv">年</a>
+                    </div>
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+                    <p class="layuiadmin-big-font">{{ day_pv }}</p>
+                    <p>
+                        总计访问量
+                        <span class="layuiadmin-span-color">{{ all_pv }} <i
+                                class="layui-inline layui-icon layui-icon-flag"></i></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    独立访问量(UV)
+                    <div class="layui-btn-group layuiadmin-btn-group">
+                        <a class="layui-btn layui-btn-xs" data-date="1" data-type="uv">日</a>
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" data-date="2" data-type="uv">周</a>
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" data-date="3" data-type="uv">月</a>
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" data-date="4" data-type="uv">年</a>
+                    </div>
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+                    <p class="layuiadmin-big-font">{{ day_uv }}</p>
+                    <p>
+                        总计独立访问量
+                        <span class="layuiadmin-span-color">{{ all_uv }} <i
+                                class="layui-inline layui-icon layui-icon-flag"></i></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    IP数量
+                    <div class="layui-btn-group layuiadmin-btn-group">
+                        <a class="layui-btn layui-btn-xs" data-date="1" data-type="ip">日</a>
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" data-date="2" data-type="ip">周</a>
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" data-date="3" data-type="ip">月</a>
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" data-date="4" data-type="ip">年</a>
+                    </div>
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+
+                    <p class="layuiadmin-big-font">{{ day_ip }}</p>
+                    <p>
+                        总IP数
+                        <span class="layuiadmin-span-color">{{ all_ip }} <i
+                                class="layui-inline layui-icon layui-icon-flag"></i></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {#      <div class="layui-col-sm6 layui-col-md3">#}
+        {#        <div class="layui-card">#}
+        {#          <div class="layui-card-header">#}
+        {#            活跃用户#}
+        {#            <span class="layui-badge layui-bg-orange layuiadmin-badge">月</span>#}
+        {#          </div>#}
+        {#          <div class="layui-card-body layuiadmin-card-list">#}
+        {##}
+        {#            <p class="layuiadmin-big-font">66,666</p>#}
+        {#            <p>#}
+        {#              最近一个月#}
+        {#              <span class="layuiadmin-span-color">15% <i class="layui-inline layui-icon layui-icon-user"></i></span>#}
+        {#            </p>#}
+        {#          </div>#}
+        {#        </div>#}
+        {#      </div>#}
+        <div class="layui-col-sm12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    访问量
+                    <div class="layui-inline date-input" style="float: right;">
+                        <label class="layui-form-label" style="padding: 11px 9px;">时间范围：</label>
+                        <div class="layui-input-inline"><input type="text" id="dateRange" placeholder=" - " lay-key="8" style="width: 180px;height: 22px;padding-left: 20px;margin-right: 80px"></div>
+                    </div>
+                    <div class="layui-inline date-input" style="float: right;display: none">
+                        <label class="layui-form-label" style="padding: 11px 9px;">时间：</label>
+                        <div class="layui-input-inline"><input type="text" id="dateRange2" placeholder=" - " lay-key="9" style="width: 90px;height: 22px;padding-left: 18px;margin-right: 80px"></div>
+                    </div>
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-row">
+                        <div class="layui-col-sm12">
+                            <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-allanalysis-dataview">
+                                <div carousel-item id="LAY-allanalysis-dataview" style="height: 300px;">
+                                    <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+{#                        <div class="layui-col-sm4">#}
+{#                            <div class="layuiadmin-card-list">#}
+{#                                <p class="layuiadmin-normal-font">月访问数</p>#}
+{#                                <span>同上期增长</span>#}
+{#                                <div class="layui-progress layui-progress-big" lay-showPercent="yes">#}
+{#                                    <div class="layui-progress-bar" lay-percent="30%"></div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="layuiadmin-card-list">#}
+{#                                <p class="layuiadmin-normal-font">月下载数</p>#}
+{#                                <span>同上期增长</span>#}
+{#                                <div class="layui-progress layui-progress-big" lay-showPercent="yes">#}
+{#                                    <div class="layui-progress-bar" lay-percent="20%"></div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="layuiadmin-card-list">#}
+{#                                <p class="layuiadmin-normal-font">月收入</p>#}
+{#                                <span>同上期增长</span>#}
+{#                                <div class="layui-progress layui-progress-big" lay-showPercent="yes">#}
+{#                                    <div class="layui-progress-bar" lay-percent="25%"></div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+{#        <div class="layui-col-sm4">#}
+{#            <div class="layui-card">#}
+{#                <div class="layui-card-header">用户留言</div>#}
+{#                <div class="layui-card-body">#}
+{#                    <ul class="layuiadmin-card-status layuiadmin-home2-usernote">#}
+{#                        <li>#}
+{#                            <h3>贤心</h3>#}
+{#                            <p>作为 layui 官方推出的后台模板，从初版的饱受争议，到后续的埋头丰富，逐步占据了国内后台系统应用的主要市场。</p>#}
+{#                            <span>5月30日 00:00</span>#}
+{#                            <a layadmin-event="replyNote" data-id="7"#}
+{#                               class="layui-btn layui-btn-xs layuiadmin-reply">回复</a>#}
+{#                        </li>#}
+{#                        <li>#}
+{#                            <h3>诸葛亮</h3>#}
+{#                            <p>皓首匹夫！苍髯老贼！你枉活九十有六，一生未立寸功，只会摇唇鼓舌！助曹为虐！一条断脊之犬，还敢在我军阵前狺狺狂吠，我从未见过有如此厚颜无耻之人！</p>#}
+{#                            <span>5月02日 00:00</span>#}
+{#                            <a href="javascript:;" layadmin-event="replyNote" data-id="5"#}
+{#                               class="layui-btn layui-btn-xs layuiadmin-reply">回复</a>#}
+{#                        </li>#}
+{#                        <li>#}
+{#                            <h3>胡歌</h3>#}
+{#                            <p>你以为只要长得漂亮就有男生喜欢？你以为只要有了钱漂亮妹子就自己贴上来了？你以为学霸就能找到好工作？我告诉你吧，这些都是真的！</p>#}
+{#                            <span>5月11日 00:00</span>#}
+{#                            <a href="javascript:;" layadmin-event="replyNote" data-id="6"#}
+{#                               class="layui-btn layui-btn-xs layuiadmin-reply">回复</a>#}
+{#                        </li>#}
+{#                        <li>#}
+{#                            <h3>杜甫</h3>#}
+{#                            <p>人才虽高，不务学问，不能致圣。刘向十日画一水，五日画一石。</p>#}
+{#                            <span>4月11日 00:00</span>#}
+{#                            <a href="javascript:;" layadmin-event="replyNote" data-id="2"#}
+{#                               class="layui-btn layui-btn-xs layuiadmin-reply">回复</a>#}
+{#                        </li>#}
+{#                        <li>#}
+{#                            <h3>鲁迅</h3>#}
+{#                            <p>路本是无所谓有和无的，走的人多了，就没路了。。</p>#}
+{#                            <span>4月28日 00:00</span>#}
+{#                            <a href="javascript:;" layadmin-event="replyNote" data-id="4"#}
+{#                               class="layui-btn layui-btn-xs layuiadmin-reply">回复</a>#}
+{#                        </li>#}
+{#                        <li>#}
+{#                            <h3>张爱玲</h3>#}
+{#                            <p>于千万人之中遇到你所要遇到的人，于千万年之中，时间的无涯的荒野中，没有早一步，也没有晚一步，刚巧赶上了，那也没有别的话好说，唯有轻轻的问一声：“噢，原来你也在这里？”</p>#}
+{#                            <span>4月11日 00:00</span>#}
+{#                            <a href="javascript:;" layadmin-event="replyNote" data-id="1"#}
+{#                               class="layui-btn layui-btn-xs layuiadmin-reply">回复</a>#}
+{#                        </li>#}
+{#                    </ul>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="layui-col-sm8">#}
+{#            <div class="layui-row layui-col-space15">#}
+{#                <div class="layui-col-sm6">#}
+{#                    <div class="layui-card">#}
+{#                        <div class="layui-card-header">本周活跃用户列表</div>#}
+{#                        <div class="layui-card-body">#}
+{#                            <table class="layui-table layuiadmin-page-table" lay-skin="line">#}
+{#                                <thead>#}
+{#                                <tr>#}
+{#                                    <th>用户名</th>#}
+{#                                    <th>最后登录时间</th>#}
+{#                                    <th>状态</th>#}
+{#                                    <th>获得赞</th>#}
+{#                                </tr>#}
+{#                                </thead>#}
+{#                                <tbody>#}
+{#                                <tr>#}
+{#                                    <td><span class="first">胡歌</span></td>#}
+{#                                    <td><i class="layui-icon layui-icon-log"> 11:20</i></td>#}
+{#                                    <td><span>在线</span></td>#}
+{#                                    <td>22 <i class="layui-icon layui-icon-praise"></i></td>#}
+{#                                </tr>#}
+{#                                <tr>#}
+{#                                    <td><span class="second">彭于晏</span></td>#}
+{#                                    <td><i class="layui-icon layui-icon-log"> 10:40</i></td>#}
+{#                                    <td><span>在线</span></td>#}
+{#                                    <td>21 <i class="layui-icon layui-icon-praise"></i></td>#}
+{#                                </tr>#}
+{#                                <tr>#}
+{#                                    <td><span class="third">靳东</span></td>#}
+{#                                    <td><i class="layui-icon layui-icon-log"> 01:30</i></td>#}
+{#                                    <td><i>离线</i></td>#}
+{#                                    <td>66 <i class="layui-icon layui-icon-praise"></i></td>#}
+{#                                </tr>#}
+{#                                <tr>#}
+{#                                    <td>吴尊</td>#}
+{#                                    <td><i class="layui-icon layui-icon-log"> 21:18</i></td>#}
+{#                                    <td><i>离线</i></td>#}
+{#                                    <td>45 <i class="layui-icon layui-icon-praise"></i></td>#}
+{#                                </tr>#}
+{#                                <tr>#}
+{#                                    <td>许上进</td>#}
+{#                                    <td><i class="layui-icon layui-icon-log"> 09:30</i></td>#}
+{#                                    <td><span>在线</span></td>#}
+{#                                    <td>21 <i class="layui-icon layui-icon-praise"></i></td>#}
+{#                                </tr>#}
+{#                                <tr>#}
+{#                                    <td>小蚊子</td>#}
+{#                                    <td><i class="layui-icon layui-icon-log"> 21:18</i></td>#}
+{#                                    <td><i>在线</i></td>#}
+{#                                    <td>45 <i class="layui-icon layui-icon-praise"></i></td>#}
+{#                                </tr>#}
+{#                                <tr>#}
+{#                                    <td>贤心</td>#}
+{#                                    <td><i class="layui-icon layui-icon-log"> 09:30</i></td>#}
+{#                                    <td><span>在线</span></td>#}
+{#                                    <td>21 <i class="layui-icon layui-icon-praise"></i></td>#}
+{#                                </tr>#}
+{#                                </tbody>#}
+{#                            </table>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="layui-col-sm6">#}
+{#                    <div class="layui-card">#}
+{#                        <div class="layui-card-header">项目进展</div>#}
+{#                        <div class="layui-card-body">#}
+{#                            <div class="layui-tab-content">#}
+{#                                <div class="layui-tab-item layui-show">#}
+{#                                    <table id="LAY-index-prograss"></table>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="layui-col-sm12">#}
+{#                    <div class="layui-card">#}
+{#                        <div class="layui-card-header">用户全国分布</div>#}
+{#                        <div class="layui-card-body">#}
+{#                            <div class="layui-row layui-col-space15">#}
+{#                                <div class="layui-col-sm4">#}
+{#                                    <table class="layui-table layuiadmin-page-table" lay-skin="line">#}
+{#                                        <thead>#}
+{#                                        <tr>#}
+{#                                            <th>排名</th>#}
+{#                                            <th>地区</th>#}
+{#                                            <th>人数</th>#}
+{#                                        </tr>#}
+{#                                        </thead>#}
+{#                                        <tbody>#}
+{#                                        <tr>#}
+{#                                            <td>1</td>#}
+{#                                            <td>浙江</td>#}
+{#                                            <td>62310</td>#}
+{#                                        </tr>#}
+{#                                        <tr>#}
+{#                                            <td>2</td>#}
+{#                                            <td>上海</td>#}
+{#                                            <td>59190</td>#}
+{#                                        </tr>#}
+{#                                        <tr>#}
+{#                                            <td>3</td>#}
+{#                                            <td>广东</td>#}
+{#                                            <td>55891</td>#}
+{#                                        </tr>#}
+{#                                        <tr>#}
+{#                                            <td>4</td>#}
+{#                                            <td>北京</td>#}
+{#                                            <td>51919</td>#}
+{#                                        </tr>#}
+{#                                        <tr>#}
+{#                                            <td>5</td>#}
+{#                                            <td>山东</td>#}
+{#                                            <td>39231</td>#}
+{#                                        </tr>#}
+{#                                        <tr>#}
+{#                                            <td>6</td>#}
+{#                                            <td>湖北</td>#}
+{#                                            <td>37109</td>#}
+{#                                        </tr>#}
+{#                                        </tbody>#}
+{#                                    </table>#}
+{#                                </div>#}
+{#                                <div class="layui-col-sm8">#}
+{##}
+{#                                    <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade"#}
+{#                                         lay-filter="LAY-index-pagethree">#}
+{#                                        <div carousel-item id="LAY-index-pagethree">#}
+{#                                            <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{##}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+
+    </div>
+</div>
+</div>
+
+<script src="{% static 'admin/layui/layui.js' %}"></script>
+<script>
+    layui.config({
+        base: '{% static 'admin' %}/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'echarts', 'carousel', 'laydate'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            element = layui.element,
+            carousel = (layui.admin, layui.carousel),
+            device = layui.device(),
+            echarts = layui.echarts;
+            laydate = layui.laydate;
+
+        function setOption(date, PV_data, UV_data){
+            if(!date){
+                layui.view.req({
+                    url:'',
+                    data:{'range_date':'none'},
+                    async:false,
+                    success:function (data) {
+                        if(data['msg'] == 'success'){
+                            date = data['date']
+                            PV_data = data['PV_data']
+                            UV_data = data['UV_data']
+                        }
+                        else{
+                            layui.msg("请求失败")
+                        }
+                    },error:function (data) {
+                        layui.msg("请求失败")
+                    }
+                });
+            }
+            options[0] = {
+                title: {
+                    text: '网站访问情况'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                legend: {
+                    textStyle:{
+                      fontSize: 14
+                    },
+                    data:['访问量(PV)','独立访问量(UV)'],
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                        data: date
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine:{
+                        show: false
+                    },axisLabel:{
+                        show: false
+                    }
+                },
+                series: [
+                    {
+                        name:'访问量(PV)',
+                        type:'line',
+                        yAxisIndex:0,
+                        smooth: true,
+                        data: PV_data
+                    },
+                    {
+                        name:'独立访问量(UV)',
+                        type:'line',
+                        smooth: true,
+                        data: UV_data
+                    }
+                ]
+            }
+        }
+        function setOption2(date2, PV_data2, UV_data2){
+            if(!date2){
+                layui.view.req({
+                    url:'',
+                    data:{'range_date2':'none'},
+                    async:false,
+                    success:function (data) {
+                        if(data['msg'] == 'success'){
+                            date2 = data['date2']
+                            PV_data2 = data['PV_data2']
+                            UV_data2 = data['UV_data2']
+                        }
+                        else{
+                            layui.msg("请求失败")
+                        }
+                    },error:function (data) {
+                        layui.msg("请求失败")
+                    }
+                });
+            }
+            options[1] = {
+                title: {
+                    text: '网站时段访问情况'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                legend: {
+                    textStyle:{
+                      fontSize: 14
+                    },
+                    data:['访问量(PV)','独立访问量(UV)'],
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                        data: date2
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine:{
+                        show: false
+                    },axisLabel:{
+                        show: false
+                    }
+                },
+                series: [
+                    {
+                        name:'访问量(PV)',
+                        type:'line',
+                        yAxisIndex:0,
+                        smooth: true,
+                        data: PV_data2
+                    },
+                    {
+                        name:'独立访问量(UV)',
+                        type:'line',
+                        smooth: true,
+                        data: UV_data2
+                    }
+                ]
+            }
+        }
+        laydate.render({
+            elem: '#dateRange'
+            , range: true
+            , type: 'date'
+            , done: function (value, date, endDate) {
+                if(!value){
+                    value = 'none'
+                }
+                layui.view.req({
+                    url:'',
+                    data:{'range_date':value},
+                    success:function (data) {
+                        if(data['msg'] == 'success'){
+                            setOption(data['date'], data['PV_data'], data['UV_data'])
+                            renderDataView(0);
+                        }
+                        else{
+                            layui.msg("请求失败")
+                        }
+                    },error:function (data) {
+                        layui.msg("请求失败")
+                    }
+                });
+            }
+        });
+        laydate.render({
+            elem: '#dateRange2'
+            , range: false
+            , type: 'date'
+            , done: function (value, date, endDate) {
+                if(!value){
+                    value = 'none'
+                }
+                layui.view.req({
+                    url:'',
+                    data:{'range_date2':value},
+                    success:function (data) {
+                        if(data['msg'] == 'success'){
+                            setOption2(data['date2'], data['PV_data2'], data['UV_data2'])
+                            renderDataView(1);
+                        }
+                        else{
+                            layui.msg("请求失败")
+                        }
+                    },error:function (data) {
+                        layui.msg("请求失败")
+                    }
+                });
+            }
+        });
+//轮播切换
+        $('.layadmin-carousel').each(function () {
+            var othis = $(this);
+            carousel.render({
+                elem: this
+                , width: '100%'
+                , arrow: 'none'
+                , interval: othis.data('interval')
+                , autoplay: othis.data('autoplay') === true
+                , trigger: (device.ios || device.android) ? 'click' : 'hover'
+                , anim: othis.data('anim')
+            });
+        });
+        element.render('progress');
+//百度图表-----------------------------划重点-下方为整合百度图表核心 方法---------------------------------------
+        var echartsApp = [], options = option = [];
+        setOption()
+        setOption2()
+        var EelemDataView = $('#LAY-allanalysis-dataview').children('div') //指定渲染的容器
+            , renderDataView = function (index) {
+            echartsApp[index] = echarts.init(EelemDataView[index], layui.echartsTheme);
+            echartsApp[index].setOption(options[index]);
+            window.onresize = echartsApp[index].resize;
+        };
+        renderDataView(0);//渲染第一个div
+        //监听数据概览轮播
+        var carouselIndex = 0;
+        carousel.on('change(LAY-allanalysis-dataview)', function (obj) {
+            renderDataView(carouselIndex = obj.index);
+            $(".date-input").eq(obj.index).show().siblings().hide();
+        });
+        $(".layui-btn-group").on('click', 'a', function () {
+            let $_t=$(this), date = $_t.data('date'), type=$_t.data('type');
+            layui.view.req({
+                url:'',
+                data:{'date':date, 'type': type},
+                success:function (data) {
+                    console.log(data)
+                    if(data['msg'] == 'success'){
+                        $_t.parents('.layui-card-header').next().find('.layuiadmin-big-font').text(data['count'])
+                        $_t.removeClass('layui-btn-primary').siblings().addClass('layui-btn-primary')
+                    }
+                    else{
+                        layui.msg("请求失败")
+                    }
+                },error:function (data) {
+                    layui.msg("请求失败")
+                }
+            });
+        })
+
+    });
+</script>
+</body>
+</html>

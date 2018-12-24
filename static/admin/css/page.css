@@ -1,0 +1,38 @@
+.floatpage{
+	position: fixed;
+	bottom:0px;
+	width:100%;
+	height:54px;
+	z-index: 90;
+}
+.page {
+	height: 55px;
+	line-height: 55px;
+	text-align: center;
+	background: #fff;
+	border-top: 1px solid #c0c0c0;
+	border-bottom: 1px solid #c0c0c0;
+	margin-bottom: 40px;
+	font-size: 12px;
+}
+.page select{
+	width: auto;
+	-webkit-appearance:;
+	display:inline;
+	border: none;
+}
+.page_next {
+	width: 30%;
+	float: left
+}
+
+.page_prev {
+	cursor: pointer;
+	width: 30%;
+	float: left
+}
+
+.page_no {
+	width: 39%;
+	float: left
+}

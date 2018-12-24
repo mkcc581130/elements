@@ -113,6 +113,18 @@
             color: #fff;
             margin-left: -88px;
         }
+        @media screen and (orientation: portrait) {
+      /*竖屏 css*/
+        #shadow{
+            display: block;
+        }
+    }
+    @media screen and (orientation: landscape) {
+      /*横屏 css*/
+        #shadow{
+            display: none;
+        }
+    }
     </style>
 </head>
 <body>
@@ -130,30 +142,8 @@
 </div>
 
 <script>
-  const evt = "onorientationchange" in window ? "orientationchange" : "resize";
   var mouse = {}, pre_mouse = {};
   let lis = [ 'sphere', 'helix', 'grid' ];
-  window.addEventListener( evt, function () {
-
-  	const width = document.documentElement.clientWidth;
-  	const height = document.documentElement.clientHeight;
-  	if ( width > height ) { // 横屏
-
-  		document.getElementById( 'shadow' ).style.display = 'none';
-  		transform( targets.sphere, 2000 );
-  		setTimeout( function () {
-
-  			transform( targets.table, 2000 );
-
-  		}, 3000 );
-
-	} else {
-
-  		document.getElementById( 'shadow' ).style.display = 'block';
-
-	}
-
-  }, false );
 
 var table = [
 	"H", "Hydrogen", "1.00794", 1, 1,
@@ -370,26 +360,35 @@ function init() {
 		element.className = 'element';
 		element.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
 		element.style.zIndex = '10000';
-		element.addEventListener( 'touchend', function () {
+		if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+            element.addEventListener( 'touchend', function () {
 
-  			if ( dragging ) {
+                if ( dragging ) {
 
-  				return;
+                    return;
 
-			}
-			window.location.href = 'css3d_molecules.html';
+                }
+                window.location.href = '/ele_info/?symbol='+item;
 
-		}, false );
-		element.addEventListener( 'touchstart', function () {
+            }, false );
+            element.addEventListener( 'touchstart', function () {
 
-			dragging = false;
+                dragging = false;
 
-		}, false );
-		element.addEventListener( 'touchmove', function () {
+            }, false );
+            element.addEventListener( 'touchmove', function () {
 
-			dragging = true;
+                dragging = true;
 
-		}, false );
+            }, false );
+        } else {
+            element.addEventListener( 'click', function () {
+
+                window.location.href = '/ele_info/?symbol='+item;
+
+            }, false );
+        }
+
 		var number = document.createElement( 'div' );
 		number.className = 'number';
 		number.textContent = ( i / 5 ) + 1;
@@ -534,23 +533,12 @@ function init() {
 	}
 
 
-  	const width = document.documentElement.clientWidth;
-  	const height = document.documentElement.clientHeight;
-  	if ( width > height ) { // 横屏
+    transform( targets.sphere, 2000 );
+    setTimeout( function () {
 
-  		document.getElementById( 'shadow' ).style.display = 'none';
-  		transform( targets.sphere, 2000 );
-  		setTimeout( function () {
+        transform( targets.table, 2000 );
 
-  			transform( targets.table, 2000 );
-
-  		}, 3000 );
-
-  	} else {
-
-  		document.getElementById( 'shadow' ).style.display = 'block';
-
-  	}
+    }, 3000 );
 	window.addEventListener( 'resize', onWindowResize, false );
   	// document.addEventListener( 'mouseup', onDocumentMouseUp, false );
   	document.onmousedown = onDocumentMouseUp;

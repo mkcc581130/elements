@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑{{ list_name }}列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <style>
+        *{margin: 0;padding: 0;list-style-type: none;text-decoration: none;}
+        .box{width: 500px;margin: auto;}
+        .bootstrap-tagsinput {
+          background-color: white;
+          border: 2px solid #ebedef;
+          border-radius: 6px;
+          margin-bottom: 18px;
+          padding: 6px 1px 1px 6px;
+          text-align: left;
+          font-size: 0;
+        }
+
+        .bootstrap-tagsinput .badge {
+          border-radius: 4px;
+          background-color: #ebedef;
+          color: #7b8996;
+          font-size: 13px;
+          cursor: pointer;
+          display: inline-block;
+          position: relative;
+          vertical-align: middle;
+          overflow: hidden;
+          margin: 0 5px 5px 0;
+
+
+          padding: 6px 28px 6px 14px;
+          transition: .25s linear;
+        }
+
+        .bootstrap-tagsinput .badge > span {
+          color: white;
+          padding: 0 10px 0 0;
+          cursor: pointer;
+          font-size: 12px;
+          position: absolute;
+          right: 0;
+          text-align: right;
+          text-decoration: none;
+          top: 0;
+          width: 100%;
+          bottom: 0;
+          z-index: 2;
+        }
+
+        .bootstrap-tagsinput .badge > span:after {
+          content: "x";
+          font-family: "Flat-UI-Pro-Icons";
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          line-height: 27px;
+        }
+
+        @media (hover: hover) {
+          .bootstrap-tagsinput .badge {
+            padding: 6px 21px;
+          }
+          .bootstrap-tagsinput .badge > span {
+            opacity: 0;
+            filter: "alpha(opacity=0)";
+            transition: opacity .25s linear;
+          }
+          .bootstrap-tagsinput .badge:hover {
+            background-color: #16a085;
+            color: white;
+            padding-right: 28px;
+            padding-left: 14px;
+          }
+          .bootstrap-tagsinput .badge:hover > span {
+            padding: 0 10px 0 0;
+            opacity: 1;
+            -webkit-filter: none;
+                    filter: none;
+          }
+        }
+
+
+        .bootstrap-tagsinput input[type="text"] {
+          font-size: 14px;
+          border: none;
+          box-shadow: none;
+          outline: none;
+          background-color: transparent;
+          padding: 0;
+          margin: 0;
+          width: auto !important;
+          max-width: inherit;
+          min-width: 80px;
+          vertical-align: top;
+          height: 29px;
+          color: #34495e;
+        }
+
+            .tagsinput-primary {
+          margin-bottom: 18px;
+        }
+
+        .tagsinput-primary .bootstrap-tagsinput {
+          border-color: #1abc9c;
+          margin-bottom: 0;
+        }
+
+        .tagsinput-primary .badge {
+          background-color: #1abc9c;
+          color: white;
+        }
+        .btn{background: #1ABC9C;border: none;color: #fff;padding: 10px;border-radius: 5px;margin-top: 10px;}
+        .layui-upload-list {
+            margin: 10px 0;
+        }
+
+        .layui-upload-img {
+            width: 92px;
+            height: 92px;
+            margin: 0 10px 10px 0;
+        }
+
+        .layui-input-block {
+            padding-right: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<form method="post" enctype="multipart/form-data" class="layui-form" id="layuiadmin-form-useradmin"
+      style="padding: 20px 0 0 0;">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">职位类型</label>
+            <div class="layui-input-inline">
+                <select name="category_id" lay-verify="required">
+                    <option value="">请选择职位</option>
+                    {% for c in category_list %}
+                        <optgroup label="{{ c.sub }}">
+                            {% for l in c.list %}
+                                <option value="{{ l.id }}" {% if data.category_id == l.id %}selected{% endif %}>{{ l.label }}</option>
+                            {% endfor %}
+                        </optgroup>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">招聘人数</label>
+            <div class="layui-input-inline">
+                <input type="text" name="num" value="{% if data.num %}{{ data.num }}{% endif %}" lay-verify="required" placeholder="请输入招聘人数" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">工作地点</label>
+            <div class="layui-input-inline">
+                <input type="text" name="work_place" value="{% if data.work_place %}{{ data.work_place }}{% else %}杭州{% endif %}" lay-verify="required" placeholder="请输入工作地点" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">教育程度</label>
+            <div class="layui-input-inline">
+                <select name="education_id" lay-verify="required">
+                    {% for e in education_list %}
+                        <option value="{{ e.id }}" {% if data.education_id == e.id %}selected{% endif %}>{{ e.label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">工作年限</label>
+            <div class="layui-input-inline">
+                <select name="worktime_id" lay-verify="required">
+                    {% for w in work_time_list %}
+                        <option value="{{ w.id }}" {% if data.worktime_id == w.id %}selected{% endif %}>{{ w.label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">是否暂停</label>
+            <div class="layui-input-inline">
+                <select name="is_pause" lay-verify="required">
+                    <option value="0" {% if data.is_pause == 0 %}selected{% endif %}>不暂停</option>
+                    <option value="1" {% if data.is_pause == 1 %}selected{% endif %}>暂停</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">发布时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="publish_time" class="layui-input" id="publish_time" value="{% if data.publish_time %}{{ data.publish_time }}{% endif %}"
+                       placeholder=" - " lay-key="8">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">职位描述</label>
+        <div class="layui-input-block">
+            <input name="description" id="description" class="tagsinput" data-role="tagsinput" value="{{ data.description }}" placeholder="输入后回车" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">职位要求</label>
+        <div class="layui-input-block">
+            <input name="requirement" id="requirement" class="tagsinput" data-role="tagsinput" value="{{ data.requirement }}" placeholder="输入后回车" />
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <button class="layui-btn layuiadmin-btn-useradmin" lay-submit id="user-mod-submit" lay-filter="user-mod-submit">
+            提交
+        </button>
+    </div>
+</form>
+<script src="/layui/layui.js"></script>
+<script src="/js/jquery-1.11.2.min.js"></script>
+<script src="/js/tagsinput.js"></script>
+
+<script>
+    layui.config({
+        base: '/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'laydate'], function () {
+        var $ = layui.$, form = layui.form, laydate=layui.laydate;
+        laydate.render({
+            elem: '#publish_time'
+            , type: 'datetime'
+        });
+    })
+</script>
+</body>
+</html>
