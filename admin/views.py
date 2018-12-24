@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 
 from django.contrib.auth.decorators import login_required
 
-from main.models import Elements
+from main.models import Elements, IonizationEnergy
 
 
 def login_view(request):
@@ -69,19 +69,34 @@ def ele_mod(request, action):
         electronegativity = post.get('electronegativity')
         electronic_affinity = post.get('electronic_affinity')
         introduction = post.get('introduction')
+        ionizationenergy = post.get('ionizationenergy')
+        ie_list = []
+        if ionizationenergy:
+            ie_list = ionizationenergy.split(',')
         extra = post.get('extra')
         cn_name = post.get('cn_name')
         if action == 'add':
-            Elements.objects.create(symbol=symbol, atomic_number=atomic_number, relative_atomic_mass=relative_atomic_mass,
-                                    atomic_radius=atomic_radius, electronegativity=electronegativity, electronic_affinity=electronic_affinity,
-                                    introduction=introduction, extra=extra, cn_name=cn_name)
+            ele = Elements.objects.create(symbol=symbol, atomic_number=atomic_number, relative_atomic_mass=relative_atomic_mass,
+                                        atomic_radius=atomic_radius, electronegativity=electronegativity, electronic_affinity=electronic_affinity,
+                                        introduction=introduction, extra=extra, cn_name=cn_name)
+            for i in ie_list:
+                IonizationEnergy.objects.create(ele=ele, energy=i)
             return JsonResponse({"code": 0, "msg": "add_success"})
         elif action == 'edit':
             if eid:
                 Elements.objects.filter(pk=eid).update(symbol=symbol, atomic_number=atomic_number, relative_atomic_mass=relative_atomic_mass,
                                                        atomic_radius=atomic_radius, electronegativity=electronegativity, electronic_affinity=electronic_affinity,
                                                        introduction=introduction, extra=extra, cn_name=cn_name)
+                IonizationEnergy.objects.filter(ele_id=eid).delete()
+                for i in ie_list:
+                    IonizationEnergy.objects.create(ele_id=eid, energy=i)
                 return JsonResponse({"code": 0, "msg": "edit_success"})
     if action == 'edit':
         if eid:
             ele = Elements.objects.get(pk=eid)
+            ie_list = IonizationEnergy.objects.filter(ele_id=eid)
+            ionizationenergy_list = []
+            for i in ie_list:
+                ionizationenergy_list.append(i.energy)
+            ionizationenergy = ','.join(ionizationenergy_list)
+    return render(request, 'admin/ele_form.html', locals())

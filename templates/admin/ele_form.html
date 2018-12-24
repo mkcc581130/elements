@@ -9,6 +9,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="{% static 'admin/layui/css/layui.css' %}" media="all">
+    <link rel="stylesheet" href="{% static 'admin/css/tagsinput.css' %}" media="all">
     <style>
         .layui-upload-list {
             margin: 10px 0;
@@ -23,35 +24,33 @@
         .layui-input-block {
             padding-right: 50px;
         }
+        #tags{
+            margin: 0;
+        }
     </style>
 </head>
 <body>
 
 <form method="post" enctype="multipart/form-data" class="layui-form" id="layuiadmin-form-useradmin"
       style="padding: 20px 0 0 0;">
+{% csrf_token %}
     <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label">元素符号</label>
             <div class="layui-input-inline">
-                <input type="text" name="symbol" value="{% if data.symbol %}{{ data.symbol }}{% endif %}" lay-verify="required" placeholder="请输入元素符号" autocomplete="off" class="layui-input">
+                <input type="text" name="symbol" value="{% if ele.symbol %}{{ ele.symbol }}{% endif %}" lay-verify="required" placeholder="请输入元素符号" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">中文名</label>
             <div class="layui-input-inline">
-                <input type="text" name="cn_name" value="{% if data.cn_name %}{{ data.cn_name }}{% endif %}" lay-verify="required" placeholder="请输入中文名" autocomplete="off" class="layui-input">
+                <input type="text" name="cn_name" value="{% if ele.cn_name %}{{ ele.cn_name }}{% endif %}" lay-verify="required" placeholder="请输入中文名" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">原子序数</label>
             <div class="layui-input-inline">
-                <input type="text" name="atomic_number" value="{% if data.atomic_number %}{{ data.atomic_number }}{% endif %}" lay-verify="required" placeholder="请输入原子序数" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">相对原子质量</label>
-            <div class="layui-input-inline">
-                <input type="text" name="relative_atomic_mass" value="{% if data.relative_atomic_mass %}{{ data.relative_atomic_mass }}{% endif %}" lay-verify="required" placeholder="请输入相对原子质量" autocomplete="off" class="layui-input">
+                <input type="text" name="atomic_number" value="{% if ele.atomic_number %}{{ ele.atomic_number }}{% endif %}" lay-verify="required" placeholder="请输入原子序数" autocomplete="off" class="layui-input">
             </div>
         </div>
     </div>
@@ -59,32 +58,46 @@
         <div class="layui-inline">
             <label class="layui-form-label">相对原子质量</label>
             <div class="layui-input-inline">
-                <input type="text" name="relative_atomic_mass" value="{% if data.relative_atomic_mass %}{{ data.relative_atomic_mass }}{% endif %}" lay-verify="required" placeholder="请输入相对原子质量" autocomplete="off" class="layui-input">
+                <input type="text" name="relative_atomic_mass" value="{% if ele.relative_atomic_mass %}{{ ele.relative_atomic_mass }}{% endif %}" lay-verify="required" placeholder="请输入相对原子质量" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">原子半径</label>
+            <div class="layui-input-inline">
+                <input type="text" name="atomic_radius" value="{% if ele.atomic_radius %}{{ ele.atomic_radius }}{% endif %}" lay-verify="required" placeholder="请输入原子半径" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">电负性</label>
             <div class="layui-input-inline">
-                <input type="text" name="electronegativity" value="{% if data.electronegativity %}{{ data.electronegativity }}{% endif %}" lay-verify="required" placeholder="请输入电负性" autocomplete="off" class="layui-input">
+                <input type="text" name="electronegativity" value="{% if ele.electronegativity %}{{ ele.electronegativity }}{% endif %}" lay-verify="required" placeholder="请输入电负性" autocomplete="off" class="layui-input">
             </div>
         </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">电离能</label>
+        <div class="layui-input-block tagsinput-primary">
+            <input type="text" name="ionizationenergy" class="tagsinput" value="{% if ionizationenergy %}{{ ionizationenergy }}{% endif %}" placeholder="回车生成标签" data-role="tagsinput">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label">电子亲和能</label>
             <div class="layui-input-inline">
-                <input type="text" name="relative_atomic_mass" value="{% if data.electronic_affinity %}{{ data.electronic_affinity }}{% endif %}" lay-verify="required" placeholder="请输入电子亲和能" autocomplete="off" class="layui-input">
+                <input type="text" name="electronic_affinity" value="{% if ele.electronic_affinity %}{{ ele.electronic_affinity }}{% endif %}" placeholder="请输入电子亲和能" autocomplete="off" class="layui-input">
             </div>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">元素介绍</label>
         <div class="layui-input-block">
-            <textarea name="introduction" id="introduction" cols="30" rows="10">{% if data.introduction %}{{ data.introduction }}{% endif %}</textarea>
+            <textarea name="introduction" id="introduction" class="layui-textarea">{% if ele.introduction %}{{ ele.introduction }}{% endif %}</textarea>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">额外信息</label>
         <div class="layui-input-block">
-            <textarea name="extra" id="extra" cols="30" rows="10">{% if data.extra %}{{ data.extra }}{% endif %}</textarea>
+            <textarea name="extra" id="extra" class="layui-textarea">{% if ele.extra %}{{ ele.extra }}{% endif %}</textarea>
         </div>
     </div>
     <div class="layui-form-item layui-hide">
@@ -94,15 +107,15 @@
     </div>
 </form>
 <script src="{% static 'admin/layui/layui.js' %}"></script>
-<script src="{% static 'admin/js/wangEditor.min.js' %}"></script>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script src="{% static 'admin/js/tagsinput.js' %}"></script>
 <script>
     layui.config({
-        base: '{% static 'admin' %}' //静态资源所在路径
+        base: '{% static 'admin' %}/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
     }).use(['index', 'form', 'laydate'], function () {
         var $ = layui.$, form = layui.form, laydate=layui.laydate;
-
     })
 </script>
 </body>
