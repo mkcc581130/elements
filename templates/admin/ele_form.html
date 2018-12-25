@@ -9,23 +9,16 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="{% static 'admin/layui/css/layui.css' %}" media="all">
+    <link rel="stylesheet" href="{% static 'admin/css/admin.css' %}" media="all">
     <link rel="stylesheet" href="{% static 'admin/css/tagsinput.css' %}" media="all">
     <style>
-        .layui-upload-list {
-            margin: 10px 0;
-        }
-
-        .layui-upload-img {
-            width: 92px;
-            height: 92px;
-            margin: 0 10px 10px 0;
-        }
-
         .layui-input-block {
             padding-right: 50px;
         }
-        #tags{
-            margin: 0;
+        .layui-inline{
+            display: inline-flex;
+            justify-content:center;
+            align-items:Center;
         }
     </style>
 </head>
@@ -56,7 +49,7 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label">相对原子质量</label>
+            <label class="layui-form-label">相对<br>原子质量</label>
             <div class="layui-input-inline">
                 <input type="text" name="relative_atomic_mass" value="{% if ele.relative_atomic_mass %}{{ ele.relative_atomic_mass }}{% endif %}" lay-verify="required" placeholder="请输入相对原子质量" autocomplete="off" class="layui-input">
             </div>
@@ -87,6 +80,16 @@
                 <input type="text" name="electronic_affinity" value="{% if ele.electronic_affinity %}{{ ele.electronic_affinity }}{% endif %}" placeholder="请输入电子亲和能" autocomplete="off" class="layui-input">
             </div>
         </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">卡片颜色</label>
+            <div class="layui-input-inline" style="width: 130px;">
+              <input type="text" name="color" value="{% if ele.color %}{{ ele.color }}{% else %}rgb(60,144,144){% endif %}" placeholder="请选择颜色" class="layui-input" id="color">
+            </div>
+            <div class="layui-inline" style="left: -11px;top: 5px;">
+              <div id="colorpicker"></div>
+            </div>
+        </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">元素介绍</label>
@@ -97,7 +100,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">额外信息</label>
         <div class="layui-input-block">
-            <textarea name="extra" id="extra" class="layui-textarea">{% if ele.extra %}{{ ele.extra }}{% endif %}</textarea>
+            <textarea name="extra" id="extra" class="layui-textarea" style="min-height: 60px">{% if ele.extra %}{{ ele.extra }}{% endif %}</textarea>
         </div>
     </div>
     <div class="layui-form-item layui-hide">
@@ -114,8 +117,16 @@
         base: '{% static 'admin' %}/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'form', 'laydate'], function () {
-        var $ = layui.$, form = layui.form, laydate=layui.laydate;
+    }).use(['index', 'form', 'colorpicker'], function () {
+        var $ = layui.$, form = layui.form, colorpicker=layui.colorpicker;
+        colorpicker.render({
+          elem: '#colorpicker'
+            ,color: '{% if ele.color %}{{ ele.color }}{% else %}rgb(60,144,144){% endif %}'
+            ,format: 'rgb'
+          ,done: function(color){
+            $('#color').val(color);
+          }
+        });
     })
 </script>
 </body>

@@ -1,19 +1,19 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.hashers import make_password, check_password
-from django.views.decorators.csrf import ensure_csrf_cookie
 import pytz
 import datetime
-from main.models import Elements
+from .models import Elements
+from .comm import visit_count
 # Create your views here.
 
 
-@ensure_csrf_cookie
+@visit_count
 def index(request):
     return render(request, 'index.html')
 
 
-@ensure_csrf_cookie
+@visit_count
 def ele_info(request):
     symbol = request.GET.get("symbol")
     ele = Elements.objects.get(symbol=symbol)
