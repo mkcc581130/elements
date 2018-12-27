@@ -23,7 +23,7 @@
         maxTags: undefined,
         maxChars: undefined,
         confirmKeys: [13, 44],
-        delimiter: ',',
+        delimiter: '|',
         delimiterRegex: null,
         cancelConfirmKeysOnEmpty: false,
         onTagExists: function (item, $tag) {

@@ -5,7 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 
 from django.contrib.auth.decorators import login_required
 
-from main.models import Elements, IonizationEnergy, VisitLog
+from main.models import Elements, IonizationEnergy, VisitLog, HiElements, HiElementItems
+from main.comm import re_find
 
 
 def login_view(request):
@@ -157,7 +158,7 @@ def ele_mod(request, action):
         color = post.get('color')
         ie_list = []
         if ionizationenergy:
-            ie_list = ionizationenergy.split(',')
+            ie_list = ionizationenergy.split('|')
         extra = post.get('extra')
         cn_name = post.get('cn_name')
         if action == 'add':
@@ -183,5 +184,64 @@ def ele_mod(request, action):
             ionizationenergy_list = []
             for i in ie_list:
                 ionizationenergy_list.append(i.energy)
-            ionizationenergy = ','.join(ionizationenergy_list)
+            ionizationenergy = '|'.join(ionizationenergy_list)
     return render(request, 'admin/ele_form.html', locals())
+
+
+def hi_ele_list(request):
+    list_name = '嗨元素'
+    page = request.GET.get('page')
+    limit = request.GET.get('limit')
+    if page and limit:
+        page = int(page)
+        limit = int(limit)
+        hi_element_list = HiElements.objects.all().values('id', 'ele__cn_name', 'introduction')
+        count = hi_element_list.count()
+        hi_element_list = hi_element_list[limit * (page - 1): limit * page]
+        return JsonResponse({"code": 0, "msg": "", "count": count, "data": list(hi_element_list)})
+    # 删除操作
+    del_data = request.GET.getlist('del_data[]')
+    if del_data:
+        for i in del_data:
+            e = HiElements.objects.filter(pk=i)
+            if e:
+                e.delete()
+        return JsonResponse({"code": 0, "msg": "del_success"})
+    return render(request, 'admin/hi_ele_list.html', locals())
+
+
+def hi_ele_mod(request, action):
+    list_name = '嗨元素'
+    post = request.POST
+    hid = request.GET.get("id")
+    if post:
+        ele_id = post.get('ele_id')
+        hielementitems = post.get('hielementitems')
+        introduction = post.get('introduction')
+        hii_list = []
+        if hielementitems:
+            hii_list = hielementitems.split('|')
+        if action == 'add':
+            HiElements.objects.create(ele_id=ele_id, introduction=introduction)
+
+        elif action == 'edit':
+            if hid:
+                ele = HiElements.objects.get(pk=hid)
+                HiElementItems.objects.filter(ele_id=ele.ele_id).delete()
+                HiElements.objects.filter(pk=hid).update(ele_id=ele_id, introduction=introduction)
+        for i in hii_list:
+            hi_list = re_find('(.*?) (.*?)', i, is_list=True)
+            raise Exception
+            HiElementItems.objects.create(ele_id=ele_id, content=hi_list[0], img=hi_list[1])
+
+        return JsonResponse({"code": 0, "msg": action + "_success"})
+    if action == 'edit':
+        if hid:
+            ele = HiElements.objects.get(pk=hid)
+            hii_list = HiElementItems.objects.filter(ele_id=ele.ele_id)
+            hielementitems_list = []
+            for i in hii_list:
+                hielementitems_list.append(i.content + ' 图片：' + i.img)
+            hielementitems = '|'.join(hielementitems_list)
+    elements_list = Elements.objects.all()
+    return render(request, 'admin/hi_ele_form.html', locals())

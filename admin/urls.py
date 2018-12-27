@@ -21,4 +21,6 @@ urlpatterns = [
     re_path('^console/$', admin_views.console, name='console'),
     re_path('^ele_list/$', admin_views.ele_list, name='ele_list'),
     re_path('^ele_list/(edit|add)+/$', admin_views.ele_mod, name='ele_mod'),
+    re_path('^hi_ele_list/$', admin_views.hi_ele_list, name='hi_ele_list'),
+    re_path('^hi_ele_list/(edit|add)+/$', admin_views.hi_ele_mod, name='hi_ele_mod'),
 ]

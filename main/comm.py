@@ -1,5 +1,6 @@
 import requests
 import json
+import re
 from .models import VisitLog
 
 
@@ -16,3 +17,13 @@ def visit_count(func):
         VisitLog.objects.create(pages=page, ip=ip, location=location)
         return func(request, *args, **kwargs)
     return wrapper
+
+
+# 正则匹配
+def re_find(re_list, content, is_list=False):
+    urls_pat = re.compile(re_list, re.DOTALL)
+    alist = re.findall(urls_pat, content)
+    if alist:
+        return alist if is_list else alist[0]
+    else:
+        return ""
