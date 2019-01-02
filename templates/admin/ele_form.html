@@ -55,17 +55,27 @@
             </div>
         </div>
         <div class="layui-inline">
-            <label class="layui-form-label">原子半径</label>
+            <label class="layui-form-label">原子半径类型</label>
+            <div class="layui-input-inline">
+                <select name="atomic_radius_type" id="atomic_radius_type" lay-verify="required">
+                    <option value="">原子半径类型</option>
+                    <option value="1" {% if ele.atomic_radius_type == 1 %}selected{% endif %}>原子共价半径</option>
+                    <option value="2" {% if ele.atomic_radius_type == 2 %}selected{% endif %}>原子范德华半径</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">原子半径值</label>
             <div class="layui-input-inline">
                 <input type="text" name="atomic_radius" value="{% if ele.atomic_radius %}{{ ele.atomic_radius }}{% endif %}" lay-verify="required" placeholder="请输入原子半径" autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-inline">
+    </div>
+    <div class="layui-form-item">
             <label class="layui-form-label">电负性</label>
-            <div class="layui-input-inline">
-                <input type="text" name="electronegativity" value="{% if ele.electronegativity %}{{ ele.electronegativity }}{% endif %}" lay-verify="required" placeholder="请输入电负性" autocomplete="off" class="layui-input">
+            <div class="layui-input-block">
+                <textarea name="electronegativity" id="electronegativity" class="layui-textarea" placeholder="请输入电负性">{% if ele.electronegativity %}{{ ele.electronegativity }}{% endif %}</textarea>
             </div>
-        </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">电离能</label>

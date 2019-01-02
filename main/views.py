@@ -13,10 +13,11 @@ def index(request):
     return render(request, 'index.html')
 
 
-@visit_count
 def ele_info(request):
     symbol = request.GET.get("symbol")
     ele = Elements.objects.get(symbol=symbol)
+    next_ele = Elements.objects.filter(atomic_number=ele.atomic_number+1)
+    pre_ele = Elements.objects.filter(atomic_number=ele.atomic_number-1)
     ie_list = []
     cn_num = ['一', '二', '三', '四', '五']
     ionizationenergy = ele.ionizationenergy_set.all()
@@ -25,4 +26,9 @@ def ele_info(request):
     else:
         for i in range(len(ionizationenergy)):
             ie_list.append({'label': '第' + cn_num[i] + '电离能', 'energy': ionizationenergy[i].energy})
-    return render(request, 'element/ele_info.html', {'ele': ele, 'ie_list': ie_list})
+    return render(request, 'element/ele_info.html', locals())
+
+
+def hi_ele(request):
+    return render(request, 'element/hi_ele.html')
+

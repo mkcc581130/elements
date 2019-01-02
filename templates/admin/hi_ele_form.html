@@ -34,7 +34,7 @@
                 <select name="ele_id" id="ele_id" lay-verify="required">
                     <option value="">请选择元素</option>
                     {% for e in elements_list %}
-                        <option value="{{ e.id }}" {% if ele.id == e.id %}selected{% endif %}>{{ e.cn_name }}</option>
+                        <option value="{{ e.id }}"  {% if ele.ele_id == e.id %}selected{% endif %}>{{ e.cn_name }}</option>
                     {% endfor %}
                 </select>
             </div>

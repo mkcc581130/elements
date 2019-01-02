@@ -116,77 +116,15 @@
 <div id="container">
 
 </div>
-<div class="ele" id="ele">
-        <h2 class="ele_title">元素资料</h2>
-        <div class="ele_main">
-            <div class="ele_left">
-                <div class="ele_info">
-                    <ul>
-                        <li>● 原子序数：{{ ele.atomic_number }}</li>
-                        <li>● 相对原子质量：{{ ele.relative_atomic_mass }}</li>
-                        <li>● 原子半径：{{ ele.atomic_radius }}</li>
-                        <li>● 电负性：{{ ele.electronegativity }}</li>
-                        {% for i in ie_list %}
-                        <li>● {{ i.label }}：{{ i.energy }}</li>
-                        {% endfor %}
-                        {% if ele.electronic_affinity %}<li>● 电子亲和能：{{ ele.electronic_affinity }}</li>{% endif %}
-                    </ul>
-                </div>
-                <div class="ele_intr">
-                    <h2 class="title">{{ ele.cn_name }}</h2>
-                    <div class="content">
-                        {{ ele.introduction }}
+<div class="hi" id="hi">
 
-                    </div>
-                </div>
-            </div>
-            <div class="ele_right">
-                <div class="ele_img"><img src="/static/img/{{ ele.symbol }}_0.JPG" width="100%" alt=""></div>
-                <div class="ele_extra">{{ ele.extra }}</div>
-            </div>
-            <div class="clear"></div>
-            <div class="ele_slice">
-                <div class="top">
-                    <div class="top_left">{{ ele.atomic_number }}</div>
-                    <div class="top_right">{{ ele.relative_atomic_mass }}</div>
-                </div>
-                <div class="middle">{{ ele.symbol }}</div>
-                <div class="bottom">{{ ele.cn_name }}</div>
-            </div>
-        </div>
-    </div>
-<div id="menu">
-    <div class="dropup">
-        <div class="dropup-title">原子</div>
-        <ul class="dropup-menu">
-            <li>2D模型</li>
-            <li>3D模型</li>
-            <li>应用</li>
-        </ul>
-    </div>
-    <div class="dropup">
-        <div class="dropup-title">元素</div>
-        <ul class="dropup-menu">
-            <li>基本资料</li>
-            <li>嗨元素漫画</li>
-            <li>发现史</li>
-            <li>学者代言</li>
-            <li>应用</li>
-        </ul>
-    </div>
-    <div class="dropup">
-        <div class="dropup-title">物质</div>
-        <ul class="dropup-menu">
-            <li>单质</li>
-            <li>化合物</li>
-        </ul>
-    </div>
-    <a href="/" id="return">
-        周期表
-    </a>
 </div>
+{% include 'element/bottom_menu.html' %}
 <script>
-
+function appFinishiLoad() {
+	//写要自动运行的JS，如横屏
+	BSL.AppScreen('2'); //横屏
+    }
     $(function () {
         $('.dropup-title').click(function () {
             $(this).next().toggle();

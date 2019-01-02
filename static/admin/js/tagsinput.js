@@ -50,7 +50,7 @@
         this.placeholderText = element.hasAttribute('placeholder') ? this.$element.attr('placeholder') : '';
         this.inputSize = Math.max(1, this.placeholderText.length);
         this.extra = element.hasAttribute('extra') ? this.$element.attr('extra') : '';
-        this.extraList = this.extra ? this.extra.split(',') : [];
+        this.extraList = this.extra ? this.extra.split('|') : [];
         this.$container = $('<div class="bootstrap-tagsinput"></div>');
         this.$input = $('<input type="text" placeholder="' + this.placeholderText + '"/>').appendTo(this.$container);
 
@@ -96,6 +96,7 @@
 
             if (typeof item === "string" && this.$element[0].tagName === 'INPUT') {
                 var delimiter = (self.options.delimiterRegex) ? self.options.delimiterRegex : self.options.delimiter;
+                console.info(delimiter);
                 var items = item.split(delimiter);
                 if (items.length > 1) {
                     for (var i = 0; i < items.length; i++) {
@@ -287,8 +288,8 @@
                 val = $.map(self.items(), function (item) {
                     return self.options.itemValue(item).toString();
                 });
-
-            self.$element.val(val, true);
+            console.info(val);
+            self.$element.val(val.join('|'));
 
             if (self.options.triggerChange)
                 self.$element.trigger('change');

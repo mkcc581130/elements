@@ -9,10 +9,10 @@
     <style>
         .ele{
             width: 1000px;
-            height: 540px;
             padding: 50px 20px;
             color: #ffffff;
             display: none;
+            overflow: hidden;
         }
         .ele_title{
             display: inline-block;
@@ -31,7 +31,7 @@
             width: 80%;
             float: left;
             padding: 10px;
-            min-height: 350px;
+            {#min-height: 350px;#}
             background-color: rgba(0, 127, 127, 0.74);
         }
         .ele_right{
@@ -124,8 +124,8 @@
                     <ul>
                         <li>● 原子序数：{{ ele.atomic_number }}</li>
                         <li>● 相对原子质量：{{ ele.relative_atomic_mass }}</li>
-                        <li>● 原子半径：{{ ele.atomic_radius }}</li>
-                        <li>● 电负性：{{ ele.electronegativity }}</li>
+                        <li>● {% if ele.atomic_radius_type == 1 %}原子共价半径{% elif ele.atomic_radius_type == 2 %}原子范德华半径{% endif %}：{{ ele.atomic_radius }}</li>
+                        <li>● 电负性：{{ ele.electronegativity|safe }}</li>
                         {% for i in ie_list %}
                         <li>● {{ i.label }}：{{ i.energy }}</li>
                         {% endfor %}
@@ -155,36 +155,9 @@
             </div>
         </div>
     </div>
-<div id="menu">
-    <div class="dropup">
-        <div class="dropup-title">原子</div>
-        <ul class="dropup-menu">
-            <li><a href="">2D模型</a></li>
-            <li><a href="">3D模型</a></li>
-            <li><a href="">应用</a></li>
-        </ul>
-    </div>
-    <div class="dropup">
-        <div class="dropup-title">元素</div>
-        <ul class="dropup-menu">
-            <li><a href="{% url 'ele_info' %}">基本资料</a></li>
-            <li><a href="{% url 'hi_ele' %}">嗨元素漫画</a></li>
-            <li><a href="">发现史</a></li>
-            <li><a href="">学者代言</a></li>
-            <li><a href="">应用</a></li>
-        </ul>
-    </div>
-    <div class="dropup">
-        <div class="dropup-title">物质</div>
-        <ul class="dropup-menu">
-            <li><a href="">单质</a></li>
-            <li><a href="">化合物</a></li>
-        </ul>
-    </div>
-    <a href="/" id="return">
-        周期表
-    </a>
-</div>
+<link rel="stylesheet" href="{% static 'iconfont/iconfont.css' %}">
+{% include 'element/bottom_menu.html' %}
+
 <script>
 
     $(function () {
@@ -196,13 +169,15 @@
 <script>
 var camera, scene, renderer;
 var controls;
-
+function appFinishiLoad() {
+	//写要自动运行的JS，如横屏
+	BSL.AppScreen('2'); //横屏
+    }
 
 var objects = [];
 
 init();
 animate();
-
 function init() {
 
 	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
@@ -210,11 +185,11 @@ function init() {
   	var dragging = false;
 	scene = new THREE.Scene();
 	var ele = document.getElementById('ele');
-	ele.style.display='block';
 	var object = new THREE.CSS3DObject( ele );
 	object.position.x = 0;
 	object.position.y = 0;
     scene.add( object );
+
 
 	renderer = new THREE.CSS3DRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );
@@ -238,7 +213,9 @@ function init() {
 	window.addEventListener( 'resize', onWindowResize, false );
 
     render();
-
+    setTimeout(function () {
+        ele.style.display='block';
+    },100)
 }
 
 function transform( camera, duration ) {

@@ -7,10 +7,11 @@ from .models import VisitLog
 def visit_count(func):
     def wrapper(request, *args, **kwargs):
         ip = request.META['REMOTE_ADDR']
-        r = requests.get('http://api.map.baidu.com/location/ip', params={'ip': ip, 'ak': 'AYoKrAimWKyh83BgdbOF8gBAOeBlmlVe'})
+        r = requests.get(url='https://api01.aliyun.venuscn.com/ip', params={'ip': ip},
+                         headers={'Authorization': 'APPCODE 2635ec67fea14b06b064a5b08b9b49f7'})
         content = r.content
         try:
-            location = json.loads(content)['content']['address_detail']['city']
+            location = json.loads(content)['data']['city']
         except KeyError:
             location = '内网IP'
         page = func.__name__

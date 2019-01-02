@@ -150,6 +150,7 @@ def ele_mod(request, action):
         symbol = post.get('symbol')
         atomic_number = post.get('atomic_number')
         relative_atomic_mass = post.get('relative_atomic_mass')
+        atomic_radius_type = post.get('atomic_radius_type')
         atomic_radius = post.get('atomic_radius')
         electronegativity = post.get('electronegativity')
         electronic_affinity = post.get('electronic_affinity')
@@ -163,7 +164,7 @@ def ele_mod(request, action):
         cn_name = post.get('cn_name')
         if action == 'add':
             ele = Elements.objects.create(symbol=symbol, atomic_number=atomic_number, relative_atomic_mass=relative_atomic_mass,
-                                        atomic_radius=atomic_radius, electronegativity=electronegativity, electronic_affinity=electronic_affinity,
+                                        atomic_radius=atomic_radius, atomic_radius_type=atomic_radius_type, electronegativity=electronegativity, electronic_affinity=electronic_affinity,
                                         introduction=introduction, extra=extra, cn_name=cn_name, color=color)
             for i in ie_list:
                 IonizationEnergy.objects.create(ele=ele, energy=i)
@@ -171,7 +172,7 @@ def ele_mod(request, action):
         elif action == 'edit':
             if eid:
                 Elements.objects.filter(pk=eid).update(symbol=symbol, atomic_number=atomic_number, relative_atomic_mass=relative_atomic_mass,
-                                                       atomic_radius=atomic_radius, electronegativity=electronegativity, electronic_affinity=electronic_affinity,
+                                                       atomic_radius=atomic_radius, atomic_radius_type=atomic_radius_type, electronegativity=electronegativity, electronic_affinity=electronic_affinity,
                                                        introduction=introduction, extra=extra, cn_name=cn_name, color=color)
                 IonizationEnergy.objects.filter(ele_id=eid).delete()
                 for i in ie_list:
@@ -214,6 +215,8 @@ def hi_ele_mod(request, action):
     list_name = '嗨元素'
     post = request.POST
     hid = request.GET.get("id")
+    if hid:
+        ele = HiElements.objects.get(pk=hid)
     if post:
         ele_id = post.get('ele_id')
         hielementitems = post.get('hielementitems')
@@ -226,12 +229,10 @@ def hi_ele_mod(request, action):
 
         elif action == 'edit':
             if hid:
-                ele = HiElements.objects.get(pk=hid)
                 HiElementItems.objects.filter(ele_id=ele.ele_id).delete()
                 HiElements.objects.filter(pk=hid).update(ele_id=ele_id, introduction=introduction)
         for i in hii_list:
-            hi_list = re_find('(.*?) (.*?)', i, is_list=True)
-            raise Exception
+            hi_list = re_find('^(.*?) 图片：(.*?)$', i)
             HiElementItems.objects.create(ele_id=ele_id, content=hi_list[0], img=hi_list[1])
 
         return JsonResponse({"code": 0, "msg": action + "_success"})
