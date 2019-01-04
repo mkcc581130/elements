@@ -14,8 +14,8 @@
     <div class="dropdown">
         <div class="dropdown-title">元素</div>
         <ul class="dropdown-menu">
-            <li>基本资料</li>
-            <li>嗨元素漫画</li>
+            <li><a href="{% url 'ele_info' %}?symbol={{ symbol }}">基本资料</a></li>
+            <li><a href="{% url 'hi_ele' %}?symbol={{ symbol }}">嗨元素漫画</a></li>
             <li>发现史</li>
             <li>学者代言</li>
             <li>应用</li>

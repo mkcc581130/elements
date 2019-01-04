@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.hashers import make_password, check_password
 import pytz
 import datetime
-from .models import Elements
+from .models import Elements,HiElements, HiElementItems
 from .comm import visit_count
 # Create your views here.
 
@@ -30,5 +30,10 @@ def ele_info(request):
 
 
 def hi_ele(request):
-    return render(request, 'element/hi_ele.html')
+    symbol = request.GET.get("symbol")
+    hiele = HiElements.objects.get(ele__symbol=symbol)
+    next_ele = Elements.objects.filter(atomic_number=hiele.ele.atomic_number + 1)
+    pre_ele = Elements.objects.filter(atomic_number=hiele.ele.atomic_number - 1)
+    hiele_item = HiElementItems.objects.filter(ele_id=hiele.ele_id)
+    return render(request, 'element/hi_ele.html', locals())
 

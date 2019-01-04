@@ -1,4 +1,5 @@
 {% load static %}
+{% load my_filter %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,101 +8,83 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/comm.css' %}">
     <style>
-        .ele{
+        .hi{
             width: 1000px;
-            height: 540px;
-            padding: 50px 20px;
+            padding: 50px 10px 10px 20px;
             color: #ffffff;
             display: none;
+            position: relative;
+            border: 5px solid #c52c01;
+            background-color: #83abdf;
+            font-size: 20px;
         }
-        .ele_title{
-            display: inline-block;
-            margin-left: 32%;
-            padding: 5px 0 5px 10px ;
-            width: 48%;
-            margin-top: 0;
-            margin-bottom: 0;
-            background-color: rgba(0, 127, 127, 0.518);
-        }
-        .ele_main{
+        .hi-main{
             width: 100%;
-            margin-top: 5px;
+            height: 100%;
+
         }
-        .ele_left{
-            width: 80%;
+        .hi-left{
+            width: 66%;
             float: left;
-            padding: 10px;
-            min-height: 350px;
-            background-color: rgba(0, 127, 127, 0.74);
+            height: 300px;
         }
-        .ele_right{
-            width: 20%;
-            float: right;
-            padding: 50px 0 0 20px;
-        }
-        .ele_info{
-            width: 40%;
-            float: left;
-            padding: 100px 10px 10px 10px;
-        }
-        .ele_info li{
-            line-height: 22px;
-            margin-bottom: 10px;
-        }
-        .ele_intr{
-            width: 60%;
-            float: right;
-            padding: 0 10px 20px 10px;
-        }
-        .ele_intr .title{
-            margin: 20px 50px 20px 0;
-            border-bottom: 1px solid rgba(127, 255, 255, 0.75);
-        }
-        .ele_intr .content{
-            line-height: 36px;
-        }
-        .ele_img{
-            border: 1px solid rgba(127, 255, 255, 0.75);
-        }
-        .ele_extra{
-            font-size: 16px;
-            line-height: 26px;
-            margin-top: 20px;
-            {#color: rgba(127, 255, 255, 0.75);#}
-        }
-        .ele_slice{
-            width: 150px;
-            height: 170px;
-            position: absolute;
-            top: 10px;
-            left: 70px;
-            padding: 10px;
+        .hi-left .title{
+            padding-left: 240px;
+            padding-bottom: 30px;
+            line-height: 34px;
+            text-indent: 40px;
             font-size: 24px;
-            background-color: {% if ele.color %}{{ ele.color }}{% else %}rgb(60, 144, 144){% endif %};
-            transform:rotate(-10deg);
-            border: 1px solid #ffffff;
         }
-        .ele_slice .top{
-            height: 30px;
+        .hi-left ul{
+            padding-right: 20px;
+            display: flex;
+            flex-direction:column;
+            align-items:center;
+            height: 300px;
+
         }
-        .ele_slice .top_left{
+        .hi-left li{
+            width: 100%;
+            height: 50%;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction:column;
+            flex: 1;
+        }
+        .hi-left li .inner{
+        }
+        .hi-left li .img{
             float: left;
+            width: 10%;
+
         }
-        .ele_slice .top_right{
+        .hi-left li .info{
+            float: left;
+            width: 90%;
+        }
+        .hi-left li img{
+            width: 50px;
+            height: 50px;
+
+        }
+        .hi-right{
+            width: 34%;
             float: right;
         }
-        .ele_slice .middle{
-            font-size: 60px;
-            text-align: center;
-            line-height: 80px;
+        .hi-right .title{
+            margin-left: 20px;
+            font-size: 28px;
             font-weight: bold;
-        }
-        .ele_slice .bottom {
-            margin: 0 auto;
-            width: 60px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #ffffff;
             text-align: center;
+        }
+        .hi-right .img{
+            width: 100%;
+            padding: 20px;
+        }
+        .arrow{
+            position: absolute;
+            top: -20px;
+            left: -50px;
         }
     </style>
 </head>
@@ -117,42 +100,62 @@
 
 </div>
 <div class="hi" id="hi">
-
+    <div class="hi-main">
+        <div class="hi-left">
+            <div class="title">{{ hiele.introduction }}</div>
+            <div class="content">
+                <ul>
+                    {% for e in hiele_item %}
+                    <li><div class="inner"><div class="img"><img src="{% static 'img/hi/' %}{{ e.img }}" alt=""></div><div class="info">{{ e.content|safe }}</div><div class="clear"></div></div></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="hi-right">
+            <div class="title">元素使者{{ hiele.ele.atomic_number|two_digits }}：{{ hiele.ele.cn_name }}（{{ symbol }}）</div>
+            <div class="img"><img width="100%" src="{% static 'img/' %}{{ symbol }}_1.JPG" alt=""></div>
+        </div>
+        <div class="clear"></div>
+        <div class="arrow"><img width="300px" src="{% static 'img/hi_arrow.png' %}" alt=""></div>
+    </div>
 </div>
+<link rel="stylesheet" href="{% static 'iconfont/iconfont.css' %}">
 {% include 'element/bottom_menu.html' %}
+
 <script>
-function appFinishiLoad() {
-	//写要自动运行的JS，如横屏
-	BSL.AppScreen('2'); //横屏
-    }
+
     $(function () {
-        $('.dropup-title').click(function () {
-            $(this).next().toggle();
-        })
+        $('.dropdown-title').on('click',function () {
+            $(this).next().toggleClass('open');
+        }).on('blur', function () {
+            $(this).next().toggleClass('open');
+        });
     })
 </script>
 <script>
 var camera, scene, renderer;
 var controls;
-
+function appFinishiLoad() {
+	//写要自动运行的JS，如横屏
+	BSL.AppScreen('2'); //横屏
+    }
 
 var objects = [];
 
 init();
 animate();
-
 function init() {
 
 	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
-	camera.position.z = 800;
+	camera.position.z = 900;
   	var dragging = false;
 	scene = new THREE.Scene();
-	var ele = document.getElementById('ele');
-	ele.style.display='block';
+	var ele = document.getElementById('hi');
 	var object = new THREE.CSS3DObject( ele );
 	object.position.x = 0;
 	object.position.y = 0;
     scene.add( object );
+
 
 	renderer = new THREE.CSS3DRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );
@@ -176,7 +179,9 @@ function init() {
 	window.addEventListener( 'resize', onWindowResize, false );
 
     render();
-
+    setTimeout(function () {
+        ele.style.display='block';
+    },100)
 }
 
 function transform( camera, duration ) {
