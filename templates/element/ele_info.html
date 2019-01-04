@@ -161,9 +161,11 @@
 <script>
 
     $(function () {
-        $('.dropup-title').click(function () {
-            $(this).next().toggle();
-        })
+        $('.dropdown-title').on('click',function () {
+            $(this).next().toggleClass('open');
+        }).on('blur', function () {
+            $(this).next().toggleClass('open');
+        });
     })
 </script>
 <script>
