@@ -22,4 +22,5 @@ urlpatterns = [
     re_path('^$', main_views.index, name='index'),
     re_path('^ele_info/$', main_views.ele_info, name='ele_info'),
     re_path('^hi_ele/$', main_views.hi_ele, name='hi_ele'),
+    re_path('^ele_history/$', main_views.ele_history, name='ele_history'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

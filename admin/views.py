@@ -2,10 +2,10 @@ import json
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login, logout
-
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 
-from main.models import Elements, IonizationEnergy, VisitLog, HiElements, HiElementItems
+from main.models import Elements, IonizationEnergy, VisitLog, HiElements, HiElementItems, ElementHistory
 from main.comm import re_find
 
 
@@ -127,7 +127,7 @@ def ele_list(request):
     if page and limit:
         page = int(page)
         limit = int(limit)
-        elements_list = Elements.objects.all().values('id', 'cn_name', 'symbol')
+        elements_list = Elements.objects.all().values('atomic_number', 'cn_name', 'symbol')
         count = elements_list.count()
         elements_list = elements_list[limit*(page-1): limit*page]
         return JsonResponse({"code": 0, "msg": "", "count": count, "data": list(elements_list)})
@@ -196,7 +196,7 @@ def hi_ele_list(request):
     if page and limit:
         page = int(page)
         limit = int(limit)
-        hi_element_list = HiElements.objects.all().values('id', 'ele__cn_name', 'introduction')
+        hi_element_list = HiElements.objects.all().values('id', 'ele__atomic_number', 'ele__cn_name', 'introduction')
         count = hi_element_list.count()
         hi_element_list = hi_element_list[limit * (page - 1): limit * page]
         return JsonResponse({"code": 0, "msg": "", "count": count, "data": list(hi_element_list)})
@@ -246,3 +246,54 @@ def hi_ele_mod(request, action):
             hielementitems = '|'.join(hielementitems_list)
     elements_list = Elements.objects.all()
     return render(request, 'admin/hi_ele_form.html', locals())
+
+
+def ele_history_list(request):
+    list_name = '元素发现史'
+    page = request.GET.get('page')
+    limit = request.GET.get('limit')
+    if page and limit:
+        page = int(page)
+        limit = int(limit)
+        elements_list = Elements.objects.all().values('id').annotate(count=Count('elementhistory')).values('id', 'atomic_number', 'cn_name', 'count')
+        count = elements_list.count()
+        elements_list = elements_list[limit * (page - 1): limit * page]
+        return JsonResponse({"code": 0, "msg": "", "count": count, "data": list(elements_list)})
+    # 删除操作
+    del_data = request.GET.getlist('del_data[]')
+    if del_data:
+        for i in del_data:
+            e = ElementHistory.objects.filter(ele_id=i)
+            if e:
+                e.delete()
+        return JsonResponse({"code": 0, "msg": "del_success"})
+    return render(request, 'admin/ele_history_list.html', locals())
+
+
+def ele_history_mod(request, action):
+    list_name = '嗨元素'
+    post = request.POST
+    eid = request.GET.get("id")
+    if post:
+        elementhistory = post.get('elementhistory')
+        ehi_list = []
+        if elementhistory:
+            ehi_list = elementhistory.split('|')
+        if action == 'edit':
+            if eid:
+                ElementHistory.objects.filter(ele_id=eid).delete()
+            for i in ehi_list:
+                eh_list = re_find('^(.*?) 年份：(.*?) 科学家：(.*?) 图片：(.*?)$', i)
+                ElementHistory.objects.create(ele_id=eid, introduction=eh_list[0], year=eh_list[1], scientist=eh_list[2]
+                                              , img=eh_list[3])
+
+        return JsonResponse({"code": 0, "msg": action + "_success"})
+    if action == 'edit':
+        if eid:
+            ehi_list = ElementHistory.objects.filter(ele_id=eid)
+            elementhistory_list = []
+            for i in ehi_list:
+                img = i.img if i.img else ''
+                elementhistory_list.append(i.introduction + ' 年份：' + str(i.year) + ' 科学家：' + i.scientist + ' 图片：' + img)
+            elementhistory = '|'.join(elementhistory_list)
+    return render(request, 'admin/ele_history_form.html', locals())

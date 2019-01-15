@@ -74,3 +74,19 @@ class HiElementItems(models.Model):
     class Meta:
         verbose_name = "嗨元素条目"
         verbose_name_plural = "嗨元素条目列表"
+
+
+class ElementHistory(models.Model):
+    ele = models.ForeignKey(Elements, verbose_name="对应元素", on_delete=None)
+    year = models.IntegerField(verbose_name="年份")
+    scientist = models.CharField(max_length=100, verbose_name="科学家")
+    img = models.TextField(verbose_name="图片", blank=True, null=True)
+    introduction = models.TextField(verbose_name="介绍")
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+
+    def __unicode__(self):
+        return self.ele.cn_name + '元素发现史'
+
+    class Meta:
+        verbose_name = "元素发现史"
+        verbose_name_plural = "元素发现史列表"
