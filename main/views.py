@@ -41,7 +41,10 @@ def hi_ele(request):
 def ele_history(request):
     symbol = request.GET.get("symbol")
     ele = Elements.objects.get(symbol=symbol)
-    hisele = ElementHistory.objects.filter(ele_id=ele.id).order_by('year')
+    hisele = ElementHistory.objects.filter(ele_id=ele.id).order_by('sort')
+    for h in hisele:
+        if h.img:
+            h.img = h.img.split('，')
     next_ele = Elements.objects.filter(atomic_number=ele.atomic_number + 1)
     pre_ele = Elements.objects.filter(atomic_number=ele.atomic_number - 1)
     return render(request, 'element/ele_history.html', locals())

@@ -18,6 +18,7 @@ import admin.views as admin_views
 urlpatterns = [
     re_path('^$', admin_views.index, name='admin'),
     re_path('^login/$', admin_views.login_view, name='login'),
+    re_path('^update_p/$', admin_views.update_p, name='update_p'),
     re_path('^console/$', admin_views.console, name='console'),
     re_path('^ele_list/$', admin_views.ele_list, name='ele_list'),
     re_path('^ele_list/(edit|add)+/$', admin_views.ele_mod, name='ele_mod'),

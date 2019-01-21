@@ -119,6 +119,12 @@ def console(request):
         all_ip = VisitLog.objects.raw("select 1 as id, count(*) as count from(select ip from main_visitlog group by ip) a")[0].count
         return render(request, 'admin/console.html', locals())
 
+def update_p(request):
+    his_list = ElementHistory.objects.all()
+    for h in his_list:
+        h.introduction = '<p>' + h.introduction.replace('<br>', '</p><p>') + '</p>'
+        h.save()
+    return HttpResponse('OK')
 
 def ele_list(request):
     list_name = '元素'
@@ -190,6 +196,7 @@ def ele_mod(request, action):
 
 
 def hi_ele_list(request):
+
     list_name = '嗨元素'
     page = request.GET.get('page')
     limit = request.GET.get('limit')
@@ -283,9 +290,9 @@ def ele_history_mod(request, action):
             if eid:
                 ElementHistory.objects.filter(ele_id=eid).delete()
             for i in ehi_list:
-                eh_list = re_find('^(.*?) 年份：(.*?) 科学家：(.*?) 图片：(.*?)$', i)
+                eh_list = re_find('^(.*?) 年份：(.*?) 科学家：(.*?) 图片：(.*?) 排序：(.*?)$', i)
                 ElementHistory.objects.create(ele_id=eid, introduction=eh_list[0], year=eh_list[1], scientist=eh_list[2]
-                                              , img=eh_list[3])
+                                              , img=eh_list[3], sort=eh_list[4])
 
         return JsonResponse({"code": 0, "msg": action + "_success"})
     if action == 'edit':
@@ -294,6 +301,7 @@ def ele_history_mod(request, action):
             elementhistory_list = []
             for i in ehi_list:
                 img = i.img if i.img else ''
-                elementhistory_list.append(i.introduction + ' 年份：' + str(i.year) + ' 科学家：' + i.scientist + ' 图片：' + img)
+                elementhistory_list.append(i.introduction + ' 年份：' + str(i.year) + ' 科学家：' + i.scientist + ' 图片：'
+                                           + img + ' 排序：' + str(i.sort))
             elementhistory = '|'.join(elementhistory_list)
     return render(request, 'admin/ele_history_form.html', locals())

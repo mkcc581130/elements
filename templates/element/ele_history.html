@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML5响应式垂直时间轴</title>
+    <title>{{ ele.symbol }}--元素发现史</title>
 
     <!--可无视-->
     <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -454,6 +454,23 @@
         }
         .container{
             position: relative;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        @media (min-width: 768px) {
+          .container {
+            width: 750px;
+          }
+        }
+        @media (min-width: 992px) {
+          .container {
+            width: 970px;
+          }
+        }
+        @media (min-width: 1200px) {
+          .container {
+            width: 1170px;
+          }
         }
         .clever{
             font-size: 40px;
@@ -464,6 +481,7 @@
             -webkit-border-radius: 10px;
             -moz-border-radius: 10px;
             border-radius: 10px;
+            padding: 0 20px;
         }
         .clever a{
             color: #cca872;
@@ -484,6 +502,7 @@
             width: 1170px;
           }
         }
+
         .symbol{
             font-size: 34px;
             text-align: center;
@@ -503,6 +522,17 @@
             font-size: 16px;
             line-height: 24px;
             text-indent: 32px;
+            margin-bottom: 74px;
+            overflow: auto;
+        }
+        .main-timeline .img-bottom{
+            width: 100%;
+
+            padding: 10px 0;
+        }
+        .main-timeline .img-bottom img{
+            height: 100px;
+            margin-right: 20px;
         }
         .main-timeline .title{
             font-size: 28px;
@@ -520,7 +550,7 @@
                 <div class="clever">
                     {% if pre_ele %}<div class="" style="float: left;"><a href="?symbol={{ pre_ele.0.symbol }}"><</a></div>{% endif %}聪明的头脑{% if next_ele %}<div class="" style="float: right;"><a href="?symbol={{ next_ele.0.symbol }}">></a></div>{% endif %}
                 </div>
-                <div class="symbol">{{ symbol }}</div>
+                <div class="symbol">{{ ele.cn_name }}（{{ symbol }}）的发现史</div>
             </div>
             <div style="height: 140px;"></div>
             <div class="col-md-12">
@@ -529,13 +559,22 @@
                     {% for h in hisele %}
                     <div class="timeline">
                         <div class="timeline-content">
-                            {% if h.img %}<div class="circle"><span><img height="100%" src="/static/img/history/{{ h.img }}" alt=""></span></div>{% endif %}
-                            <div class="content" {% if not h.img %}style="width: 100%"{% endif %}>
+                            <div class="circle" {% if not h.img %}style="visibility: hidden"{% endif %}><span>{% if h.img %}<img height="100%" src="/static/img/history/{{ h.img.0 }}" alt="">{% endif %}</span></div>
+                            <div class="content">
                                 <span class="year">{{ h.year }}</span>
                                 <h4 class="title">{{ h.scientist }}</h4>
-                                <p class="description">
-                                    {{ h.introduction }}
-                                </p>
+                                <div class="description">
+                                    {{ h.introduction|safe }}
+
+                                    <div class="img-bottom">
+                                        {% for i in h.img %}
+                                            {% if not forloop.counter == 1 %}
+                                                <img src="/static/img/history/{{ i }}" alt="">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
                                 <div class="icon"><span></span></div>
                             </div>
                         </div>
