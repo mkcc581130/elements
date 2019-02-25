@@ -5,8 +5,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 
-from main.models import Elements, IonizationEnergy, VisitLog, HiElements, HiElementItems, ElementHistory
+from main.models import Elements, IonizationEnergy, VisitLog, HiElements, HiElementItems, ElementHistory, \
+    ElementRepresentative, ElementRepresentativeItem, ElementIsotope, IMG
 from main.comm import re_find
+from django.views.decorators.csrf import csrf_exempt
 
 
 def login_view(request):
@@ -133,7 +135,7 @@ def ele_list(request):
     if page and limit:
         page = int(page)
         limit = int(limit)
-        elements_list = Elements.objects.all().values('atomic_number', 'cn_name', 'symbol')
+        elements_list = Elements.objects.all().values('atomic_number', 'cn_name', 'symbol', 'id')
         count = elements_list.count()
         elements_list = elements_list[limit*(page-1): limit*page]
         return JsonResponse({"code": 0, "msg": "", "count": count, "data": list(elements_list)})
@@ -168,10 +170,11 @@ def ele_mod(request, action):
             ie_list = ionizationenergy.split('|')
         extra = post.get('extra')
         cn_name = post.get('cn_name')
+        en_name = post.get('en_name')
         if action == 'add':
             ele = Elements.objects.create(symbol=symbol, atomic_number=atomic_number, relative_atomic_mass=relative_atomic_mass,
                                         atomic_radius=atomic_radius, atomic_radius_type=atomic_radius_type, electronegativity=electronegativity, electronic_affinity=electronic_affinity,
-                                        introduction=introduction, extra=extra, cn_name=cn_name, color=color)
+                                        introduction=introduction, extra=extra, cn_name=cn_name, en_name=en_name, color=color)
             for i in ie_list:
                 IonizationEnergy.objects.create(ele=ele, energy=i)
             return JsonResponse({"code": 0, "msg": "add_success"})
@@ -179,7 +182,7 @@ def ele_mod(request, action):
             if eid:
                 Elements.objects.filter(pk=eid).update(symbol=symbol, atomic_number=atomic_number, relative_atomic_mass=relative_atomic_mass,
                                                        atomic_radius=atomic_radius, atomic_radius_type=atomic_radius_type, electronegativity=electronegativity, electronic_affinity=electronic_affinity,
-                                                       introduction=introduction, extra=extra, cn_name=cn_name, color=color)
+                                                       introduction=introduction, extra=extra, cn_name=cn_name, en_name=en_name, color=color)
                 IonizationEnergy.objects.filter(ele_id=eid).delete()
                 for i in ie_list:
                     IonizationEnergy.objects.create(ele_id=eid, energy=i)
@@ -228,16 +231,18 @@ def hi_ele_mod(request, action):
         ele_id = post.get('ele_id')
         hielementitems = post.get('hielementitems')
         introduction = post.get('introduction')
+        light_color = post.get('light_color')
+        dark_color = post.get('dark_color')
         hii_list = []
         if hielementitems:
             hii_list = hielementitems.split('|')
         if action == 'add':
-            HiElements.objects.create(ele_id=ele_id, introduction=introduction)
+            HiElements.objects.create(ele_id=ele_id, introduction=introduction, dark_color=dark_color, light_color=light_color)
 
         elif action == 'edit':
             if hid:
                 HiElementItems.objects.filter(ele_id=ele.ele_id).delete()
-                HiElements.objects.filter(pk=hid).update(ele_id=ele_id, introduction=introduction)
+                HiElements.objects.filter(pk=hid).update(ele_id=ele_id, introduction=introduction, dark_color=dark_color, light_color=light_color)
         for i in hii_list:
             hi_list = re_find('^(.*?) 图片：(.*?)$', i)
             HiElementItems.objects.create(ele_id=ele_id, content=hi_list[0], img=hi_list[1])
@@ -278,7 +283,7 @@ def ele_history_list(request):
 
 
 def ele_history_mod(request, action):
-    list_name = '嗨元素'
+    list_name = '元素发现史'
     post = request.POST
     eid = request.GET.get("id")
     if post:
@@ -305,3 +310,122 @@ def ele_history_mod(request, action):
                                            + img + ' 排序：' + str(i.sort))
             elementhistory = '|'.join(elementhistory_list)
     return render(request, 'admin/ele_history_form.html', locals())
+
+
+def ele_representative_list(request):
+    list_name = '元素代言人'
+    page = request.GET.get('page')
+    limit = request.GET.get('limit')
+    if page and limit:
+        page = int(page)
+        limit = int(limit)
+        elements_list = ElementRepresentative.objects.all().values('id', 'ele__cn_name', 'pro_name', 'country')
+        count = elements_list.count()
+        elements_list = elements_list[limit * (page - 1): limit * page]
+        return JsonResponse({"code": 0, "msg": "", "count": count, "data": list(elements_list)})
+    # 删除操作
+    del_data = request.GET.getlist('del_data[]')
+    if del_data:
+        for i in del_data:
+            e = ElementRepresentative.objects.filter(pk=i)
+            if e:
+                e.delete()
+        return JsonResponse({"code": 0, "msg": "del_success"})
+    return render(request, 'admin/ele_representative_list.html', locals())
+
+
+def ele_representative_mod(request, action):
+    list_name = '元素代言人'
+    post = request.POST
+    rid = request.GET.get("id")
+    if post:
+        ele_id = post.get('ele_id')
+        pro_name = post.get('pro_name')
+        university = post.get('university')
+        country = post.get('country')
+        duty = post.get('duty')
+        top_color = post.get('top_color')
+        main_color = post.get('main_color')
+        title_list = post.getlist('title')
+        img_info_list = post.getlist('img_info')
+        img_type_list = post.getlist('img_type')
+        introduction_list = post.getlist('introduction')
+        list_len = len(title_list)
+        if action == 'add':
+            er = ElementRepresentative.objects.create(ele_id=ele_id, duty=duty, pro_name=pro_name, university=university
+                                                      , country=country, main_color=main_color, top_color=top_color)
+            for i in range(list_len):
+                ElementRepresentativeItem.objects.create(representative_id=er.id, title=title_list[i],
+                                                         img_info=img_info_list[i], img_type=img_type_list[i],
+                                                         introduction=introduction_list[i])
+        elif action == 'edit':
+            if rid:
+                er = ElementRepresentative.objects.filter(pk=rid).update(ele_id=ele_id, duty=duty, pro_name=pro_name
+                                                                         , university=university, country=country,
+                                                                         main_color=main_color, top_color=top_color)
+                ElementRepresentativeItem.objects.filter(representative_id=rid).delete()
+                for i in range(list_len):
+                    ElementRepresentativeItem.objects.create(representative_id=rid, title=title_list[i],
+                                                             img_info=img_info_list[i], img_type=img_type_list[i],
+                                                             introduction=introduction_list[i])
+        return JsonResponse({"code": 0, "msg": action + "_success"})
+    if action == 'edit':
+        if rid:
+            ere = ElementRepresentative.objects.get(id=rid)
+            item_list = ElementRepresentativeItem.objects.filter(representative_id=rid)
+    elements_list = Elements.objects.all()
+    return render(request, 'admin/ele_representative_form.html', locals())
+
+
+def ele_isotope_list(request):
+    list_name = '元素代言人'
+    page = request.GET.get('page')
+    limit = request.GET.get('limit')
+    if page and limit:
+        page = int(page)
+        limit = int(limit)
+        elements_list = ElementIsotope.objects.all().values('id', 'ele__symbol', 'guide')
+        count = elements_list.count()
+        elements_list = elements_list[limit * (page - 1): limit * page]
+        return JsonResponse({"code": 0, "msg": "", "count": count, "data": list(elements_list)})
+    # 删除操作
+    del_data = request.GET.getlist('del_data[]')
+    if del_data:
+        for i in del_data:
+            e = ElementIsotope.objects.filter(pk=i)
+            if e:
+                e.delete()
+        return JsonResponse({"code": 0, "msg": "del_success"})
+    return render(request, 'admin/ele_isotope_list.html', locals())
+
+
+def ele_isotope_mod(request, action):
+    list_name = '同位素'
+    post = request.POST
+    iid = request.GET.get("id")
+    if post:
+        ele_id = post.get('ele_id')
+        stable_isotope = post.get('stable_isotope')
+        guide = post.get('guide')
+        introduction = post.get('introduction')
+        if action == 'add':
+            ElementIsotope.objects.create(ele_id=ele_id, stable_isotope=stable_isotope, guide=guide,
+                                          introduction=introduction)
+        elif action == 'edit':
+            if iid:
+                er = ElementIsotope.objects.filter(pk=iid).update(ele_id=ele_id, stable_isotope=stable_isotope,
+                                                                  guide=guide, introduction=introduction)
+        return JsonResponse({"code": 0, "msg": action + "_success"})
+    if action == 'edit':
+        if iid:
+            eie = ElementIsotope.objects.get(id=iid)
+    elements_list = Elements.objects.all()
+    return render(request, 'admin/ele_isotope_form.html', locals())
+
+
+@csrf_exempt
+def upload_img(request):
+    source = request.GET.get("source")
+    new_img = IMG(img=request.FILES.get('file'), name=request.FILES.get('file').name, source=source)
+    new_img.save()
+    return HttpResponse(json.dumps({"errno": 0, "data": [new_img.img.url]}))

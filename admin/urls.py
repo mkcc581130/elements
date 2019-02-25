@@ -17,6 +17,7 @@ from django.urls import path, re_path
 import admin.views as admin_views
 urlpatterns = [
     re_path('^$', admin_views.index, name='admin'),
+    re_path('^upload_img/$', admin_views.upload_img, name='upload_img'),
     re_path('^login/$', admin_views.login_view, name='login'),
     re_path('^update_p/$', admin_views.update_p, name='update_p'),
     re_path('^console/$', admin_views.console, name='console'),
@@ -26,4 +27,8 @@ urlpatterns = [
     re_path('^hi_ele_list/(edit|add)+/$', admin_views.hi_ele_mod, name='hi_ele_mod'),
     re_path('^ele_history_list/$', admin_views.ele_history_list, name='ele_history_list'),
     re_path('^ele_history_list/(edit|add)+/$', admin_views.ele_history_mod, name='ele_history_mod'),
+    re_path('^ele_representative_list/$', admin_views.ele_representative_list, name='ele_representative_list'),
+    re_path('^ele_representative_list/(edit|add)+/$', admin_views.ele_representative_mod, name='ele_representative_mod'),
+    re_path('^ele_isotope_list/$', admin_views.ele_isotope_list, name='ele_isotope_list'),
+    re_path('^ele_isotope_list/(edit|add)+/$', admin_views.ele_isotope_mod, name='ele_isotope_mod'),
 ]

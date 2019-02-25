@@ -23,4 +23,7 @@ urlpatterns = [
     re_path('^ele_info/$', main_views.ele_info, name='ele_info'),
     re_path('^hi_ele/$', main_views.hi_ele, name='hi_ele'),
     re_path('^ele_history/$', main_views.ele_history, name='ele_history'),
+    re_path('^ele_representative/$', main_views.ele_representative, name='ele_representative'),
+    re_path('^ele_isotope/$', main_views.ele_isotope, name='ele_isotope'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

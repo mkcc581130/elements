@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑{{ list_name }}列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="{% static 'admin/layui/css/layui.css' %}" media="all">
+    <link rel="stylesheet" href="{% static 'admin/css/admin.css' %}" media="all">
+    <link rel="stylesheet" href="{% static 'admin/css/tagsinput.css' %}" media="all">
+    <link rel="stylesheet" href="{% static 'admin/css/wangEditor.min.css' %}" media="all">
+    <style>
+        .layui-input-block {
+            padding-right: 50px;
+        }
+        .layui-inline{
+            display: inline-flex;
+            justify-content:center;
+            align-items:Center;
+        }
+        .layui-textarea{
+            min-height: 50px;
+        }
+        .layui-form-select{
+            z-index: 10999;
+        }
+        #editor{
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<form method="post" enctype="multipart/form-data" class="layui-form" id="layuiadmin-form-useradmin"
+      style="padding: 20px 0 0 0;">
+{% csrf_token %}
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">所属元素</label>
+            <div class="layui-input-inline">
+                <select name="ele_id" id="ele_id" lay-verify="required">
+                    <option value="">请选择元素</option>
+                    {% for e in elements_list %}
+                        <option value="{{ e.id }}"  {% if eie.ele_id == e.id %}selected{% endif %}>{{ e.cn_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">介绍</label>
+        <div class="layui-input-block">
+            <textarea name="guide" id="guide" class="layui-textarea">{% if eie.guide %}{{ eie.guide }}{% endif %}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">稳定同位素</label>
+        <div class="layui-input-block tagsinput-primary">
+            <input type="text" name="stable_isotope" class="tagsinput" extra="相对原子质量|摩尔分数" value="{% if eie.stable_isotope %}{{ eie.stable_isotope }}{% endif %}" placeholder="输入稳定同位素回车" data-role="tagsinput">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">内容</label>
+        <div class="layui-input-block">
+            <div id="editor">
+                <div>{% if eie.introduction %}{{ eie.introduction|safe }}{% endif %}</div>
+
+            </div>
+        </div>
+        <textarea name="introduction" id="introduction" style="display: none">{% if eie.introduction %}{{ eie.introduction|safe }}{% endif %}</textarea>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <button class="layui-btn layuiadmin-btn-useradmin" lay-submit id="user-mod-submit" lay-filter="user-mod-submit">
+            提交
+        </button>
+    </div>
+</form>
+<script src="{% static 'admin/layui/layui.js' %}"></script>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script src="{% static 'admin/js/tagsinput.js' %}"></script>
+<script src="{% static 'admin/js/wangEditor.min.js' %}"></script>
+<script>
+    layui.config({
+        base: '{% static 'admin' %}/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'colorpicker'], function () {
+        var $ = layui.$, form = layui.form, colorpicker=layui.colorpicker;
+        var E = window.wangEditor;
+        var editor = new E('#editor');
+        var $text = $('#introduction');
+        editor.customConfig.onchange = function (html) {
+            // 监控变化，同步更新到 textarea
+            $text.html(html);
+        }
+        // 配置服务器端地址
+        editor.customConfig.uploadImgServer = '/admin/upload_img/?source=isotope';
+        editor.customConfig.uploadFileName = 'file';
+        editor.create();
+    })
+</script>
+</body>
+</html>

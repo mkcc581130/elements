@@ -52,6 +52,25 @@
             <textarea name="introduction" id="introduction" class="layui-textarea">{% if ele.introduction %}{{ ele.introduction }}{% endif %}</textarea>
         </div>
     </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">深色</label>
+            <div class="layui-input-inline" style="width: 130px;">
+              <input type="text" name="dark_color" value="{% if ele.dark_color %}{{ ele.dark_color }}{% else %}#21548d{% endif %}" placeholder="请选择颜色" class="layui-input" id="color">
+            </div>
+            <div class="layui-inline" style="left: -11px;top: 5px;">
+              <div id="colorpicker1"></div>
+            </div>
+        </div><div class="layui-inline">
+            <label class="layui-form-label">浅色</label>
+            <div class="layui-input-inline" style="width: 130px;">
+              <input type="text" name="light_color" value="{% if ele.light_color %}{{ ele.light_color }}{% else %}#2f97a8{% endif %}" placeholder="请选择颜色" class="layui-input" id="color">
+            </div>
+            <div class="layui-inline" style="left: -11px;top: 5px;">
+              <div id="colorpicker2"></div>
+            </div>
+        </div>
+    </div>
     <div class="layui-form-item layui-hide">
         <button class="layui-btn layuiadmin-btn-useradmin" lay-submit id="user-mod-submit" lay-filter="user-mod-submit">
             提交
@@ -66,9 +85,22 @@
         base: '{% static 'admin' %}/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'form'], function () {
-        var $ = layui.$, form = layui.form;
-
+    }).use(['index', 'form', 'colorpicker'], function () {
+        var $ = layui.$, form = layui.form, colorpicker = layui.colorpicker;
+        colorpicker.render({
+          elem: '#colorpicker1'
+            ,color: '{% if ele.dark_color %}{{ ele.dark_color }}{% else %}#21548d{% endif %}'
+          ,done: function(color){
+            $('#color').val(color);
+          }
+        });
+        colorpicker.render({
+          elem: '#colorpicker2'
+            ,color: '{% if ele.light_color %}{{ ele.light_color }}{% else %}#2f97a8{% endif %}'
+          ,done: function(color){
+            $('#color').val(color);
+          }
+        });
     })
 </script>
 </body>

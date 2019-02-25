@@ -53,9 +53,9 @@
             url: location.pathname, // request get: ?page=1&limit=30 response: {code: 0,msg: "",count: 1000,data: []}
             cols: [[{type: "checkbox", fixed: "left"},
                 {field: "id", title: "id", sort: !0},
-                {field: "ele__atomic_number", title: "原子序数"},
-                {field: "ele__cn_name", title: "元素名称", align: "center"},
-                {field: "introduction", title: "介绍", align: "center"},
+                {field: "ele__cn_name", title: "元素名称", sort: !0},
+                {field: "pro_name", title: "教授名称", align: "center"},
+                {field: "country", title: "国家", align: "center"},
                 {title: "操作", width: 170, align: "center", toolbar: "#table-useradmin-webuser",fixed: "right"}]],
             page: !0,
             limit: 15,
@@ -89,7 +89,7 @@
                     title: "编辑{{ list_name }}",
                     content: location.pathname + "edit?id=" + e.data['id'],
                     maxmin: !0,
-                    area: ["1000px", "550px"],
+                    area: ["1000px", "605px"],
                     btn: ["保存", "取消"],
                     shadeClose: true,
                     yes: function (e, t) {
@@ -106,14 +106,6 @@
                         n.trigger("click");
                     }
                 })
-            } else if ("url" === e.event) {
-                layer.open({
-                    type: 2,
-                    title: "跳转url",
-                    content: e.data['url'],
-                    maxmin: !0,
-                    area: ["1000px", "605px"],
-                });
             }
         });
         //监听搜索
@@ -135,6 +127,7 @@
                 $('.layuiadmin-submit-btn').click();
             }
         }
+
         //事件
         var active = {
             batchdel: function () {

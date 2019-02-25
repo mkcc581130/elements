@@ -1,3 +1,4 @@
+{% load static %}
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
@@ -6,9 +7,10 @@
     <title>{{ ele.symbol }}--元素发现史</title>
 
     <!--可无视-->
-    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
+    <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <style type="text/css">
         body, html {
             font-size: 100%;
@@ -488,17 +490,18 @@
             text-decoration: none;
         }
         @media (min-width: 768px) {
-          .clever {
+          .clever,.navbar {
             width: 750px;
           }
+
         }
         @media (min-width: 992px) {
-          .clever {
+          .clever,.navbar {
             width: 970px;
           }
         }
         @media (min-width: 1200px) {
-          .clever {
+          .clever,.navbar {
             width: 1170px;
           }
         }
@@ -538,6 +541,12 @@
             font-size: 28px;
             margin-bottom: 15px;
         }
+        .navbar{
+            margin: 0 auto;
+         }
+        .navbar-nav>li>a {
+        color: #a6a6a6;
+        }
     </style>
 
 </head>
@@ -545,14 +554,59 @@
 
 <div class="demo">
     <div class="container">
+
         <div class="row">
             <div class="col-md-12 header">
+            <nav class="navbar" role="navigation">
+                <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#" style="color: #cca872">元素发现史</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                原子
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">2D模型</a></li>
+                                <li><a href="#">3D模型</a></li>
+                                <li><a href="#">应用</a></li>
+                            </ul>
+                        </li><li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                元素
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'ele_info' %}?symbol={{ symbol }}">基本资料</a></li>
+                                <li><a href="{% url 'hi_ele' %}?symbol={{ symbol }}">嗨元素漫画</a></li>
+                                <li><a href="{% url 'ele_history' %}?symbol={{ symbol }}">发现史</a></li>
+                                <li><a href="{% url 'ele_representative' %}?symbol={{ symbol }}">学者代言</a></li>
+                                <li><a href="{% url 'ele_isotope' %}?symbol={{ symbol }}">同位素</a></li>
+                            </ul>
+                        </li><li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                物质
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">单质</a></li>
+                                <li><a href="#">化合物</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="/">元素周期表</a></li>
+                    </ul>
+                </div>
+                </div>
+            </nav>
                 <div class="clever">
                     {% if pre_ele %}<div class="" style="float: left;"><a href="?symbol={{ pre_ele.0.symbol }}"><</a></div>{% endif %}聪明的头脑{% if next_ele %}<div class="" style="float: right;"><a href="?symbol={{ next_ele.0.symbol }}">></a></div>{% endif %}
                 </div>
                 <div class="symbol">{{ ele.cn_name }}（{{ symbol }}）的发现史</div>
             </div>
-            <div style="height: 140px;"></div>
+            <div style="height: 190px;"></div>
             <div class="col-md-12">
 
                 <div class="main-timeline">

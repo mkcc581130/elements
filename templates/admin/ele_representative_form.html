@@ -1,0 +1,228 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑{{ list_name }}列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="{% static 'admin/layui/css/layui.css' %}" media="all">
+    <link rel="stylesheet" href="{% static 'admin/css/admin.css' %}" media="all">
+    <link rel="stylesheet" href="{% static 'admin/css/tagsinput.css' %}" media="all">
+    <style>
+        .layui-input-block {
+            padding-right: 50px;
+        }
+        .layui-inline{
+            display: inline-flex;
+            justify-content:center;
+            align-items:Center;
+        }
+        .add-btn{
+            margin: 0 0 20px 20px;
+        }
+        .layui-colla-title{
+            background-color: #fff;
+        }
+        .layui-textarea{
+            resize: none;
+        }
+        .layui-colla-item{
+            position: relative;
+        }
+        .layui-colla-del{
+            color: red;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<form method="post" enctype="multipart/form-data" class="layui-form" id="layuiadmin-form-useradmin"
+      style="padding: 20px 0 0 0;">
+{% csrf_token %}
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">所属元素</label>
+            <div class="layui-input-inline">
+                <select name="ele_id" id="ele_id" lay-verify="required">
+                    <option value="">请选择元素</option>
+                    {% for e in elements_list %}
+                        <option value="{{ e.id }}"  {% if ere.ele_id == e.id %}selected{% endif %}>{{ e.cn_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">教授名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="pro_name" value="{% if ere.pro_name %}{{ ere.pro_name }}{% endif %}" lay-verify="required" placeholder="请输入教授名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">大学</label>
+            <div class="layui-input-inline">
+                <input type="text" name="university" value="{% if ere.university %}{{ ere.university }}{% endif %}" lay-verify="required" placeholder="请输入大学" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">国家</label>
+            <div class="layui-input-inline">
+                <input type="text" name="country" value="{% if ere.country %}{{ ere.country }}{% endif %}" lay-verify="required" placeholder="请输入国家" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">导航栏颜色</label>
+            <div class="layui-input-inline" style="width: 130px;">
+              <input type="text" name="top_color" value="{% if ere.top_color %}{{ ere.top_color }}{% else %}#ce1932{% endif %}" placeholder="请选择颜色" class="layui-input" id="color">
+            </div>
+            <div class="layui-inline" style="left: -11px;top: 5px;">
+              <div id="colorpicker1"></div>
+            </div>
+        </div><div class="layui-inline">
+            <label class="layui-form-label">主体颜色</label>
+            <div class="layui-input-inline" style="width: 130px;">
+              <input type="text" name="main_color" value="{% if ere.main_color %}{{ ere.main_color }}{% else %}#03277b{% endif %}" placeholder="请选择颜色" class="layui-input" id="color">
+            </div>
+            <div class="layui-inline" style="left: -11px;top: 5px;">
+              <div id="colorpicker2"></div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">任职情况</label>
+        <div class="layui-input-block tagsinput-primary">
+            <input type="text" name="duty" class="tagsinput" value="{% if ere.duty %}{{ ere.duty }}{% endif %}" placeholder="请输入任职情况" data-role="tagsinput">
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <button class="layui-btn layuiadmin-btn-useradmin" lay-submit id="user-mod-submit" lay-filter="user-mod-submit">
+            提交
+        </button>
+    </div>
+    <div class="layui-btn layui-btn-primary add-btn">增加一条 </div>
+    <div class="layui-collapse">
+    {% for i in item_list %}
+      <div class="layui-colla-item">
+        <h2 class="layui-colla-title">{% if i.title %}{{ i.title }}{% endif %}</h2>
+        <div class="layui-colla-del">删除</div>
+        <div class="layui-colla-content layui-show">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">标题</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="title" value="{% if i.title %}{{ i.title }}{% endif %}" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">图片类别</label>
+                    <div class="layui-input-inline">
+                        <select name="img_type" id="img_type" lay-verify="required">
+                            <option value="0" {% if i.img_type == 0 %}selected{% endif %}>默认</option>
+                            <option value="1" {% if i.img_type == 1 %}selected{% endif %}>滚动</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图片信息</label>
+                <div class="layui-input-block tagsinput-primary">
+                    <input type="text" name="img_info" class="tagsinput" extra="说明" value="{% if i.img_info %}{{ i.img_info }}{% endif %}" placeholder="请输入图片名称" data-role="tagsinput">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">条目介绍</label>
+                <div class="layui-input-block">
+                    <textarea name="introduction" placeholder="请输入条目介绍" class="layui-textarea">{% if i.introduction %}{{ i.introduction }}{% endif %}</textarea>
+                </div>
+            </div>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+
+
+
+</form>
+<script src="{% static 'admin/layui/layui.js' %}"></script>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script src="{% static 'admin/js/tagsinput.js' %}"></script>
+<script>
+    layui.config({
+        base: '{% static 'admin' %}/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'element', 'colorpicker'], function () {
+        var $ = layui.$, form = layui.form, element = layui.element, colorpicker = layui.colorpicker;
+        colorpicker.render({
+          elem: '#colorpicker1'
+            ,color: '{% if ele.top_color %}{{ ele.top_color }}{% else %}#ce1932{% endif %}'
+          ,done: function(color){
+            $('#color').val(color);
+          }
+        });
+        colorpicker.render({
+          elem: '#colorpicker2'
+            ,color: '{% if ele.main_color %}{{ ele.main_color }}{% else %}#03277b{% endif %}'
+          ,done: function(color){
+            $('#color').val(color);
+          }
+        });
+        $(".layui-collapse").on('click', ".layui-colla-del",function () {
+            if(confirm("是否删除该条？")){
+                $(this).parent().remove();
+            }
+        });
+
+        $(".add-btn").on('click',function () {
+            var html = "<div class=\"layui-colla-item\">\n" +
+                "        <h2 class=\"layui-colla-title\"></h2>\n" +
+                "        <div class=\"layui-colla-del\">删除</div>\n" +
+                "        <div class=\"layui-colla-content layui-show\">\n" +
+                "            <div class=\"layui-form-item\">\n" +
+                "                <div class=\"layui-inline\">\n" +
+                "                    <label class=\"layui-form-label\">标题</label>\n" +
+                "                    <div class=\"layui-input-inline\">\n" +
+                "                        <input type=\"text\" name=\"title\" placeholder=\"请输入标题\" autocomplete=\"off\" class=\"layui-input\">\n" +
+                "                    </div>\n" +
+                "                </div>\n" +
+                "                <div class=\"layui-inline\">\n" +
+                "                    <label class=\"layui-form-label\">图片类别</label>\n" +
+                "                    <div class=\"layui-input-inline\">\n" +
+                "                        <select name=\"img_type\" id=\"img_type\" lay-verify=\"required\">\n" +
+                "                            <option value=\"0\">默认</option>\n" +
+                "                            <option value=\"1\">滚动</option>\n" +
+                "                        </select>\n" +
+                "                    </div>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "            <div class=\"layui-form-item\">\n" +
+                "                <label class=\"layui-form-label\">图片信息</label>\n" +
+                "                <div class=\"layui-input-block tagsinput-primary\">\n" +
+                "                    <input type=\"text\" name=\"img_info\" class=\"tagsinput\" extra=\"说明\" value=\"\" placeholder=\"请输入图片名称\" data-role=\"tagsinput\">\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "            <div class=\"layui-form-item\">\n" +
+                "                <label class=\"layui-form-label\">条目介绍</label>\n" +
+                "                <div class=\"layui-input-block\">\n" +
+                "                    <textarea name=\"introduction\" placeholder=\"请输入条目介绍\" class=\"layui-textarea\"></textarea>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "        </div>\n" +
+                "      </div>";
+            $(".layui-collapse").append(html);
+            element.render('collapse');
+            form.render('select');
+            $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
+        })
+    })
+</script>
+</body>
+</html>

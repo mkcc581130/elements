@@ -1,0 +1,248 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ symbol }}--元素代言人</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/animate.min.css' %}" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+    <style>
+        body, html {
+            font-size: 100%;
+            padding: 0;
+            margin: 0;
+            color: #ffffff;
+        }
+
+        /* Reset */
+        *,
+        *:after,
+        *:before {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        .name{
+            font-size: 40px;
+        }
+        .intro{
+            font-size: 20px;
+            padding-top: 23px;
+            line-height: 36px;
+        }
+        .common_icon{
+            text-align: center;
+        }
+        .common_icon img{
+            height: 300px;
+        }
+        .common_icon p{
+            padding: 10px 0;
+        }
+        .common_p{
+            line-height: 26px;
+            margin-top: 10px;
+        }
+        .common_section{
+            padding-bottom: 20px;
+            background-color: {% if ere.main_color %}{{ ere.main_color }}{% else %}#03277b{% endif %};
+        }
+        .common_section h2{
+            padding: 10px 0 10px 10px;
+            background-color: #fff;
+            color: {% if ere.main_color %}{{ ere.main_color }}{% else %}#03277b{% endif %};
+            box-shadow: 0 3px 10px rgba(0,0,0,.8);
+        }
+        .arrow{
+            position: fixed;
+            top: 50%;
+            width: 100%;
+            max-width: 1140px;
+
+        }
+        .arrow .left, .arrow .right{
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            line-height: 60px;
+            text-align: center;
+            font-size: 30px;
+            background-color: rgba(0,0,0,0.6);
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .arrow .left{
+            float: left;
+        }
+        .arrow .right{
+            float: right;
+        }
+        .info-title .word{
+            background-color: #fff;
+            padding: 0 15px;
+            position: absolute;
+            top: -10px;
+            left: 0;
+            color: #bba377;
+        }
+        .navbar-nav {
+          float: none;
+          text-align:right;
+
+        }
+        ul.nav.navbar-nav li {
+            float:none;
+            display: inline-block;
+            margin-right: 30px;
+        }
+        .nav>li>a:focus, .nav>li>a:hover{
+            text-decoration: none;
+            background-color: rgba(0,0,0,.4);
+            top: 1px;
+        }
+        .nav .open>a, .nav .open>a:focus, .nav .open>a:hover{
+            background-color: rgba(0,0,0,.4);
+            color: #fff;
+            top: 1px;
+
+        }
+        .navbar-nav>li>a{
+            color: #fff;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .navbar{
+            background-color: {% if ere.top_color %}{{ ere.top_color }}{% else %}#ce1932{% endif %};
+            box-shadow: 0 3px 10px rgba(0,0,0,.8);
+        }
+        .navbar-brand{
+            color: #fff;
+            font-size: 24px;
+            padding: 20px 30px;
+        }
+        .navbar-brand:hover{
+            color: #ffffff;
+        }
+        .dropdown-menu>li{
+            width: 100%;
+        }
+        .animated{
+            visibility: hidden;
+        }
+        .animated.in{
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+
+        <div style="height: 88px;background-color: {% if ere.main_color %}{{ ere.main_color }}{% else %}#03277b{% endif %};"></div>
+        <nav class="navbar navbar-fixed-top" role="navigation">
+                <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target="#navbar-collapse">
+                        <span class="sr-only">切换导航</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">{{ ele.cn_name }}（{{ symbol }}）学者代言</a>
+                    <div class="arrow">{% if pre_ele %}<a href="?symbol={{ pre_ele.0.symbol }}" class="left"><</a>{% endif %}{% if next_ele %}<a  href="?symbol={{ next_ele.0.symbol }}" class="right">></a>{% endif %}</div>
+                </div>
+                <div class="collapse navbar-collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                原子
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">2D模型</a></li>
+                                <li><a href="#">3D模型</a></li>
+                                <li><a href="#">应用</a></li>
+                            </ul>
+                        </li><li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                元素
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'ele_info' %}?symbol={{ symbol }}">基本资料</a></li>
+                                <li><a href="{% url 'hi_ele' %}?symbol={{ symbol }}">嗨元素漫画</a></li>
+                                <li><a href="{% url 'ele_history' %}?symbol={{ symbol }}">发现史</a></li>
+                                <li><a href="{% url 'ele_representative' %}?symbol={{ symbol }}">学者代言</a></li>
+                                <li><a href="{% url 'ele_isotope' %}?symbol={{ symbol }}">同位素</a></li>
+                            </ul>
+                        </li><li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                物质
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">单质</a></li>
+                                <li><a href="#">化合物</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="/">元素周期表</a></li>
+                    </ul>
+                </div>
+                </div>
+            </nav>
+        <div class="col-sm-12 common_section">
+            <div class="container">
+            <div class="col-md-1"></div>
+            <div class="col-md-7">
+                <div class="col-md-12 name wow fadeInUp">{{ ere.pro_name }} 教授<br>{{ ere.university }}，{{ ere.country }}</div>
+                <div class="col-sm-12 intro wow fadeInUp">{% if duty_list %}{% for d in duty_list %}{{ d }}<br>{% endfor %}{% endif %}</div>
+            </div>
+            <div class="col-md-3  wow fadeInRight" style="padding: 0 20px;"><div style="overflow: hidden;border-radius: 170px"><img width="100%" src="{% static 'img/representative/' %}{{ symbol }}_2.jpg" alt=""></div></div>
+            </div>
+            <div class="col-md-1"></div>
+            </div>
+        </div>
+        {% for i in item_list %}
+        <div class="col-sm-12 common_section">
+            <div class="container">
+            {% if i.title %}<h2 class="wow fadeInUp">{{ i.title }}</h2>{% endif %}
+                {% if i.length == 1 %}
+                    {% if i.img_type == 1 %}
+                        <div class="col-sm-12 wow fadeInUp" style="height: 300px;overflow: auto;padding: 20px 0"><img width="100%" src="{% static 'img/representative/' %}{{ i.img_list.0.img }}" alt=""></div>
+                        {% else %}
+                        <div class="col-sm-12 wow fadeInUp" style="margin: 20px 0;padding:0;border: 2px solid #fff;"><img width="100%" src="{% static 'img/representative/' %}{{ i.img_list.0.img }}" alt=""></div>
+                    {% endif %}
+                    {% elif i.length >= 2 %}
+                    {% for im in i.img_list %}
+            <div class="col-sm-6 common_icon wow fadeInUp"><img src="{% static 'img/representative/' %}{{ im.img }}" alt="">{% if im.explain %}<p>{{ im.explain }}</p>{% endif %}</div>
+                    {% endfor %}
+                {% endif %}
+            <div class="col-sm-12 common_p wow fadeInUp">
+                {{ i.introduction|safe }}
+            </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="col-sm-12 common_section" style="height: 20px"></div>
+
+</body>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script src="{% static 'js/wow.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script>
+    var wow = new WOW({
+　　　　boxClass: 'wow',
+　　　　animateClass: 'animated',
+　　　　offset: 0,
+　　　　mobile: true,
+　　　　live: true
+　　});
+　　wow.init();
+
+</script>
+</html>

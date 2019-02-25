@@ -8,14 +8,19 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/comm.css' %}">
     <style>
+        body{
+            background-color: #fff;
+        }
         .hi{
             width: 1000px;
             padding: 50px 10px 10px 20px;
-            color: #ffffff;
+            color: #333;
             display: none;
             position: relative;
-            border: 5px solid #c52c01;
-            background-color: #83abdf;
+            border: 2px solid;
+            border-image: -webkit-linear-gradient( {% if hiele.dark_color %}{{ hiele.dark_color }}{% else %}#21548d{% endif %},{% if hiele.light_color %}{{ hiele.light_color }}{% else %}#2f97a8{% endif %}) 30 30;
+            border-image: -moz-linear-gradient( {% if hiele.dark_color %}{{ hiele.dark_color }}{% else %}#21548d{% endif %},{% if hiele.light_color %}{{ hiele.light_color }}{% else %}#2f97a8{% endif %}) 30 30;
+            border-image: linear-gradient( {% if hiele.dark_color %}{{ hiele.dark_color }}{% else %}#21548d{% endif %},{% if hiele.light_color %}{{ hiele.light_color }}{% else %}#2f97a8{% endif %}) 30 30;
             font-size: 20px;
         }
         .hi-main{
@@ -24,23 +29,51 @@
 
         }
         .hi-left{
-            width: 66%;
+            width: 60%;
             float: left;
-            height: 300px;
         }
         .hi-left .title{
-            padding-left: 240px;
-            padding-bottom: 30px;
+            position: relative;
+            margin-top: 50px;
+            margin-bottom: 30px;
             line-height: 34px;
             text-indent: 40px;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            background: #fff;
+            background-clip: padding-box;
+            padding: 30px 10px 10px 10px;
+        }
+        .hi-left .title .angel{
+            display: inline-block;
+            position: absolute;
+            top: -16px;
+            left: 10px;
             font-size: 24px;
+            font-weight: bold;
+            background-color: #fff;
+            text-indent: 0;
+            padding-left: 10px;
+        }
+        .hi-left .title .angel .inner{
+            background-image: -webkit-gradient(linear, left 0, right 0, from({% if hiele.dark_color %}{{ hiele.dark_color }}{% else %}#21548d{% endif %}), to({% if hiele.light_color %}{{ hiele.light_color }}{% else %}#2f97a8{% endif %}));
+            -webkit-background-clip: text; /*必需加前缀 -webkit- 才支持这个text值 */
+            -webkit-text-fill-color: transparent; /*text-fill-color会覆盖color所定义的字体颜色： */
+        }
+        .hi-left .title::after{
+            position: absolute;
+            top: -2px; bottom: -2px;
+            left: -2px; right: -2px;
+            background: linear-gradient({% if hiele.dark_color %}{{ hiele.dark_color }}{% else %}#21548d{% endif %}, {% if hiele.light_color %}{{ hiele.light_color }}{% else %}#2f97a8{% endif %});
+            content: '';
+            z-index: -1;
+            border-radius: 16px;
         }
         .hi-left ul{
             padding-right: 20px;
             display: flex;
             flex-direction:column;
             align-items:center;
-            height: 300px;
 
         }
         .hi-left li{
@@ -61,6 +94,7 @@
         .hi-left li .info{
             float: left;
             width: 90%;
+            padding-left: 24px;
         }
         .hi-left li img{
             width: 50px;
@@ -68,8 +102,9 @@
 
         }
         .hi-right{
-            width: 34%;
+            width: 40%;
             float: right;
+            position: relative;
         }
         .hi-right .title{
             margin-left: 20px;
@@ -78,13 +113,48 @@
             text-align: center;
         }
         .hi-right .img{
-            width: 100%;
-            padding: 20px;
+            width: 118%;
+            position: absolute;
+            top: -106px;
+            right: -40px;
         }
         .arrow{
             position: absolute;
-            top: -20px;
-            left: -50px;
+            top: -54px;
+            left: -33px;
+        }
+        @font-face{
+            font-family:happyFont;
+            src:url('{% static 'font/happy_font.ttf' %}');
+        }
+        .happy{
+            font-family: happyFont;
+        }
+        .zi{
+            z-index: 999;
+            display: inline-block;
+            position: absolute;
+            background-image: -webkit-gradient(linear, left top, right top, from({% if hiele.dark_color %}{{ hiele.dark_color }}{% else %}#21548d{% endif %}), to({% if hiele.light_color %}{{ hiele.light_color }}{% else %}#2f97a8{% endif %}));
+            -webkit-background-clip: text; /*必需加前缀 -webkit- 才支持这个text值 */
+            -webkit-text-fill-color: transparent; /*text-fill-color会覆盖color所定义的字体颜色： */
+            border: none;
+        }
+        .zi.hai{
+            font-size: 140px;
+            top: -59px;
+            left: -27px;
+            transform: rotate(-11deg);
+        }
+        .zi.yuan{
+            font-size: 70px;
+            top: -8px;
+            left: 116px;
+        }
+        .zi.su{
+            font-size: 85px;
+            top: -36px;
+            left: 176px;
+            transform: rotate(-10deg);
         }
     </style>
 </head>
@@ -102,7 +172,7 @@
 <div class="hi" id="hi">
     <div class="hi-main">
         <div class="hi-left">
-            <div class="title">{{ hiele.introduction }}</div>
+            <div class="title">{{ hiele.introduction }}<div class="angel"><div class="inner">元素使者{{ hiele.ele.atomic_number|two_digits }}：{{ hiele.ele.cn_name }}（{{ symbol }}）</div></div></div>
             <div class="content">
                 <ul>
                     {% for e in hiele_item %}
@@ -112,10 +182,13 @@
             </div>
         </div>
         <div class="hi-right">
-            <div class="title">元素使者{{ hiele.ele.atomic_number|two_digits }}：{{ hiele.ele.cn_name }}（{{ symbol }}）</div>
-            <div class="img"><img width="100%" src="{% static 'img/' %}{{ symbol }}_1.JPG" alt=""></div>
+{#            <div class="title">元素使者{{ hiele.ele.atomic_number|two_digits }}：{{ hiele.ele.cn_name }}（{{ symbol }}）</div>#}
+            <div class="img"><img width="100%" src="{% static 'img/' %}{{ symbol }}_1.png" alt=""></div>
         </div>
         <div class="clear"></div>
+    <div class="happy zi hai">嗨</div>
+    <div class="happy zi yuan">元</div>
+    <div class="happy zi su">素</div>
         <div class="arrow"><img width="300px" src="{% static 'img/hi_arrow.png' %}" alt=""></div>
     </div>
 </div>
