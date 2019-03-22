@@ -1,0 +1,678 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>卡通漫画元素周期表</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="{% static 'iconfont/iconfont.css' %}">
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            margin: 0;
+            font-family: "Open Sans", sans-serif;
+            overflow: hidden;
+            color: #393F44;
+        }
+
+        a {
+            color: #ffffff;
+        }
+
+        #info {
+            position: absolute;
+            width: 100%;
+            color: #ffffff;
+            padding: 5px;
+            font-family: Monospace;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 1;
+        }
+
+        #menu {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .element {
+            width: 160px;
+            height: 160px;
+            box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            cursor: default;
+        }
+
+        .element:hover {
+            box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.75);
+        }
+
+        .element .number {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 28px;
+            color: rgba(127, 255, 255, 0.75);
+        }
+
+        .element .symbol {
+            position: absolute;
+            top: 40px;
+            left: 0px;
+            right: 0px;
+            font-size: 60px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.75);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
+        }
+
+        .element .details {
+            position: absolute;
+            bottom: 15px;
+            left: 0px;
+            right: 0px;
+            font-size: 14px;
+            color: rgba(127, 255, 255, 0.75);
+        }
+
+        button {
+            color: rgba(127, 255, 255, 0.75);
+            background: transparent;
+            outline: 1px solid rgba(127, 255, 255, 0.75);
+            border: 0px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgba(0, 255, 255, 0.5);
+        }
+
+        button:active {
+            color: #000000;
+            background-color: rgba(0, 255, 255, 0.75);
+        }
+        #shadow{
+            position: fixed;
+            width: 100%;
+            height: 2000px;
+            background-color: #000;
+            z-index: 100;
+        }
+        #shadow p{
+            position: absolute;
+            top: 300px;
+            left: 50%;
+            color: #fff;
+            margin-left: -88px;
+        }
+        @media screen and (orientation: portrait) {
+      /*竖屏 css*/
+        #shadow{
+            display: block;
+        }
+    }
+    @media screen and (orientation: landscape) {
+      /*横屏 css*/
+        #shadow{
+            display: none;
+        }
+    }
+        h1.title{
+            position: absolute;
+            top: 50px;
+            left: 400px;
+            font-size: 100px;
+            color: #302678;
+            width: 1000px !important;
+        }
+        .show-modal{
+            position: absolute;
+            width: 700px;
+            height: 400px;
+            top: 50%;
+            left: 50%;
+            margin-left: -350px;
+            margin-top: -200px;
+            background-color: #fff;
+            z-index: 10002;
+            display: none;
+        }
+        .show-modal .left{
+            width: 57.1%;
+            float: left;
+        }
+        .show-modal .right{
+            width: 42.9%;
+            float: left;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .show-modal .right .title{
+            font-size: 30px;
+            text-align: center;
+            padding: 20px 0 30px;
+            border-bottom: 1px solid #393F44;
+        }
+        .show-modal .right .content{
+            box-sizing: border-box;
+            padding: 50px 15px 0;
+            line-height: 30px;
+        }
+        .shadow{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2000px;
+            background-color: rgba(255,255,255,.8);
+            z-index: 10001;
+            display: none;
+        }
+        .show-modal .close{
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 24px;
+            height: 23px;
+            text-align: center;
+            line-height: 25px;
+            -webkit-border-radius: 20px;
+            -moz-border-radius: 20px;
+            border-radius: 20px;
+            border: 1px solid #888;
+            color: #888;
+            cursor: pointer;
+        }
+
+        @media screen and ( max-width: 960px ) {
+        .show-modal{
+            width: 350px;
+            height: 200px;
+            margin-left: -175px;
+            margin-top: -100px;
+            font-size: 8px;
+        }
+        .show-modal .right{
+            width: 42.9%;
+            float: left;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .show-modal .right .title{
+            font-size: 15px;
+            text-align: center;
+            padding: 10px 0 15px;
+            border-bottom: 1px solid #393F44;
+        }
+        .show-modal .right .content{
+            box-sizing: border-box;
+            padding: 25px 8px 0;
+            line-height: 16px;
+        }
+        .show-modal .close{
+            width: 12px;
+            height: 12px;
+            line-height: 12px;
+            top: 8px;
+            right: 8px;
+            -webkit-border-radius: 50px;
+            -moz-border-radius: 50px;
+            border-radius: 50px;
+            font-weight: bold;
+        }
+        }
+        @media screen and ( max-width: 736px ) {
+        }
+        @media screen and ( max-width: 568px ) {
+        }
+        .reset{
+            position: absolute;
+            top: 60px;
+            left: -120px;
+            cursor: pointer;
+            font-size: 45px;
+        }
+    </style>
+</head>
+<body>
+<script src="{% static 'js/three.min.js' %}"></script>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script src="{% static 'js/libs/tween.min.js' %}"></script>
+<script src="{% static 'js/controls/TrackballControls.js' %}"></script>
+<script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
+{% include 'left_nav.html' %}
+
+<div id="shadow"><p>请横屏使用，效果更佳！</p></div>
+<div id="container">
+
+</div>
+    <div class="show-modal">
+        <div class="left"><img width="100%" src="/static/img/comic/800x800/H.jpg" alt=""></div>
+        <div class="right">
+            <div class="title">Hydrogen</div>
+            <div class="content">我是宇宙中最丰富的元素喔，hiahiahia（语气词）。<br>
+                人类常常让我去充当航空航天工业的燃料。
+                </div>
+        </div>
+        <div class="close">X</div>
+    </div>
+
+    <div class="shadow"></div>
+<script>
+    $(".show-modal .close,.shadow").on("click", function () {
+        $(".show-modal").fadeOut();
+        $(".shadow").hide();
+    })
+</script>
+
+<script>
+  function appFinishiLoad() {
+	//写要自动运行的JS，如横屏
+	BSL.AppScreen('2'); //横屏
+    }
+  var mouse = {}, pre_mouse = {};
+
+var table = [
+	"H", "Hydrogen", "1.00794", 1, 1, "我是宇宙中最丰富的元素喔，hiahiahia（语气词）。 <br/> 人类常常让我去充当航空航天工业的燃料。",
+	"He", "Helium", "4.002602", 18, 1, "我和氢一样，在宇宙中含量也很丰富，担任着“加热”热气球的角色。<br>人们总是称我为惰性气体，大概是因为我很少与其他元素发生反应吧。",
+	"Li", "Lithium", "6.941", 1, 2, "我的任务是制造电池的碱金属。<br>我还有一个“超能力”就是放进水里会变得很“活泼”喔！",
+	"Be", "Beryllium", "9.012182", 2, 2, "人类在祖母绿和海蓝宝石等矿物中发现了我，并用于制作镜子。",
+	"B", "Boron", "10.811", 13, 2, "我因为一种叫做'20 mule team borax'的清洁剂而出名。",
+	"C", "Carbon", "12.0107", 14, 2, "有机化学因我而存在，因我而精彩！",
+	"N", "Nitrogen", "14.0067", 15, 2, "提到生命当中必不可少的元素，大家一定会想到我！此外，我还可以用于制造肥料，炸药等等！ （更不用说制作液氮冰淇淋！想想真是美味呢）",
+	"O", "Oxygen", "15.9994", 16, 2, "正因为有我，所以才有了人类，才有了这个世界。",
+	"F", "Fluorine", "18.9984032", 17, 2, "我是牙膏中含有的一种元素，可以给人类带来良好的“甜美牙齿”。<br>我也是一种非常活泼的卤素。可以与氢结合形成可以腐蚀玻璃的酸。",
+	"Ne", "Neon", "20.1797", 18, 2, "我是一种惰性气体，用于时髦的灯光和标志。<br>此外，我还很轻，还拥有发出红橙色光的技能。",
+	"Na", "Sodium", "22.98976...", 1, 3, "我是一种活性碱金属，可与氯制成食盐。<br>当我被汉弗莱·戴维提取出来之后，就被广泛用作动物和植物的必需元素。",
+	"Mg", "Magnesium", "24.305", 2, 3, "我是一种碱土金属，在早期摄影中用作照明剂。<br>当我变身成粉末状时，还可用作制烟花呢。",
+	"Al", "Aluminium", "26.9815386", 13, 3, "大家都觉得我轻巧无毒，因此广泛用于制作饮料罐。",
+	"Si", "Silicon", "28.0855", 14, 3, "以我为原料制得的半导体可为计算机行业提供计算机芯片和导体。",
+	"P", "Phosphorus", "30.973762", 15, 3, "渺小的我，被人类在小便中发现，却在火柴和焰火制作方面发挥出巨大的作用。",
+	"S", "Sulfur", "32.065", 16, 3, "我是在陨石坑附近被发现的。不要小看我的能量，我的化合物会让你在切洋葱时哭泣。",
+	"Cl", "Chlorine", "35.453", 17, 3, "你们总会在清洁员清洁游泳池的时候看到我！",
+	"Ar", "Argon", "39.948", 18, 3, "化学活性上，我是惰性的；但储存含量上，我是丰富的。",
+	"K", "Potassium", "39.948", 1, 4, "我是水果中的一种活性元素，如香蕉，鳄梨，橙子和西红柿等水果当中都有我的身影呢。",
+	"Ca", "Calcium", "40.078", 2, 4, "食物中存在许多我的化合物，用于促进骨骼的生长。难道还有人怀疑我不是人体最重要的元素之一吗？",
+	"Sc", "Scandium", "44.955912", 3, 4, "我在瑞典被人类发现，他们认为我不仅可以应用于科学，也可以应用于体育。<br>我的合金（钪铝合金）还可用于制作棒球帽和高尔夫球棒等物品，以提高性能。",
+	"Ti", "Titanium", "47.867", 4, 4, "看！街上那些汽车里的应用和设备都是我的合金制成的哎！",
+	"V", "Vanadium", "50.9415", 5, 4, "我是一种银灰色过渡金属。<br>在福特T型车首次大规模工业应用中，我被用于减轻重量并提高抗拉强度。",
+	"Cr", "Chromium", "51.9961", 6, 4, "我的名称源自希腊语“色度”，因为许多相关化合物都是强烈着色的（黄色，绿色，紫色等）。<br>我也常被用于金属电镀和黄色颜料。",
+	"Mn", "Manganese", "54.938045", 7, 4, "我是矿物质中常见的一种元素，与铁结合。<br>我的氧化物MnO2已被用作许多史前洞穴壁画的黑色颜料。",
+	"Fe", "Iron", "55.845", 8, 4, "说到常见，还有哪个元素可以胜过我呢？<br>我本身是柔软的，但我的合金钢是重要的工业材料。<br>另外，我在人类体内也起很大作用，主要是在血红蛋白和肌红蛋白的分子氧中形成复合物。",
+	"Co", "Cobalt", "58.933195", 9, 4, "我的化合物被广泛用作中国蓝瓷的染料。",
+	"Ni", "Nickel", "58.6934", 10, 4, "我被称为“铜的恶魔”，主要用于制造硬币。<br>我的复合物具有多种颜色：蓝色，紫色和绿色。",
+	"Cu", "Copper", "63.546", 11, 4, "我是一种红黄色金属，历史上首次被人类使用，并为青铜器时代命名。<br>我通常用于制作硬币和商品。 （此图为中国传统青铜器）",
+	"Zn", "Zinc", "65.38", 12, 4, "我是具有多种用途的过渡元素：铜管乐器，防晒剂等。我也可以用作铁的牺牲电极。",
+	"Ga", "Gallium", "69.723", 13, 4, "起源于Sam Kean的“消失的勺子”的我，被称作是后过渡金属，熔点很低。 ",
+	"Ge", "Germanium", "72.63", 14, 4, "荣幸的是，我以德国命名，并且我的化合物可用于光学和半导体。",
+	"As", "Arsenic", "74.9216", 15, 4, "是否说拿破仑去世的原因之一是他的巴黎绿壁纸？",
+	"Se", "Selenium", "78.96", 16, 4, "我是透析补充剂中的重要成分，用于许多生物的细胞发育和营养。<br>想知道在哪里可以找到我吗？去茄子、卷心菜和猕猴桃当中看看吧。",
+	"Br", "Bromine", "79.904", 17, 4, "我是室温下的发烟液体，是第三轻的卤素。",
+	"Kr", "Krypton", "83.798", 18, 4, "我是一种无色惰性气体，用于照明和摄影。<br>在流行文化中，我的名字指的是超人的本土世界。",
+	"Rb", "Rubidium", "85.4678", 1, 5, "我是一种被称为“rubidus”的活性碱元素，代表其在光谱中的鲜红色线条。但令人想不到的是，我却被用于烟花中的紫色。",
+	"Sr", "Strontium", "87.62", 2, 5, "我是以苏格兰Strontian村命名的，是在彩色电视机的阴极射线管中被发现的，会用于烟花中的红色。",
+	"Y", "Yttrium", "88.90585", 3, 5, "我是瑞典岛Ytterby采石场发现的4种元素之一。",
+	"Zr", "Zirconium", "91.224", 4, 5, "不仅我自身对于腐蚀性环境具有高度抵抗力，我的氧化物氧化锆（ZrO2）由于其韧性，颜色和耐化学性而经常被用作钻石的替代品。",
+	"Nb", "Niobium", "92.90628", 5, 5, "我以前被称为'Columbium'，现在是以希腊女神Niobe命名的。",
+	"Mo", "Molybdenum", "95.96", 6, 5, "我被用作切削工具和花椰菜肥料组分。",
+	"Tc", "Technetium", "(98)", 7, 5, "作为最轻的元素，我的同位素都是放射性的，但是不会自然发生。<br>此外，我的同位素锝-99m用于医学测试，用于对身体的不同部位进行成像。",
+	"Ru", "Ruthenium", "101.07", 8, 5, "在古代，我以拉丁名称Ruthenia命名的；在现代，我常被用于制作芯片电阻器。",
+	"Rh", "Rhodium", "102.9055", 9, 5, "我是一种以玫瑰为名的过渡金属。<br>威廉·海德·沃拉斯顿（William Hyde Wollaston）通过深红色粉末发现了我的化合物—氯化铑。",
+	"Pd", "Palladium", "106.42", 10, 5, "我是以希腊神话中波塞冬的儿子帕拉斯命名的。<br>我主要用作催化转化器，将汽车中的有害气体转化为较少的有害物质。",
+	"Ag", "Silver", "107.8682", 11, 5, "作为史前人类所知的七种古代金属之一，我不是很活泼，主要用于制作珠宝，银器和药品。 （但是我的离子态具有生物活性，可以在体外杀死细菌）",
+	"Cd", "Cadmium", "112.411", 12, 5, "我的化合物主要用于制造水彩和水粉的黄色和红色化合物。",
+	"In", "Indium", "114.818", 13, 5, "我以'indigo'命名（我的化合物火焰的颜色），我常被用于LCD显示器的薄膜涂层（主要用于电视）。",
+	"Sn", "Tin", "118.71", 14, 5, "正因为我是一种软金属，常常被用于锡罐，箔和焊料的涂层。",
+	"Sb", "Antimony", "121.76", 15, 5, "在埃及前代，我被认为是眼部化妆品的元素。中国是前一时期最大的锑及其化合物生产国。",
+	"Te", "Tellurium", "127.6", 16, 5, "为了提高太阳能发电的效率，我被用于制作碲化镉太阳能电池板。",
+	"I", "Iodine", "126.90447", 17, 5, "我是一种紫黑色金属固体，在STP下升华成紫色气体。<br>此外，我还会产生甲状腺激素，可以杀死真菌/细菌，对人类的健康至关重要。",
+	"Xe", "Xenon", "131.293", 18, 5, "我是在超新星爆炸期间形成的，用于闪光灯和全身麻醉剂。",
+	"Cs", "Caesium", "132.9054", 1, 6, "除了作为反应元素，我还是一种知名的时间元素（铯钟）。",
+	"Ba", "Barium", "132.9054", 2, 6, "“将死的化学家应该怎么办？”<br>“钡”",
+	"La", "Lanthanum", "138.90547", 4, 9, "我是镧系元素的同名词，主要用于相机镜头和舞台灯光。",
+	"Ce", "Cerium", "140.116", 5, 9, "小小的我，有大大的能量。最广泛的用途就是用于铁铝合金打火机了。",
+	"Pr", "Praseodymium", "140.90765", 6, 9, "我的名字来源于“绿双胞胎”的含义。正因为我，眼镜和陶瓷得以呈现黄色。",
+	"Nd", "Neodymium", "144.242", 7, 9, "我是合金中用于制造强力钕磁铁的组件。这些磁体通常用于需要低磁体质量和强磁场的产品（例如麦克风）中。",
+	"Pm", "Promethium", "(145)", 8, 9, "极为罕见的我，很少在地壳中被发现。尽管如此，我仍以普罗米修斯命名（普罗米修斯是希腊神话中为人类偷火的泰坦。）",
+	"Sm", "Samarium", "150.36", 9, 9, "我被用于钐钴磁铁以及电吉他拾音器。",
+	"Eu", "Europium", "151.964", 10, 9, "因为有磷光，人类才会在欧元纸币中的防伪荧光粉原料中选择我。",
+	"Gd", "Gadolinium", "157.25", 11, 9, "我在X射线成像中用作磷光体。",
+	"Tb", "Terbium", "158.92535", 12, 9, "我的绿色荧光粉用于提供三色照明技术，是一种用于照明的高效白光。",
+	"Dy", "Dysprosium", "162.5", 13, 9, "人类在多种矿物质中发现了我，例如磷钇矿。",
+	"Ho", "Holmium", "164.93032", 14, 9, "“哈哈哈！”<br>我是所以元件中磁导率最高的物质，常用于最强静磁体的极片。",
+	"Er", "Erbium", "167.259", 15, 9, "看！那个粉色的玻璃着色剂就是以我为原料的哎！",
+	"Tm", "Thulium", "168.93421", 16, 9, "我常被用于激光手术，因为我对组织的表面消融非常有效。",
+	"Yb", "Ytterbium", "173.054", 17, 9, "以我为原料的激光器效率高，寿命长，可产生短脉冲;我也可以很容易地掺入用于制造激光的材料中。",
+	"Lu", "Lutetium", "174.9668", 18, 9, "我的名字来自Lutetia，即现代的巴黎。",
+	"Hf", "Hafnium", "178.49", 4, 6, "作为门捷列夫在元素周期表中预测的元素之一，我常用于核反应堆和核潜艇的反应堆杆，深感“荣幸”！",
+	"Ta", "Tantalum", "180.94788", 5, 6, "我的主要用途在于电子设备，例如移动电话，DVD播放器和计算机。",
+	"W", "Tungsten", "183.84", 6, 6, "我是一种稀有金属，仅与化学化合物中的其他元素结合使用。<br>我常被用于灯泡灯丝，X射线管和焊接。这张图片的灵感来自Oliver Sacks的叔叔Tungsten。",
+	"Re", "Rhenium", "186.207", 7, 6, "当人类在制造飞行的喷气发动机零件需要高温超合金时，通常会想到我。",
+	"Os", "Osmium", "190.23", 8, 6, "我是一种坚硬的蓝白色过渡金属，用于制作钢笔笔尖倾斜。",
+	"Ir", "Iridium", "192.217", 9, 6, "我是以希腊女神伊丽丝的名字命名的，因为我的化合物具有多种颜色，常有彩虹之意。",
+	"Pt", "Platinum", "195.084", 10, 6, "大概是因为不活跃的原因，我的角色往往是那些惰性电极和可久置的珠宝，哎！",
+	"Au", "Gold", "196.966569", 11, 6, "历史上我被用于硬币和皇家配饰的贵金属。",
+	"Hg", "Mercury", "200.59", 12, 6, "我是STP中唯一的液体金属元素，主要用于温度计和气压计。",
+	"Tl", "Thallium", "204.3833", 13, 6, "我的盐家族在历史上用于大鼠毒药和杀虫剂。因此，我们在许多国家被禁止或限制，真是难过。",
+	"Pb", "Lead", "207.2", 14, 6, "虽然作为一种相对不起反应的过渡后金属，但我的毒性已得到认可，并且会污染水并干扰生物酶，真是不幸！",
+	"Bi", "Bismuth", "208.9804", 15, 6, "我是一种脆性金属，具有白色银粉色调，通常具有呈虹彩的氧化物变色，呈现出从黄色到蓝色的多种颜色。",
+	"Po", "Polonium", "(209)", 16, 6, "我被应用于太空探测器中的加热器，以及中子和α粒子的来源。图为原子弹环含有pol。",
+	"At", "Astatine", "(210)", 17, 6, "我的名称意为“改变”，是地球中最稀有的元素之一，但存在具有不确定性。",
+	"Rn", "Radon", "(222)", 18, 6, "你们知道吗？镭的无色放射性衰变产物就是我哦！<br>我可以在温泉中被找到，但可能会带来一些潜在的健康风险。",
+	"Fr", "Francium", "(223)", 1, 7, "感谢居里夫人的学生Marguerite Perey于1939年在巴黎发现了我！但不幸的是，我是一种非常不稳定的碱元素，只有大约20分钟的寿命。",
+	"Ra", "Radium", "(226)", 2, 7, "法国化学家Marie Curie发现并提取出了我，而后常被用作辐射发光器件的放射源（涂料）。",
+	"Ac", "Actinium", "(227)", 4, 10, "Actinium赋予了我名称。 我的同位素常用于药物中以用作放射疗法的药剂。",
+	"Th", "Thorium", "232.03806", 5, 10, "我是以托尔命名的元素。具有放射性，是强大的潜在能源之一。",
+	"Pa", "Protactinium", "231.0588", 6, 10, "由于十分稀缺，且具有高放射性和毒性，目前我在基础科学研究之外没有其他用途。",
+	"U", "Uranium", "238.02891", 7, 10, "我被用作铀玻璃的着色剂，产生柠檬绿色。才外，我也更常用于核武器和发电厂。",
+	"Np", "Neptunium", "(237)", 8, 10, "我是以海王星命名的放射性元素。",
+	"Pu", "Plutonium", "(244)", 9, 10, "我是以冥王星命名的放射性元素，最初是由氘-238的氘核轰击产生的。",
+	"Am", "Americium", "(243)", 10, 10, "我是以美洲命名的元素。",
+	"Cm", "Curium", "(247)", 11, 10, "我是以Pierre Curie和Marie Curie夫妇的名字命名的。",
+	"Bk", "Berkelium", "(247)", 12, 10, "我是以加利福尼亚州伯克利市的名字命名的，这是劳伦斯伯克利国家实验室的所在地。",
+	"Cf", "Californium", "(251)", 13, 10, "我是以加利福尼亚州的名字命名的。",
+	"Es", "Einstenium", "(252)", 14, 10, "我是在第一次氢轰炸后发现的act系元素，是以科学家爱因斯坦的名字命名的。",
+	"Fm", "Fermium", "(257)", 15, 10, "我是以Enrico Fermi命名的。",
+	"Md", "Mendelevium", "(258)", 16, 10, "我是在1955年用α粒子轰击e后被发现的，以周期表之父Dmitri Mendeleev的名字命名。",
+	"No", "Nobelium", "(259)", 17, 10, "我的名字是为了纪念阿尔弗雷德诺贝尔，他是炸药和科学的恩人的发明者。",
+	"Lr", "Lawrencium", "(262)", 18, 10, "我的名字是为了纪念回旋加速器的发明者欧内斯特劳伦斯，这是一种用于发现许多人造放射性元素的装置。",
+	"Rf", "Rutherfordium", "(267)", 4, 7, "我是以物理学家欧内斯特卢瑟福的名字命名的。",
+	"Db", "Dubnium", "(268)", 5, 7, "我最初是以其橡树而闻名的杜布纳镇命名的。",
+	"Sg", "Seaborgium", "(271)", 6, 7, "我是以美国核化学家Glenn T. Seaborg的名字命名的。",
+	"Bh", "Bohrium", "(272)", 7, 7, "我是以丹麦物理学家Niels Bohr的名字命名的。",
+	"Hs", "Hassium", "(270)", 8, 7, "我是以德国黑森州命名的。",
+	"Mt", "Meitnerium", "(276)", 9, 7, "我是以物理学家Lise Meitner的名字命名的。",
+	"Ds", "Darmstadium", "(281)", 10, 7, "我于1994年由德国达姆施塔特市附近的GSI亥姆霍兹重离子研究中心创建，之后即被命名。",
+	"Rg", "Roentgenium", "(280)", 11, 7, "我是以发现X射线的物理学家WilhelmRöntgen的名字命名的。",
+	"Cn", "Copernicium", "(285)", 12, 7, "我是以天文学家Nicolaus Copernicus的名字命名的。",
+	"Nh", "Nihonium", "(286)", 13, 7, "我是日本集团RIKEN发现的第113个元素。",
+	"Fl", "Flerovium", "(289)", 14, 7, "我是以杜布纳核研究联合研究所Flerov核反应实验室命名的。",
+	"Mc", "Moscovium", "(290)", 15, 7, "我是以俄罗斯联合核研究所命名的第115个元素。",
+	"Lv", "Livermorium", "(293)", 16, 7, "我是以美国劳伦斯利弗莫尔国家实验室的名字命名的。",
+	"Ts", "Tennessine", "(294)", 17, 7, "我是以田纳西州命名的元素，以纪念橡树岭国家实验室。",
+	"Og", "Oganesson", "(294)", 18, 7, "我是以物理学家Yuri Oganessian命名的第118个元素。"
+];
+
+
+var camera, scene, renderer;
+var controls;
+
+
+var objects = [];
+var targets = { table: [], sphere: [], helix: [], grid: [] };
+
+init();
+animate();
+
+function init() {
+
+	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+	camera.position.z = 3000;
+  	var dragging = false;
+	scene = new THREE.Scene();
+
+	//标题
+    var title = document.createElement( 'h1' );
+    title.className = 'title';
+    title.innerText = "卡通漫画元素周期表";
+    var object = new THREE.CSS3DObject( title );
+    object.position.x = -1150;
+    object.position.y = 700;
+    object.position.z = 0;
+    scene.add( object );
+    //重置
+    var reset = document.createElement( 'h1' );
+    reset.className = 'reset';
+    reset.innerText = "重置";
+    reset.addEventListener('click', function () {
+        controls.reset();
+    });
+    var object = new THREE.CSS3DObject( reset );
+    object.position.x = -150;
+    object.position.y = 700;
+    object.position.z = 0;
+    scene.add( object );
+	// table
+
+	for ( var i = 0; i < table.length; i += 6 ) {
+
+		let item = table[ i ];
+        let symbol = table[ i + 1 ];
+        let content = table[ i + 5 ];
+		var element = document.createElement( 'div' );
+		element.className = 'element';
+		element.style.background = "url(/static/img/comic/100x100/"+item+".jpg)";
+		element.style.backgroundRepeat = "no-repeat";
+		element.style.backgroundSize = "100% 100%";
+		element.style.zIndex = '10000';
+		if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+            element.addEventListener( 'touchend', function () {
+
+                if ( dragging ) {
+
+                    return;
+
+                }
+                var $modal = $(".show-modal");
+                $modal.find(".left img").attr('src', '/static/img/comic/800x800/'+item+'.jpg');
+                $modal.find(".right .title").text(symbol);
+                $modal.find(".right .content").html(content);
+                setTimeout(function () {
+                    $(".shadow").show();
+                    $modal.fadeIn();
+                }, 100);
+
+            }, false );
+            element.addEventListener( 'touchstart', function () {
+
+                dragging = false;
+
+            }, false );
+            element.addEventListener( 'touchmove', function () {
+
+                dragging = true;
+
+            }, false );
+        } else {
+            element.addEventListener( 'click', function () {
+                var $modal = $(".show-modal");
+                $modal.find(".left img").attr('src', '/static/img/comic/800x800/'+item+'.jpg');
+                $modal.find(".right .title").text(symbol);
+                $modal.find(".right .content").html(content);
+                setTimeout(function () {
+                    $(".shadow").show();
+                    $modal.fadeIn();
+                }, 100);
+
+
+            }, false );
+        }
+
+		var object = new THREE.CSS3DObject( element );
+		object.position.x = Math.random() * 4000 - 2000;
+		object.position.y = Math.random() * 4000 - 2000;
+		object.position.z = Math.random() * 4000 - 2000;
+		scene.add( object );
+
+		objects.push( object );
+
+		//
+
+		var object = new THREE.Object3D();
+		object.position.x = ( table[ i + 3 ] * 180 - 1730 );
+  		object.position.y = - ( table[ i + 4 ] * 180 ) + 990;
+
+		targets.table.push( object );
+
+	}
+
+	//
+
+	renderer = new THREE.CSS3DRenderer();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.getElementById( 'container' ).appendChild( renderer.domElement );
+
+	//
+
+	controls = new THREE.TrackballControls( camera, renderer.domElement );
+	controls.rotateSpeed = 1;
+	controls.minDistance = 500;
+	controls.maxDistance = 6000;
+	controls.addEventListener( 'change', render );
+
+
+	function scaleCamera() {
+
+		camera.fov = 5000;
+		camera.updateProjectionMatrix();
+		renderer.render( scene, camera );
+
+	}
+
+
+
+    transform( targets.table, 2000 );
+
+	window.addEventListener( 'resize', onWindowResize, false );
+  	// document.addEventListener( 'mouseup', onDocumentMouseUp, false );
+  	document.onmousedown = onDocumentMouseUp;
+	document.addEventListener( 'touthmove', onDocumentTouchMove, false );
+
+}
+
+function transform( targets, duration ) {
+
+	TWEEN.removeAll();
+
+	for ( var i = 0; i < objects.length; i ++ ) {
+
+		var object = objects[ i ];
+		var target = targets[ i ];
+
+		new TWEEN.Tween( object.position )
+			.to( {
+				x: target.position.x,
+				y: target.position.y,
+				z: target.position.z
+			}, Math.random() * duration + duration )
+			.easing( TWEEN.Easing.Exponential.InOut )
+			.start();
+
+		new TWEEN.Tween( object.rotation )
+			.to( {
+				x: target.rotation.x,
+				y: target.rotation.y,
+				z: target.rotation.z
+			}, Math.random() * duration + duration )
+			.easing( TWEEN.Easing.Exponential.InOut )
+			.start();
+
+	}
+
+	new TWEEN.Tween( this )
+		.to( {}, duration * 2 )
+		.onUpdate( render )
+		.start();
+
+}
+
+function onWindowResize() {
+
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
+	render();
+
+}
+  function onDocumentMouseUp( event ) {
+
+  	event.preventDefault();
+  	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  	console.info( mouse );
+  	//适配手机
+  	if ( event.touches ) {
+
+  		mouse.x = ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1;
+  		mouse.y = - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1;
+  		pre_mouse.x = mouse.x;
+  		pre_mouse.y = mouse.y;
+
+	}
+
+  }
+
+
+
+
+
+function onDocumentMouseMove( event ) {
+
+  	// is_move = true;
+  	// mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  	// mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+  	// if ( is_click ) {
+  	//
+  	// 	if ( earth && earth_cloud ) {
+  	//
+  	// 		earth.rotation.set( earth.rotation.x - ( mouse.y - pre_mouse.y ), earth.rotation.y + ( mouse.x - pre_mouse.x ), earth.rotation.z );
+  	// 		earth_cloud.rotation.set( earth_cloud.rotation.x - ( mouse.y - pre_mouse.y ), earth_cloud.rotation.y + ( mouse.x - pre_mouse.x ), earth_cloud.rotation.z );
+  	//
+	// 	}
+  	//
+	// }
+  	// pre_mouse.x = mouse.x;
+  	// pre_mouse.y = mouse.y;
+
+}
+  function onDocumentTouchMove() {
+
+  	is_move = true;
+  	mouse.x = ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1;
+  	mouse.y = - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1;
+  	// if ( is_click ) {
+  	//
+  	// 	if ( earth && earth_cloud ) {
+  	//
+  	// 		earth.rotation.set( earth.rotation.x - ( mouse.y - pre_mouse.y ), earth.rotation.y + ( mouse.x - pre_mouse.x ), earth.rotation.z );
+  	// 		earth_cloud.rotation.set( earth_cloud.rotation.x - ( mouse.y - pre_mouse.y ), earth_cloud.rotation.y + ( mouse.x - pre_mouse.x ), earth_cloud.rotation.z );
+  	//
+	// 	}
+  	//
+	// }
+  	pre_mouse.x = mouse.x;
+  	pre_mouse.y = mouse.y;
+
+}
+function animate() {
+
+	requestAnimationFrame( animate );
+
+	TWEEN.update();
+
+	controls.update();
+
+}
+
+function render() {
+
+	renderer.render( scene, camera );
+
+}
+
+</script>
+</body>
+</html>
+

@@ -18,12 +18,29 @@ from django.conf.urls.static import static
 from django.conf import settings
 import main.views as main_views
 urlpatterns = [
+    re_path(r'^register/$', main_views.register, name='register'),
+    re_path(r'^login/$', main_views.login, name='login'),
     re_path('^admin/', include('admin.urls')),
     re_path('^$', main_views.index, name='index'),
+    re_path('^comic/$', main_views.comic, name='comic'),
+    re_path('^cartoon/$', main_views.cartoon, name='cartoon'),
+    re_path('^poem/$', main_views.poem, name='poem'),
+    re_path('^love_poem/$', main_views.love_poem, name='love_poem'),
+    re_path('^jingle/$', main_views.jingle, name='jingle'),
+    re_path('^structure/$', main_views.structure, name='structure'),
+    re_path('^animation/$', main_views.animation, name='animation'),
+    re_path('^collection/$', main_views.collection, name='collection'),
+    re_path('^name_source/$', main_views.name_source, name='name_source'),
+    re_path('^idiom/$', main_views.idiom, name='idiom'),
+    re_path('^hi/$', main_views.hi, name='hi'),
+    re_path('^representative/$', main_views.representative, name='representative'),
     re_path('^ele_info/$', main_views.ele_info, name='ele_info'),
     re_path('^hi_ele/$', main_views.hi_ele, name='hi_ele'),
     re_path('^ele_history/$', main_views.ele_history, name='ele_history'),
     re_path('^ele_representative/$', main_views.ele_representative, name='ele_representative'),
     re_path('^ele_isotope/$', main_views.ele_isotope, name='ele_isotope'),
+    re_path('^ele_material/$', main_views.ele_material, name='ele_material'),
+    re_path('^ele_compound/$', main_views.ele_compound, name='ele_compound'),
+    re_path('^get_love_poem_poster/(.*?).png$', main_views.get_love_poem_poster, name='get_love_poem_poster'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

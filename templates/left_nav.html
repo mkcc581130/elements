@@ -1,0 +1,209 @@
+<style>
+.nav_sidebar {
+    position: fixed;
+    z-index: 10;
+    right: 25px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 88px;
+    height: 176px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-top:29px;
+}
+
+.nav_sidebar__item {
+    position: absolute;
+    z-index: 10;
+    width: 21px;
+    height: 21px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    top: 50px;
+    left: -52px;
+    border: 8px solid transparent;
+    cursor: pointer;
+    display: inline-block;
+    -webkit-transition: background-color .3s ease, border-color .3s ease, -webkit-box-shadow .3s ease;
+    -moz-transition: background-color .3s ease, border-color .3s ease, -moz-box-shadow .3s ease;
+    -o-transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease;
+    transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.nav_sidebar__item:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    margin: auto;
+    height: 5px;
+    width: 5px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background-color: #455fff
+}
+
+.nav_sidebar__item:hover, .nav_sidebar__item.state-active {
+    border-color: #455fff;
+    -webkit-box-shadow: 1px 1.7px 4px rgba(64, 69, 73, 0.4);
+    -moz-box-shadow: 1px 1.7px 4px rgba(64, 69, 73, 0.4);
+    box-shadow: 1px 1.7px 4px rgba(64, 69, 73, 0.4)
+}
+
+.nav_sidebar__item:hover:before, .nav_sidebar__item.state-active:before {
+    background-color: white
+}
+
+.nav_sidebar__item:hover .nav_sidebar__badge {
+    -webkit-transform: translateY(-100%);
+    -moz-transform: translateY(-100%);
+    -ms-transform: translateY(-100%);
+    -o-transform: translateY(-100%);
+    transform: translateY(-100%);
+    display: block;
+    opacity: 1
+}
+
+.nav_sidebar__item:hover .nav_sidebar__badge--center, .nav_sidebar__item.state-active .nav_sidebar__badge--center {
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%)
+}
+
+.nav_sidebar__item:hover .nav_sidebar__badge--bot, .nav_sidebar__item.state-active .nav_sidebar__badge--bot {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0)
+}
+
+
+.nav_sidebar__badge {
+    width: initial !important;
+    position: absolute;
+    display: none;
+    top: 15px;
+    right: 25px;
+    padding: 3px 14px;
+    line-height: 22px;
+    background-color: #292930;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-box-shadow: 5px 8.7px 22px rgba(64, 69, 73, 0.4);
+    -moz-box-shadow: 5px 8.7px 22px rgba(64, 69, 73, 0.4);
+    box-shadow: 5px 8.7px 22px rgba(64, 69, 73, 0.4);
+    -webkit-transform: scale(0.8) translateY(-100%);
+    -moz-transform: scale(0.8) translateY(-100%);
+    -ms-transform: scale(0.8) translateY(-100%);
+    -o-transform: scale(0.8) translateY(-100%);
+    transform: scale(0.8) translateY(-100%);
+    opacity: 0;
+    -webkit-transform-origin: right center;
+    -moz-transform-origin: right center;
+    -ms-transform-origin: right center;
+    -o-transform-origin: right center;
+    transform-origin: right center;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    transition: all .2s ease;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    white-space:nowrap;
+    z-index: 20;
+}
+
+.nav_sidebar__badge--center {
+    -webkit-transform: scale(0.8) translateY(-50%);
+    -moz-transform: scale(0.8) translateY(-50%);
+    -ms-transform: scale(0.8) translateY(-50%);
+    -o-transform: scale(0.8) translateY(-50%);
+    transform: scale(0.8) translateY(-50%)
+}
+
+.nav_sidebar__badge--bot {
+    -webkit-transform: scale(0.8) translateY(0);
+    -moz-transform: scale(0.8) translateY(0);
+    -ms-transform: scale(0.8) translateY(0);
+    -o-transform: scale(0.8) translateY(0);
+    transform: scale(0.8) translateY(0)
+}
+.arrow{
+   position: absolute;
+   top: 50%;
+   margin-top: -25px;
+    right: 50px;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius: 130px;
+    line-height: 46px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.75);
+    text-decoration: none;
+    cursor: pointer;
+   box-sizing: border-box;
+    font-weight: bold;
+    z-index: 99;
+        font-size: 50px;
+}
+.arrow.left {
+        right: initial;
+        left: 50px;
+        transform: rotate(-180deg);
+    }
+    @media screen and ( max-width: 1400px ) {
+        .arrow{
+            right: 40px;
+        }
+        .arrow.left {
+            left: 40px;
+        }
+        .nav_sidebar {
+            right: 15px;
+        }
+    }
+
+</style>
+<div class="nav_sidebar">
+    {% for p in page_info.page_list %}
+    <a href="{% url p.en_name %}" class="nav_sidebar__item {% if page_name == p.en_name %}state{% endif %}">
+        <div class="nav_sidebar__badge">{{ p.cn_name }}</div>
+    </a>
+    {% endfor %}
+
+</div>
+{% if page_info.pre_page %}<a href="{% url page_info.pre_page.en_name %}" class="arrow left iconfont iconyoujian"></a>{% endif %}
+{% if page_info.next_page %}<a href="{% url page_info.next_page.en_name %}" class="arrow right iconfont iconyoujian"></a>{% endif %}
+<script>
+    $(function () {
+        $(".nav_sidebar .nav_sidebar__item").each(function (i, e) {
+            var $t = $(this);
+                $t.css('left', Math.sin(-3.14/12*(12-i)) * 88 + 44 - 1.5).css('top', Math.cos(-3.14/12*(12-i)) * 88 + 44 - 1.5);
+        })
+        setTimeout(function () {
+            $(".nav_sidebar .nav_sidebar__item.state").addClass("state-active");
+        }, 1000)
+    })
+</script>

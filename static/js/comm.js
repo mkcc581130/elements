@@ -1,4 +1,3 @@
-// 判断横竖屏
 var utils = {
     debounce: function(func,delay){
         var timer = null;

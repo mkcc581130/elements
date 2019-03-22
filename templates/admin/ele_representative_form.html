@@ -81,7 +81,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">导航栏颜色</label>
             <div class="layui-input-inline" style="width: 130px;">
-              <input type="text" name="top_color" value="{% if ere.top_color %}{{ ere.top_color }}{% else %}#ce1932{% endif %}" placeholder="请选择颜色" class="layui-input" id="color">
+              <input type="text" name="top_color" value="{% if ere.top_color %}{{ ere.top_color }}{% else %}#ce1932{% endif %}" placeholder="请选择颜色" class="layui-input" id="color1">
             </div>
             <div class="layui-inline" style="left: -11px;top: 5px;">
               <div id="colorpicker1"></div>
@@ -89,7 +89,7 @@
         </div><div class="layui-inline">
             <label class="layui-form-label">主体颜色</label>
             <div class="layui-input-inline" style="width: 130px;">
-              <input type="text" name="main_color" value="{% if ere.main_color %}{{ ere.main_color }}{% else %}#03277b{% endif %}" placeholder="请选择颜色" class="layui-input" id="color">
+              <input type="text" name="main_color" value="{% if ere.main_color %}{{ ere.main_color }}{% else %}#03277b{% endif %}" placeholder="请选择颜色" class="layui-input" id="color2">
             </div>
             <div class="layui-inline" style="left: -11px;top: 5px;">
               <div id="colorpicker2"></div>
@@ -163,16 +163,16 @@
         var $ = layui.$, form = layui.form, element = layui.element, colorpicker = layui.colorpicker;
         colorpicker.render({
           elem: '#colorpicker1'
-            ,color: '{% if ele.top_color %}{{ ele.top_color }}{% else %}#ce1932{% endif %}'
+            ,color: '{% if ere.top_color %}{{ ere.top_color }}{% else %}#ce1932{% endif %}'
           ,done: function(color){
-            $('#color').val(color);
+            $('#color1').val(color);
           }
         });
         colorpicker.render({
           elem: '#colorpicker2'
-            ,color: '{% if ele.main_color %}{{ ele.main_color }}{% else %}#03277b{% endif %}'
+            ,color: '{% if ere.main_color %}{{ ere.main_color }}{% else %}#03277b{% endif %}'
           ,done: function(color){
-            $('#color').val(color);
+            $('#color2').val(color);
           }
         });
         $(".layui-collapse").on('click', ".layui-colla-del",function () {

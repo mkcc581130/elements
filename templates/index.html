@@ -5,6 +5,7 @@
     <title>AR化学元素周期表</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="{% static 'iconfont/iconfont.css' %}">
     <style>
         html, body {
             height: 100%;
@@ -13,7 +14,7 @@
         body {
             background-color: #000000;
             margin: 0;
-            font-family: Helvetica, sans-serif;;
+            font-family: "Open Sans", sans-serif;
             overflow: hidden;
         }
 
@@ -75,7 +76,7 @@
 
         .element .details {
             position: absolute;
-            bottom: 15px;
+            bottom: 10px;
             left: 0px;
             right: 0px;
             font-size: 14px;
@@ -125,22 +126,31 @@
             display: none;
         }
     }
+   .arrow{
+        color: rgba(0, 255, 255, 0.9) !important;
+    }
+
     </style>
 </head>
 <body>
 <script src="{% static 'js/three.min.js' %}"></script>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
 <script src="{% static 'js/libs/tween.min.js' %}"></script>
 <script src="{% static 'js/controls/TrackballControls.js' %}"></script>
 <script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
+{% include 'left_nav.html' %}
 <div id="shadow"><p>请横屏使用，效果更佳！</p></div>
 <div id="container"></div>
+<a href="{% url 'structure' %}" class="arrow iconfont iconyoujian"></a>
 <div id="menu">
-    <button id="table">TABLE</button>
-    <button id="sphere">SPHERE</button>
-    <button id="helix">HELIX</button>
-    <button id="grid">GRID</button>
+    <button id="table">表格排列</button>
+    <button id="sphere">球形排列</button>
+    <button id="helix">螺旋排列</button>
+    <button id="grid">栅格排列</button>
+    <button id="reset">重置</button>
 </div>
-
+<script>
+</script>
 <script>
   function appFinishiLoad() {
 	//写要自动运行的JS，如横屏
@@ -283,7 +293,7 @@ animate();
 function init() {
 
 	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
-	camera.position.z = 3000;
+	camera.position.z = 2800;
   	var dragging = false;
 	scene = new THREE.Scene();
 
@@ -499,7 +509,9 @@ function init() {
 	controls.minDistance = 500;
 	controls.maxDistance = 6000;
 	controls.addEventListener( 'change', render );
-
+    document.getElementById( 'reset' ).addEventListener('click', function () {
+        controls.reset();
+    });
 	var button = document.getElementById( 'table' );
 	button.addEventListener( 'click', function () {
 
@@ -535,14 +547,14 @@ function init() {
 		renderer.render( scene, camera );
 
 	}
+    transform( targets.table, 2000 );
 
+    //transform( targets.sphere, 2000 );
+    //setTimeout( function () {
 
-    transform( targets.sphere, 2000 );
-    setTimeout( function () {
+    //    transform( targets.table, 2000 );
 
-        transform( targets.table, 2000 );
-
-    }, 3000 );
+    //}, 3000 );
 	window.addEventListener( 'resize', onWindowResize, false );
   	// document.addEventListener( 'mouseup', onDocumentMouseUp, false );
   	document.onmousedown = onDocumentMouseUp;

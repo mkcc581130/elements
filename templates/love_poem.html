@@ -1,0 +1,692 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>情诗周期表</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
+    <link rel="stylesheet" href="{% static 'iconfont/iconfont.css' %}">
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            margin: 0;
+            font-family: "Open Sans", sans-serif;
+            overflow: hidden;
+            color: #393F44;
+            background-image: url("{% static 'img/love_poem_bk.jpg' %}");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+        }
+
+        a {
+            color: #ffffff;
+        }
+
+        #info {
+            position: absolute;
+            width: 100%;
+            color: #ffffff;
+            padding: 5px;
+            font-family: Monospace;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 1;
+        }
+
+        #menu {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+        @font-face{
+            font-family:bsFont;
+            src:url('{% static 'font/BauerBodoniStd.otf' %}');
+        }
+        @font-face{
+            font-family:baiqiFont;
+            src:url('{% static 'font/baiqi.ttf' %}');
+        }
+
+        .element {
+            width: 160px;
+            height: 160px;
+            box-shadow: 0px 0px 12px rgba(0,0,0, 0.5);
+            text-align: center;
+            cursor: default;
+            border: 1px solid #ff9a9e;
+            background: -webkit-linear-gradient(top left, #fad0c4 , #ff9a9e); /* Safari 5.1 - 6.0 */
+            background: -o-linear-gradient(bottom right, #fad0c4 , #ff9a9e); /* Opera 11.1 - 12.0 */
+            background: -moz-linear-gradient(bottom right, #fad0c4 , #ff9a9e); /* Firefox 3.6 - 15 */
+            background: linear-gradient(to bottom right, #fad0c4 , #ff9a9e); /* 标准的语法（必须放在最后） */
+            color: rgba(0,0,0,.5);
+            font-family: bsFont;
+            border-radius: 15px;
+            border-top-left-radius: 0;
+            opacity: .9;
+        }
+
+        .element:hover {
+            {#box-shadow: 0px 0px 12px rgba(85,157,185, 0.75);#}
+            {#background-color: rgb(85,157,185);#}
+
+        }
+        .element:hover .number, .element:hover .symbol{
+            color: #fff;
+
+        }
+        .element .number {
+            position: absolute;
+            top: 13px;
+            left: 13px;
+            font-size: 30px;
+        }
+
+        .element .symbol {
+            position: absolute;
+            top: 58px;
+            left: 0px;
+            right: 0px;
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+        .element .details {
+            position: absolute;
+            bottom: 15px;
+            left: 0px;
+            right: 0px;
+            font-size: 14px;
+            color: rgba(127, 255, 255, 0.75);
+        }
+
+        button {
+            color: rgba(127, 255, 255, 0.75);
+            background: transparent;
+            outline: 1px solid rgba(127, 255, 255, 0.75);
+            border: 0px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgba(0, 255, 255, 0.5);
+        }
+
+        button:active {
+            color: #000000;
+            background-color: rgba(0, 255, 255, 0.75);
+        }
+        #shadow{
+            position: fixed;
+            width: 100%;
+            height: 2000px;
+            background-color: #000;
+            z-index: 100;
+        }
+        #shadow p{
+            position: absolute;
+            top: 300px;
+            left: 50%;
+            color: #fff;
+            margin-left: -88px;
+        }
+        @media screen and (orientation: portrait) {
+      /*竖屏 css*/
+        #shadow{
+            display: block;
+        }
+    }
+    @media screen and (orientation: landscape) {
+      /*横屏 css*/
+        #shadow{
+            display: none;
+        }
+    }
+        @media screen and ( max-width: 960px ) {
+        }
+        @media screen and ( max-width: 736px ) {
+        }
+        @media screen and ( max-width: 568px ) {
+        }
+        h1.title{
+            position: absolute;
+            top: 50px;
+            left: 400px;
+            font-size: 100px;
+            color: #302678;
+            width: 1000px !important;
+        }
+        .show-modal{
+            position: absolute;
+            width: 530px;
+
+            top: 50%;
+            left: 50%;
+            margin-left: -265px;
+            margin-top: -290px;
+            background-color: #fff;
+            z-index: 10002;
+            display: none;
+
+
+        }
+        .show-modal .left{
+            width: 530px;
+            position: relative;
+            z-index: 100;
+            box-sizing: border-box;
+        }
+        .show-modal .right{
+            width: 100%;
+            position: relative;
+            padding: 10px 20px 20px 20px;
+            box-sizing: border-box;
+            font-size: 28px;
+            font-family: baiqiFont;
+            z-index: 100;
+        }
+        .show-modal .right .content{
+            box-sizing: border-box;
+            padding: 30px 15px 0;
+            line-height: 30px;
+        }
+        .show-modal .right .content .item{
+            text-align: center;
+            padding: 10px 0;
+        }
+        .show-modal .right .content .end{
+            text-align: right;
+            padding: 10px 0;
+        }
+        .shadow{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2000px;
+            background-color: rgba(255,255,255,.8);
+            z-index: 10001;
+            display: none;
+        }
+        .show-modal .download{
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            width: 24px;
+            height: 24px;
+            font-size: 24px;
+            text-align: center;
+            color: #888;
+            cursor: pointer;
+            z-index: 100;
+            text-decoration: none;
+            font-style: normal;
+        }
+        .show-modal .yj{
+            position: absolute;
+            top: 50%;
+            margin-top: -15px;
+            right: -56px;
+            width: 60px;
+            height: 60px;
+            font-size: 60px;
+            text-align: center;
+            color: #888;
+            cursor: pointer;
+            z-index: 99;
+            transition: all 0.5s ease-out;
+            transform: rotate(0deg);
+        }
+        .rotate-180{
+            transform: rotate(-180deg) !important;
+        }
+        .show-modal .leave_words{
+            width: 260px;
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 98;
+            transition: all 0.5s ease-out;
+            opacity: 0;
+            background-color: #fff;
+        }
+        .show-modal .leave_words .top{
+            background-color: #fff;
+            padding: 20px;
+
+        }
+
+        .show-modal .leave_words .top .title{
+            font-size: 20px;
+        }.show-modal .leave_words .top .sub_title{
+            font-size: 14px;
+            color: #aaa;
+            padding-top: 5px;
+        }
+        .show-modal .leave_words .bottom{
+            background-color: #fff;
+            padding: 10px 10px 0;
+            box-sizing: border-box;
+            width: 100%;
+            border-top: 1px solid #efefef;
+
+        }
+        .show-modal .leave_words .subbtn{
+            background-color: #fc5c62;
+            color: #fff;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+
+        }
+        .show-modal .leave_words .bottom textarea{
+            width: 100%;
+            height: 80px;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            resize: none;
+            font-size: 18px;
+        }
+        .right-300{
+            right: -320px !important;
+            opacity: 1 !important;
+        }
+        .reset{
+            position: absolute;
+            top: 60px;
+            left: -120px;
+            cursor: pointer;
+            font-size: 45px;
+        }
+        .sp2{
+            bottom: -5px !important;
+        }
+    </style>
+</head>
+<body>
+
+<div id="shadow"><p>请横屏使用，效果更佳！</p></div>
+<div id="container">
+
+</div>
+<div class="show-modal">
+        <div class="left">
+            <div class="swiper-container sw1">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" data-id="0"><div><img width="100%" src="{% static 'img/love_poem/love_poem_modal0.jpg' %}" alt=""></div></div>
+                    <div class="swiper-slide" data-id="1"><div><img width="100%" src="{% static 'img/love_poem/love_poem_modal1.jpg' %}" alt=""></div></div>
+                    <div class="swiper-slide" data-id="2"><div><img width="100%" src="{% static 'img/love_poem/love_poem_modal2.jpg' %}" alt=""></div></div>
+                    <div class="swiper-slide" data-id="3"><div><img width="100%" src="{% static 'img/love_poem/love_poem_modal3.jpg' %}" alt=""></div></div>
+                    <div class="swiper-slide" data-id="4"><div><img width="100%" src="{% static 'img/love_poem/love_poem_modal4.jpg' %}" alt=""></div></div>
+                    <div class="swiper-slide" data-id="5"><div><img width="100%" src="{% static 'img/love_poem/love_poem_modal5.jpg' %}" alt=""></div></div>
+                </div>
+                <div class="swiper-pagination sp1"></div>
+            </div>
+
+        </div>
+        <div class="right">
+            <div class="swiper-container sw2">
+                <div class="swiper-wrapper">
+
+                </div>
+                <div class="swiper-pagination sp2"></div>
+            </div>
+
+        </div>
+        <a title="发表个人意见" class="iconfont iconyoujian yj"></a>
+        <a title="下载明信片" class="iconfont iconxiazai download" download=""></a>
+        <div class="leave_words">
+            <div class="top">
+                <div class="title">请发表您创作的元素情诗</div>
+                <div class="sub_title">网站将择优进行展示</div>
+            </div>
+            <div class="show_area">
+                <div class="item">sadadadas</div>
+            </div>
+            <div class="bottom">
+                <textarea name="poem" id="poem"></textarea>
+            </div>
+            <div class="subbtn">提交</div>
+        </div>
+    </div>
+    <div class="shadow"></div>
+<script src="{% static 'js/three.min.js' %}"></script>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script src="{% static 'js/libs/tween.min.js' %}"></script>
+<script src="{% static 'js/swiper.min.js' %}"></script>
+<script src="{% static 'js/controls/TrackballControls.js' %}"></script>
+<script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
+<script src="{% static 'js/html2canvas.min.js' %}"></script>
+{% include 'left_nav.html' %}
+<script>
+    $(function () {
+        $(".download").click(function () {
+            {#html2canvas($(".show-modal")).then(function (canvas) {#}
+            {#    var imgurl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); // 获取生成的图片的url#}
+            {#    window.location.href = imgurl; // 下载图片#}
+            //{#});#}
+
+
+        });
+        $(".show-modal .close,.shadow").on("click", function () {
+            $(".show-modal").fadeOut();
+            $(".shadow").hide();
+            mySwiper1.destroy();
+            mySwiper2.destroy();
+        });
+        $(".show-modal").on("click", ".yj", function () {
+            $(this).toggleClass("rotate-180");
+            $(".show-modal .leave_words").toggleClass("right-300");
+        }).on("click", "textarea", function () {
+            $(this).focus();
+        });
+    });
+
+
+</script>
+<script>
+  var mouse = {}, pre_mouse = {};
+
+var table = [
+    {% for e in ep_list %}
+	"{{ e.ele__symbol }}", "{{ e.ele__cn_name }}", "{{ e.ele__en_name }}", "{{ e.ele__atomic_number }}", {{ e.ele__across }}, {{ e.ele__vertical }}, "{{ e.poem|safe }}",
+    {% endfor %}
+];
+
+
+var camera, scene, renderer;
+var controls;
+var mySwiper1,mySwiper2;
+
+
+var objects = [];
+var targets = { table: [], sphere: [], helix: [], grid: [] };
+
+init();
+animate();
+function init() {
+
+	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+	camera.position.z = 3000;
+  	var dragging = false;
+	scene = new THREE.Scene();
+
+	// table
+
+	for ( var i = 0; i < table.length; i += 7 ) {
+
+		let item = table[ i ];
+		let num = table[ i+3 ];
+		let cn_name = table[ i+1 ];
+		let en_name = table[ i+2 ];
+		let poem = table[ i+6 ];
+		let poem_list = poem.split("|");
+		var element = document.createElement( 'div' );
+		element.className = 'element';
+		if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+            element.addEventListener( 'touchend', function () {
+
+                if ( dragging ) {
+
+                    return;
+
+                }
+            }, false );
+            element.addEventListener( 'touchstart', function () {
+
+                dragging = false;
+
+            }, false );
+            element.addEventListener( 'touchmove', function () {
+
+                dragging = true;
+
+            }, false );
+        } else {
+            element.addEventListener( 'click', function () {
+                var $modal = $(".show-modal"),html="",$down = $(".download");
+                for(var i=0;i<poem_list.length;i++){
+                    let po_list = poem_list[i].split(".");
+                    html += "<div class=\"swiper-slide\" data-id=\""+i+"\">\n" +
+                        "                        <div class=\"content\">\n";
+                    for(var j=0;j<po_list.length;j++) {
+                        html += "<div class=\"item\">" + po_list[j] + "</div>";
+                    }
+                    html += "<div class=\"end\">--"+cn_name+"</div></div></div>"
+                }
+                if(html) $modal.find(".right .swiper-wrapper").empty().html(html);
+                setTimeout(function () {
+                    $(".shadow").show();
+                    $modal.fadeIn();
+                    mySwiper1 = new Swiper ('.sw1', {
+                        on:{
+                            slideChangeTransitionEnd: function(){
+                                var $down =$(".download"), href = $down.attr('href'), img_num = $(".sw1").find(".swiper-slide.swiper-slide-active").data("id");
+                                var match_list = href.match(/img_num=\d+/g);
+                                if (match_list){
+                                    $down.attr('href',href.replace(match_list[0], 'img_num='+img_num))
+                                }
+
+                            },
+                        },pagination: {
+                          el: '.sp1',
+                        },
+                    });
+                    mySwiper2 = new Swiper ('.sw2', {
+                        on:{
+                            slideChangeTransitionEnd: function(){
+                                var $down =$(".download"), href = $down.attr('href'), poem_num = $(".sw2").find(".swiper-slide.swiper-slide-active").data("id");
+                                var match_list = href.match(/poem_num=\d+/g);
+                                if (match_list){
+                                    $down.attr('href',href.replace(match_list[0], 'poem_num='+poem_num))
+                                }
+                            },
+                        },pagination: {
+                          el: '.sp2',
+                        },
+                    });
+                    $down.attr('href', '/get_love_poem_poster/'+cn_name+'元素三行情诗明信片.png?img_num=0&poem_num=0&symbol='+item);
+                }, 100);
+            }, false );
+            element.addEventListener( 'mouseout', function () {
+            }, false );
+        }
+
+		var number = document.createElement( 'div' );
+		number.className = 'number';
+		number.textContent = num;
+		element.appendChild( number );
+
+		var symbol = document.createElement( 'div' );
+		symbol.className = 'symbol';
+		symbol.textContent = item;
+		element.appendChild( symbol );
+
+		var object = new THREE.CSS3DObject( element );
+		object.position.x = Math.random() * 4000 - 2000;
+		object.position.y = Math.random() * 4000 - 2000;
+		object.position.z = Math.random() * 4000 - 2000;
+		scene.add( object );
+
+		objects.push( object );
+
+		//
+
+		var object = new THREE.Object3D();
+		object.position.x = ( table[ i + 4 ] * 180 - 1730 );
+  		object.position.y = - ( table[ i + 5 ] * 180 ) + 990;
+
+		targets.table.push( object );
+
+	}
+
+	//
+
+	renderer = new THREE.CSS3DRenderer();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.getElementById( 'container' ).appendChild( renderer.domElement );
+
+	//
+
+	controls = new THREE.TrackballControls( camera, renderer.domElement );
+	controls.rotateSpeed = 1;
+	controls.minDistance = 500;
+	controls.maxDistance = 6000;
+	controls.addEventListener( 'change', render );
+
+
+	function scaleCamera() {
+
+		camera.fov = 5000;
+		camera.updateProjectionMatrix();
+		renderer.render( scene, camera );
+
+	}
+
+
+
+    transform( targets.table, 2000 );
+
+	window.addEventListener( 'resize', onWindowResize, false );
+  	// document.addEventListener( 'mouseup', onDocumentMouseUp, false );
+  	{#document.onmousedown = onDocumentMouseUp;#}
+	document.addEventListener( 'touthmove', onDocumentTouchMove, false );
+
+}
+
+function transform( targets, duration ) {
+
+	TWEEN.removeAll();
+
+	for ( var i = 0; i < objects.length; i ++ ) {
+
+		var object = objects[ i ];
+		var target = targets[ i ];
+
+		new TWEEN.Tween( object.position )
+			.to( {
+				x: target.position.x,
+				y: target.position.y,
+				z: target.position.z
+			}, Math.random() * duration + duration )
+			.easing( TWEEN.Easing.Exponential.InOut )
+			.start();
+
+		new TWEEN.Tween( object.rotation )
+			.to( {
+				x: target.rotation.x,
+				y: target.rotation.y,
+				z: target.rotation.z
+			}, Math.random() * duration + duration )
+			.easing( TWEEN.Easing.Exponential.InOut )
+			.start();
+
+	}
+
+	new TWEEN.Tween( this )
+		.to( {}, duration * 2 )
+		.onUpdate( render )
+		.start();
+
+}
+
+function onWindowResize() {
+
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
+	render();
+
+}
+  function onDocumentMouseUp( event ) {
+
+  	event.preventDefault();
+  	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  	console.info( mouse );
+  	//适配手机
+  	if ( event.touches ) {
+
+  		mouse.x = ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1;
+  		mouse.y = - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1;
+  		pre_mouse.x = mouse.x;
+  		pre_mouse.y = mouse.y;
+
+	}
+
+  }
+
+
+
+
+
+function onDocumentMouseMove( event ) {
+
+  	// is_move = true;
+  	// mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  	// mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+  	// if ( is_click ) {
+  	//
+  	// 	if ( earth && earth_cloud ) {
+  	//
+  	// 		earth.rotation.set( earth.rotation.x - ( mouse.y - pre_mouse.y ), earth.rotation.y + ( mouse.x - pre_mouse.x ), earth.rotation.z );
+  	// 		earth_cloud.rotation.set( earth_cloud.rotation.x - ( mouse.y - pre_mouse.y ), earth_cloud.rotation.y + ( mouse.x - pre_mouse.x ), earth_cloud.rotation.z );
+  	//
+	// 	}
+  	//
+	// }
+  	// pre_mouse.x = mouse.x;
+  	// pre_mouse.y = mouse.y;
+
+}
+  function onDocumentTouchMove() {
+
+  	is_move = true;
+  	mouse.x = ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1;
+  	mouse.y = - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1;
+  	// if ( is_click ) {
+  	//
+  	// 	if ( earth && earth_cloud ) {
+  	//
+  	// 		earth.rotation.set( earth.rotation.x - ( mouse.y - pre_mouse.y ), earth.rotation.y + ( mouse.x - pre_mouse.x ), earth.rotation.z );
+  	// 		earth_cloud.rotation.set( earth_cloud.rotation.x - ( mouse.y - pre_mouse.y ), earth_cloud.rotation.y + ( mouse.x - pre_mouse.x ), earth_cloud.rotation.z );
+  	//
+	// 	}
+  	//
+	// }
+  	pre_mouse.x = mouse.x;
+  	pre_mouse.y = mouse.y;
+
+}
+function animate() {
+
+	requestAnimationFrame( animate );
+
+	TWEEN.update();
+
+	controls.update();
+
+}
+
+function render() {
+
+	renderer.render( scene, camera );
+
+}
+
+</script>
+</body>
+</html>
+

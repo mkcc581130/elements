@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    "compressor",
     'admin'
 ]
 
@@ -50,7 +51,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware'
 ]
-
 ROOT_URLCONF = 'elements.urls'
 
 TEMPLATES = [
@@ -82,7 +82,10 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'qq123456',
         'HOST': '47.99.144.183',
-        'PORT': '3306'
+        'PORT': '3306',
+        'OPTIONS': {
+            'charset': 'utf8mb4'
+        }
     }
 }
 
@@ -123,10 +126,18 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'compressor.finders.CompressorFinder',
 )
-# Media files
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
+STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+
+# Media files
+

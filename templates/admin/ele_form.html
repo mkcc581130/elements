@@ -35,9 +35,27 @@
             </div>
         </div>
         <div class="layui-inline">
+            <label class="layui-form-label">原子序数</label>
+            <div class="layui-input-inline">
+                <input type="text" name="atomic_number" value="{% if ele.atomic_number %}{{ ele.atomic_number }}{% endif %}" lay-verify="required" placeholder="请输入原子序数" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">相对<br>原子质量</label>
+            <div class="layui-input-inline">
+                <input type="text" name="relative_atomic_mass" value="{% if ele.relative_atomic_mass %}{{ ele.relative_atomic_mass }}{% endif %}" placeholder="请输入相对原子质量" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
             <label class="layui-form-label">中文名</label>
             <div class="layui-input-inline">
                 <input type="text" name="cn_name" value="{% if ele.cn_name %}{{ ele.cn_name }}{% endif %}" lay-verify="required" placeholder="请输入中文名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">拼音</label>
+            <div class="layui-input-inline">
+                <input type="text" name="pinyin" value="{% if ele.pinyin %}{{ ele.pinyin }}{% endif %}" placeholder="请输入拼音" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
@@ -47,24 +65,38 @@
             </div>
         </div>
 
-    </div>
-    <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label">原子序数</label>
+            <label class="layui-form-label">外层电子</label>
             <div class="layui-input-inline">
-                <input type="text" name="atomic_number" value="{% if ele.atomic_number %}{{ ele.atomic_number }}{% endif %}" lay-verify="required" placeholder="请输入原子序数" autocomplete="off" class="layui-input">
+                <input type="text" name="outer_electron" value="{% if ele.outer_electron %}{{ ele.outer_electron }}{% endif %}" placeholder="请输入外层电子" autocomplete="off" class="layui-input">
+            </div>
+        </div><div class="layui-inline">
+            <label class="layui-form-label">电子排布</label>
+            <div class="layui-input-inline">
+                <input type="text" name="electron_configuration" value="{% if ele.electron_configuration %}{{ ele.electron_configuration }}{% endif %}" placeholder="请输入电子排布" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
-            <label class="layui-form-label">相对<br>原子质量</label>
+            <label class="layui-form-label">元素类型</label>
             <div class="layui-input-inline">
-                <input type="text" name="relative_atomic_mass" value="{% if ele.relative_atomic_mass %}{{ ele.relative_atomic_mass }}{% endif %}" lay-verify="required" placeholder="请输入相对原子质量" autocomplete="off" class="layui-input">
+                <select name="element_type" id="element_type">
+                    <option value="">元素类型</option>
+                    <option value="1" {% if ele.element_type == 1 %}selected{% endif %}>非金属</option>
+                    <option value="2" {% if ele.element_type == 2 %}selected{% endif %}>类金属</option>
+                    <option value="3" {% if ele.element_type == 3 %}selected{% endif %}>卤素</option>
+                    <option value="4" {% if ele.element_type == 4 %}selected{% endif %}>惰性气体</option>
+                    <option value="5" {% if ele.element_type == 5 %}selected{% endif %}>碱金属</option>
+                    <option value="6" {% if ele.element_type == 6 %}selected{% endif %}>碱土金属</option>
+                    <option value="7" {% if ele.element_type == 7 %}selected{% endif %}>过渡金属</option>
+                    <option value="8" {% if ele.element_type == 8 %}selected{% endif %}>主族金属</option>
+                    <option value="9" {% if ele.element_type == 9 %}selected{% endif %}>镧系金属</option>
+                    <option value="10" {% if ele.element_type == 10 %}selected{% endif %}>锕系金属</option>
+                </select>
             </div>
-        </div>
-        <div class="layui-inline">
+        </div><div class="layui-inline">
             <label class="layui-form-label">原子半径类型</label>
             <div class="layui-input-inline">
-                <select name="atomic_radius_type" id="atomic_radius_type" lay-verify="required">
+                <select name="atomic_radius_type" id="atomic_radius_type">
                     <option value="">原子半径类型</option>
                     <option value="1" {% if ele.atomic_radius_type == 1 %}selected{% endif %}>原子共价半径</option>
                     <option value="2" {% if ele.atomic_radius_type == 2 %}selected{% endif %}>原子范德华半径</option>
@@ -89,7 +121,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">原子半径值</label>
             <div class="layui-input-inline">
-                <input type="text" name="atomic_radius" value="{% if ele.atomic_radius %}{{ ele.atomic_radius }}{% endif %}" lay-verify="required" placeholder="请输入原子半径" autocomplete="off" class="layui-input">
+                <input type="text" name="atomic_radius" value="{% if ele.atomic_radius %}{{ ele.atomic_radius }}{% endif %}" placeholder="请输入原子半径" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">

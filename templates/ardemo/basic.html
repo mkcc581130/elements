@@ -6,6 +6,8 @@
 <script src="bulid/stats.js"></script>
 <!-- ar.js -->
 <script src="bulid/ar.js"></script>
+<script src="bulid/PDBLoader.js"></script>
+<script src="bulid/CSS2DRenderer.js"></script>
 <script src="bulid/MTLLoader.js"></script>
 <script src="bulid/OBJLoader.js"></script>
 
@@ -117,7 +119,7 @@
     // init controls for camera
     var markerControls = new THREEx.ArMarkerControls(arToolkitContext,camera, {
         type : 'pattern',
-        patternUrl : 'arcode/marker89.td',
+        patternUrl : 'arcode/pattern-marker.patt',
         // patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/patt.kanji',
         // as we controls the camera, set changeMatrixMode: 'cameraTransformMatrix'
         changeMatrixMode: 'cameraTransformMatrix'
@@ -184,34 +186,122 @@
 
 
 
-        var mtlLoader = new THREE.MTLLoader();
+        //var mtlLoader = new THREE.MTLLoader();
 
-        mtlLoader.setPath( 'obj/' );
+        //mtlLoader.setPath( 'obj/' );
 
-        mtlLoader.load( 'jj.mtl', function( materials ) {
+        //mtlLoader.load( 'jj.mtl', function( materials ) {
 
 
-            materials.preload();
+        //    materials.preload();
 
-            var objLoader = new THREE.OBJLoader();
+        //   var objLoader = new THREE.OBJLoader();
 
-            objLoader.setMaterials( materials );
+        //    objLoader.setMaterials( materials );
 
-            objLoader.setPath( 'obj/' );
+        //    objLoader.setPath( 'obj/' );
 
-            objLoader.load( 'jj.obj', function ( object ) {
+        //    objLoader.load( 'jj.obj', function ( object ) {
 //                object.position.y = - 95;
-                obj=object;
-                scene.add( object );
-                object.position.set(0,0,0);
-                object.scale.set(0.001,0.001,0.001);
-                var axes=new THREE.AxisHelper(10);
-                scene.add(axes);
-            }, onProgress, onError );
+        //        obj=object;
+        //        scene.add( object );
+        //        object.position.set(0,0,0);
+        //        object.scale.set(0.001,0.001,0.001);
+        //        var axes=new THREE.AxisHelper(10);
+        //        scene.add(axes);
+        //    }, onProgress, onError );
 
 
 
-        });
+        //});
+          var loader = new THREE.PDBLoader(),root;
+    loader.load("obj/H2O.pdb", function (pdb) {
+        //创建一个模型组
+        root = new THREE.Group();
+        var offset = new THREE.Vector3();
 
+        //获取到原子相关的数据
+        var geometryAtoms = pdb.geometryAtoms;
+        //获取到原子间的键的数据
+        var geometryBonds = pdb.geometryBonds;
+        //获取原子文字的数据
+        var json = pdb.json;
 
+        var boxGeometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
+        var sphereGeometry = new THREE.IcosahedronBufferGeometry( 1, 2 );
+
+        //让模型居中
+        geometryAtoms.computeBoundingBox();
+        geometryAtoms.boundingBox.getCenter( offset ).negate();
+        geometryAtoms.translate( offset.x, offset.y, offset.z );
+        geometryBonds.translate( offset.x, offset.y, offset.z );
+
+        //将原子和原子的文字添加到模型组当中
+        var positions = geometryAtoms.getAttribute( 'position' );
+        var colors = geometryAtoms.getAttribute( 'color' );
+        var position = new THREE.Vector3();
+        var color = new THREE.Color();
+        for ( var i = 0; i < positions.count; i ++ ) {
+            position.x = positions.getX( i );
+            position.y = positions.getY( i );
+            position.z = positions.getZ( i );
+            color.r = colors.getX( i );
+            color.g = colors.getY( i );
+            color.b = colors.getZ( i );
+            var material = new THREE.MeshPhongMaterial( { color: color } );
+            var object = new THREE.Mesh( sphereGeometry, material );
+            object.position.copy( position );
+            object.position.multiplyScalar( 75 );
+            object.scale.multiplyScalar( 25 );
+            root.add( object );
+            var atom = json.atoms[ i ];
+            var text = document.createElement( 'p' );
+            text.className = 'label';
+            text.style.color = 'rgb(' + atom[ 3 ][ 0 ] + ',' + atom[ 3 ][ 1 ] + ',' + atom[ 3 ][ 2 ] + ')';
+            text.style.textShadow = "1px 1px 1px #000";
+            text.textContent = atom[ 4 ];
+            var label = new THREE.CSS2DObject( text );
+            label.position.copy( object.position );
+            root.add( label );
+        }
+
+        //将原子之间的键添加到模型组当中
+        positions = geometryBonds.getAttribute( 'position' );
+        var start = new THREE.Vector3();
+        var end = new THREE.Vector3();
+        for ( var i = 0; i < positions.count; i += 2 ) {
+            start.x = positions.getX( i );
+            start.y = positions.getY( i );
+            start.z = positions.getZ( i );
+            end.x = positions.getX( i + 1 );
+            end.y = positions.getY( i + 1 );
+            end.z = positions.getZ( i + 1 );
+            start.multiplyScalar( 75 );
+            end.multiplyScalar( 75 );
+            var object = new THREE.Mesh( boxGeometry, new THREE.MeshPhongMaterial( 0xffffff ) );
+            object.position.copy( start );
+            object.position.lerp( end, 0.5 );
+            object.scale.set( 5, 5, start.distanceTo( end ) );
+            object.lookAt( end );
+            root.add( object );
+        }
+
+        //缩放并将模型组添加到场景当中
+        root.scale.set(0.01, 0.01, 0.01);
+        scene.add(root);
+    });
+    //自动旋转
+    var t=0;
+    function loop(){
+     t++;
+     renderer.clear();
+     //root.rotation.set(0,0,t/100);
+     camera.position.x = 400*Math.cos(t/100);
+     camera.position.y = 400*Math.sin(t/200);
+     camera.position.z = 50*Math.cos(t/100);
+     camera.lookAt( {x:0, y:0, z:0 } );
+     renderer.render(scene,camera);
+     window.requestAnimationFrame(loop);
+    }
+    loop();
 </script></body>

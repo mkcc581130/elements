@@ -24,12 +24,15 @@
     <div class="dropdown">
         <div class="dropdown-title">物质</div>
         <ul class="dropdown-menu">
-            <li>单质</li>
-            <li>化合物</li>
+            <li><a href="{% url 'ele_material' %}?symbol={{ symbol }}">单质</a></li>
+            <li><a href="{% url 'ele_compound' %}?symbol={{ symbol }}">化合物</a></li>
         </ul>
     </div>
     <a href="/" id="return">
         周期表
+    </a>
+    <a href="javascript:void(0)" id="reset">
+        重置
     </a>
     {% if next_ele %}<a href="?symbol={{ next_ele.0.symbol }}" class="next">
         >>

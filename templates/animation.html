@@ -1,0 +1,745 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>单质收藏周期表（收藏家）</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="{% static 'iconfont/iconfont.css' %}">
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            margin: 0;
+            font-family: "Open Sans", sans-serif;
+            overflow: hidden;
+            color: #393F44;
+        }
+
+        a {
+            color: #ffffff;
+        }
+
+        #info {
+            position: absolute;
+            width: 100%;
+            color: #ffffff;
+            padding: 5px;
+            font-family: Monospace;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 1;
+        }
+
+        #menu {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .element {
+            width: 160px;
+            height: 160px;
+            box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            cursor: default;
+        }
+
+        .element:hover {
+            box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.75);
+        }
+
+        .element .number {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 28px;
+            color: #fff;
+        }
+
+        .element .symbol {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .element .details {
+            position: absolute;
+            bottom: 15px;
+            left: 0px;
+            right: 0px;
+            font-size: 14px;
+            color: rgba(127, 255, 255, 0.75);
+        }
+
+        button {
+            color: rgba(127, 255, 255, 0.75);
+            background: transparent;
+            outline: 1px solid rgba(127, 255, 255, 0.75);
+            border: 0px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgba(0, 255, 255, 0.5);
+        }
+
+        button:active {
+            color: #000000;
+            background-color: rgba(0, 255, 255, 0.75);
+        }
+        #shadow{
+            position: fixed;
+            width: 100%;
+            height: 2000px;
+            background-color: #000;
+            z-index: 100;
+        }
+        #shadow p{
+            position: absolute;
+            top: 300px;
+            left: 50%;
+            color: #fff;
+            margin-left: -88px;
+        }
+        @media screen and (orientation: portrait) {
+      /*竖屏 css*/
+        #shadow{
+            display: block;
+        }
+    }
+    @media screen and (orientation: landscape) {
+      /*横屏 css*/
+        #shadow{
+            display: none;
+        }
+    }
+        h1.title{
+            position: absolute;
+            top: 50px;
+            left: 400px;
+            font-size: 100px;
+            color: #302678;
+            width: 1300px !important;
+        }
+        .show-modal{
+            position: absolute;
+            width: 700px;
+            height: 400px;
+            top: 50%;
+            left: 50%;
+            margin-left: -350px;
+            margin-top: -200px;
+            background-color: #fff;
+            z-index: 10002;
+            display: none;
+        }
+        .show-modal .left{
+            width: 57.1%;
+            float: left;
+        }
+        .show-modal .right{
+            width: 42.9%;
+            float: left;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .show-modal .right .title{
+            font-size: 30px;
+            text-align: center;
+            padding: 20px 0 30px;
+            border-bottom: 1px solid #393F44;
+        }
+        .show-modal .right .content{
+            box-sizing: border-box;
+            padding: 50px 15px 0;
+            line-height: 30px;
+        }
+        .shadow{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2000px;
+            background-color: rgba(255,255,255,.8);
+            z-index: 10001;
+            display: none;
+        }
+        .show-modal .close{
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 24px;
+            height: 23px;
+            text-align: center;
+            line-height: 25px;
+            -webkit-border-radius: 20px;
+            -moz-border-radius: 20px;
+            border-radius: 20px;
+            border: 1px solid #888;
+            color: #888;
+            cursor: pointer;
+        }
+        @media screen and ( max-width: 960px ) {
+        .show-modal{
+            width: 350px;
+            height: 200px;
+            margin-left: -175px;
+            margin-top: -100px;
+            font-size: 8px;
+        }
+        .show-modal .right{
+            width: 42.9%;
+            float: left;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .show-modal .right .title{
+            font-size: 15px;
+            text-align: center;
+            padding: 10px 0 15px;
+            border-bottom: 1px solid #393F44;
+        }
+        .show-modal .right .content{
+            box-sizing: border-box;
+            padding: 25px 8px 0;
+            line-height: 16px;
+        }
+        .show-modal .close{
+            width: 12px;
+            height: 12px;
+            line-height: 12px;
+            top: 8px;
+            right: 8px;
+            -webkit-border-radius: 50px;
+            -moz-border-radius: 50px;
+            border-radius: 50px;
+            font-weight: bold;
+        }
+        }
+        .reset{
+            position: absolute;
+            top: 60px;
+            left: -120px;
+            cursor: pointer;
+            font-size: 45px;
+        }
+        .element img.png, .video-modal img{
+            position:relative;
+            animation:mymove 10s infinite;
+            -webkit-animation:mymove 10s infinite; /*Safari and Chrome*/
+            animation-direction:alternate;/*轮流反向播放动画。*/
+            animation-timing-function: ease; /*动画的速度曲线*/
+            /* Safari 和 Chrome */
+            -webkit-animation:mymove 10s infinite;
+            -webkit-animation-direction:alternate;/*轮流反向播放动画。*/
+            -webkit-animation-timing-function: ease; /*动画的速度曲线*/
+        }
+        @keyframes mymove
+            {
+                0%{
+                transform: scale(0.9);  /*开始为原始大小*/
+                }
+                25%{
+                    transform: scale(1.1); /*放大1.1倍*/
+                }
+                50%{
+                    transform: scale(0.9);
+                }
+                75%{
+                    transform: scale(1.1);
+                }
+
+            }
+
+            @-webkit-keyframes mymove /*Safari and Chrome*/
+            {
+                0%{
+                transform: scale(0.9);  /*开始为原始大小*/
+                }
+                25%{
+                    transform: scale(1.1); /*放大1.1倍*/
+                }
+                50%{
+                    transform: scale(0.9);
+                }
+                75%{
+                    transform: scale(1.1);
+                }
+            }
+        .video-modal{
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            top: 50%;
+            left: 50%;
+            margin-left: -250px;
+            margin-top: -250px;
+            z-index: 500;
+            display: none;
+            overflow: hidden;
+            background-color: #000;
+        }
+        .shadow{
+            background-color: rgba(0,0,0,0.8);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2000px;
+            z-index: 499;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<script src="{% static 'js/three.min.js' %}"></script>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script src="{% static 'js/libs/tween.min.js' %}"></script>
+<script src="{% static 'js/controls/TrackballControls.js' %}"></script>
+<script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
+{% include 'left_nav.html' %}
+<div id="shadow"><p>请横屏使用，效果更佳！</p></div>
+<div id="container">
+
+</div>
+<div class="video-modal">
+    <video width="100%" autoplay loop muted>
+        <source src="" type="video/mp4">
+    您的浏览器不支持 video 标签。
+    </video>
+</div>
+<div class="shadow"></div>
+
+<script>
+  function appFinishiLoad() {
+	//写要自动运行的JS，如横屏
+	BSL.AppScreen('2'); //横屏
+    }
+  var mouse = {}, pre_mouse = {};
+
+ var table = [
+	"H", "Hydrogen", "1", 1, 1,
+	"He", "Helium", "2", 18, 1,
+	"Li", "Lithium", "3", 1, 2,
+	"Be", "Beryllium", "4", 2, 2,
+	"B", "Boron", "5", 13, 2,
+	"C", "Carbon", "6", 14, 2,
+	"N", "Nitrogen", "7", 15, 2,
+	"O", "Oxygen", "8", 16, 2,
+	"F", "Fluorine", "9", 17, 2,
+	"Ne", "Neon", "10", 18, 2,
+	"Na", "Sodium", "11", 1, 3,
+	"Mg", "Magnesium", "12", 2, 3,
+	"Al", "Aluminium", "13", 13, 3,
+	"Si", "Silicon", "14", 14, 3,
+	"P", "Phosphorus", "15", 15, 3,
+	"S", "Sulfur", "16", 16, 3,
+	"Cl", "Chlorine", "17", 17, 3,
+	"Ar", "Argon", "18", 18, 3,
+	"K", "Potassium", "19", 1, 4,
+	"Ca", "Calcium", "20", 2, 4,
+	"Sc", "Scandium", "21", 3, 4,
+	"Ti", "Titanium", "22", 4, 4,
+	"V", "Vanadium", "23", 5, 4,
+	"Cr", "Chromium", "24", 6, 4,
+	"Mn", "Manganese", "25", 7, 4,
+	"Fe", "Iron", "26", 8, 4,
+	"Co", "Cobalt", "27", 9, 4,
+	"Ni", "Nickel", "28", 10, 4,
+	"Cu", "Copper", "29", 11, 4,
+	"Zn", "Zinc", "30", 12, 4,
+	"Ga", "Gallium", "31", 13, 4,
+	"Ge", "Germanium", "32", 14, 4,
+	"As", "Arsenic", "33", 15, 4,
+	"Se", "Selenium", "34", 16, 4,
+	"Br", "Bromine", "35", 17, 4,
+	"Kr", "Krypton", "36", 18, 4,
+	"Rb", "Rubidium", "37", 1, 5,
+	"Sr", "Strontium", "38", 2, 5,
+	"Y", "Yttrium", "39", 3, 5,
+	"Zr", "Zirconium", "40", 4, 5,
+	"Nb", "Niobium", "41", 5, 5,
+	"Mo", "Molybdenum", "42", 6, 5,
+	"Tc", "Technetium", "43", 7, 5,
+	"Ru", "Ruthenium", "44", 8, 5,
+	"Rh", "Rhodium", "45", 9, 5,
+	"Pd", "Palladium", "46", 10, 5,
+	"Ag", "Silver", "47", 11, 5,
+	"Cd", "Cadmium", "48", 12, 5,
+	"In", "Indium", "49", 13, 5,
+	"Sn", "Tin", "50", 14, 5,
+	"Sb", "Antimony", "51", 15, 5,
+	"Te", "Tellurium", "52", 16, 5,
+	"I", "Iodine", "53", 17, 5,
+	"Xe", "Xenon", "54", 18, 5,
+	"Cs", "Caesium", "55", 1, 6,
+	"Ba", "Barium", "56", 2, 6,
+	"La", "Lanthanum", "57", 4, 9,
+	"Ce", "Cerium", "58", 5, 9,
+	"Pr", "Praseodymium", "59", 6, 9,
+	"Nd", "Neodymium", "60", 7, 9,
+	"Pm", "Promethium", "61", 8, 9,
+	"Sm", "Samarium", "62", 9, 9,
+	"Eu", "Europium", "63", 10, 9,
+	"Gd", "Gadolinium", "64", 11, 9,
+	"Tb", "Terbium", "65", 12, 9,
+	"Dy", "Dysprosium", "66", 13, 9,
+	"Ho", "Holmium", "67", 14, 9,
+	"Er", "Erbium", "68", 15, 9,
+	"Tm", "Thulium", "69", 16, 9,
+	"Yb", "Ytterbium", "70", 17, 9,
+	"Lu", "Lutetium", "71", 18, 9,
+	"Hf", "Hafnium", "72", 4, 6,
+	"Ta", "Tantalum", "73", 5, 6,
+	"W", "Tungsten", "74", 6, 6,
+	"Re", "Rhenium", "75", 7, 6,
+	"Os", "Osmium", "76", 8, 6,
+	"Ir", "Iridium", "77", 9, 6,
+	"Pt", "Platinum", "78", 10, 6,
+	"Au", "Gold", "79", 11, 6,
+	"Hg", "Mercury", "80", 12, 6,
+	"Tl", "Thallium", "81", 13, 6,
+	"Pb", "Lead", "82", 14, 6,
+	"Bi", "Bismuth", "83", 15, 6,
+	"Po", "Polonium", "84", 16, 6,
+	"At", "Astatine", "85", 17, 6,
+	"Rn", "Radon", "86", 18, 6,
+	"Fr", "Francium", "87", 1, 7,
+	"Ra", "Radium", "88", 2, 7,
+	"Ac", "Actinium", "89", 4, 10,
+	"Th", "Thorium", "90", 5, 10,
+	"Pa", "Protactinium", "91", 6, 10,
+	"U", "Uranium", "92", 7, 10,
+	"Np", "Neptunium", "93", 8, 10,
+	"Pu", "Plutonium", "94", 9, 10,
+	"Am", "Americium", "95", 10, 10,
+	"Cm", "Curium", "96", 11, 10,
+	"Bk", "Berkelium", "97", 12, 10,
+	"Cf", "Californium", "98", 13, 10,
+	"Es", "Einstenium", "99", 14, 10,
+	"Fm", "Fermium", "100", 15, 10,
+	"Md", "Mendelevium", "101", 16, 10,
+	"No", "Nobelium", "102", 17, 10,
+	"Lr", "Lawrencium", "103", 18, 10,
+	"Rf", "Rutherfordium", "104", 4, 7,
+	"Db", "Dubnium", "105", 5, 7,
+	"Sg", "Seaborgium", "106", 6, 7,
+	"Bh", "Bohrium", "107", 7, 7,
+	"Hs", "Hassium", "108", 8, 7,
+	"Mt", "Meitnerium", "109", 9, 7,
+	"Ds", "Darmstadium", "110", 10, 7,
+	"Rg", "Roentgenium", "111", 11, 7,
+	"Cn", "Copernicium", "112", 12, 7,
+	"Nh", "Nihonium", "113", 13, 7,
+	"Fl", "Flerovium", "114", 14, 7,
+	"Mc", "Moscovium", "115", 15, 7,
+	"Lv", "Livermorium", "116", 16, 7,
+	"Ts", "Tennessine", "117", 17, 7,
+	"Og", "Oganesson", "118", 18, 7
+];
+
+
+var camera, scene, renderer;
+var controls;
+
+
+var objects = [];
+var targets = { table: [], sphere: [], helix: [], grid: [] };
+
+init();
+animate();
+$(function () {
+    $(".shadow").on('click', function () {
+        $(".video-modal").fadeOut();
+        $(".shadow").hide();
+    });
+})
+
+function init() {
+
+	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+	camera.position.z = 3000;
+  	var dragging = false;
+	scene = new THREE.Scene();
+
+	//标题
+    var title = document.createElement( 'h1' );
+    title.className = 'title';
+    title.innerText = "单质收藏周期表（收藏家）";
+    var object = new THREE.CSS3DObject( title );
+    object.position.x = -1150;
+    object.position.y = 700;
+    object.position.z = 0;
+    scene.add( object );
+    //重置
+    var reset = document.createElement( 'h1' );
+    reset.className = 'reset';
+    reset.innerText = "重置";
+    reset.addEventListener('click', function () {
+        controls.reset();
+    });
+    var object = new THREE.CSS3DObject( reset );
+    object.position.x = -50;
+    object.position.y = 700;
+    object.position.z = 0;
+    scene.add( object );
+	// table
+
+	for ( var i = 0; i < table.length; i += 5 ) {
+
+		let item = table[ i ];
+		var element = document.createElement( 'div' );
+		element.className = 'element';
+		element.style.backgroundColor = '#000';
+		element.style.overflow = 'hidden';
+		element.innerHTML = "<img width=\"100%\" src=\"/static/img/material/periodic/gif/"+item+".gif\" onerror=\"this.src='/static/img/material/periodic/80x80/"+item+".png';this.className='png'\">";
+		if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+            element.addEventListener( 'touchend', function () {
+
+                if ( dragging ) {
+
+                    return;
+
+                }
+                var $modal = $(".video-modal"),html;
+                $modal.empty();
+                if($(this).find('img').hasClass('png')){
+                    html = "<img width=\"100%\" src=\"/static/img/material/periodic/500x500/"+item+".png\">";
+                }else{
+                    html = "<video width=\"100%\" autoplay loop muted>\n" +
+                    "        <source src=\"/static/img/material/periodic/500x500/"+item+".mp4\" type=\"video/mp4\">\n" +
+                    "    您的浏览器不支持 video 标签。\n" +
+                    "    </video>";
+                }
+                $modal.append(html);
+                $modal.fadeIn();
+                $(".shadow").show();
+            }, false );
+            element.addEventListener( 'touchstart', function () {
+
+                dragging = false;
+
+            }, false );
+            element.addEventListener( 'touchmove', function () {
+
+                dragging = true;
+
+            }, false );
+        } else {
+            element.addEventListener( 'click', function () {
+                var $modal = $(".video-modal"),html;
+                $modal.empty();
+                if($(this).find('img').hasClass('png')){
+                    html = "<img width=\"100%\" src=\"/static/img/material/periodic/500x500/"+item+".png\">";
+                }else{
+                    html = "<video width=\"100%\" autoplay loop muted>\n" +
+                    "        <source src=\"/static/img/material/periodic/500x500/"+item+".mp4\" type=\"video/mp4\">\n" +
+                    "    您的浏览器不支持 video 标签。\n" +
+                    "    </video>";
+                }
+                $modal.append(html);
+                $modal.fadeIn();
+                $(".shadow").show();
+
+
+            }, false );
+        }
+        var number = document.createElement( 'div' );
+		number.className = 'number';
+		number.textContent = table[ i+2 ];
+		element.appendChild( number );
+
+		var symbol = document.createElement( 'div' );
+		symbol.className = 'symbol';
+		symbol.textContent = table[ i ];
+		element.appendChild( symbol );
+		var object = new THREE.CSS3DObject( element );
+		object.position.x = Math.random() * 4000 - 2000;
+		object.position.y = Math.random() * 4000 - 2000;
+		object.position.z = Math.random() * 4000 - 2000;
+		scene.add( object );
+
+		objects.push( object );
+
+		//
+
+		var object = new THREE.Object3D();
+		object.position.x = ( table[ i + 3 ] * 180 - 1730 );
+  		object.position.y = - ( table[ i + 4 ] * 180 ) + 990;
+
+		targets.table.push( object );
+
+	}
+
+	//
+
+	renderer = new THREE.CSS3DRenderer();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.getElementById( 'container' ).appendChild( renderer.domElement );
+
+	//
+
+	controls = new THREE.TrackballControls( camera, renderer.domElement );
+	controls.rotateSpeed = 1;
+	controls.minDistance = 500;
+	controls.maxDistance = 6000;
+	controls.addEventListener( 'change', render );
+
+
+	function scaleCamera() {
+
+		camera.fov = 5000;
+		camera.updateProjectionMatrix();
+		renderer.render( scene, camera );
+
+	}
+
+
+
+    transform( targets.table, 2000 );
+
+	window.addEventListener( 'resize', onWindowResize, false );
+  	// document.addEventListener( 'mouseup', onDocumentMouseUp, false );
+  	document.onmousedown = onDocumentMouseUp;
+	document.addEventListener( 'touthmove', onDocumentTouchMove, false );
+
+}
+
+function transform( targets, duration ) {
+
+	TWEEN.removeAll();
+
+	for ( var i = 0; i < objects.length; i ++ ) {
+
+		var object = objects[ i ];
+		var target = targets[ i ];
+
+		new TWEEN.Tween( object.position )
+			.to( {
+				x: target.position.x,
+				y: target.position.y,
+				z: target.position.z
+			}, Math.random() * duration + duration )
+			.easing( TWEEN.Easing.Exponential.InOut )
+			.start();
+
+		new TWEEN.Tween( object.rotation )
+			.to( {
+				x: target.rotation.x,
+				y: target.rotation.y,
+				z: target.rotation.z
+			}, Math.random() * duration + duration )
+			.easing( TWEEN.Easing.Exponential.InOut )
+			.start();
+
+	}
+
+	new TWEEN.Tween( this )
+		.to( {}, duration * 2 )
+		.onUpdate( render )
+		.start();
+
+}
+
+function onWindowResize() {
+
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
+	render();
+
+}
+  function onDocumentMouseUp( event ) {
+
+  	event.preventDefault();
+  	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  	console.info( mouse );
+  	//适配手机
+  	if ( event.touches ) {
+
+  		mouse.x = ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1;
+  		mouse.y = - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1;
+  		pre_mouse.x = mouse.x;
+  		pre_mouse.y = mouse.y;
+
+	}
+
+  }
+
+
+
+
+
+function onDocumentMouseMove( event ) {
+
+  	// is_move = true;
+  	// mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  	// mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+  	// if ( is_click ) {
+  	//
+  	// 	if ( earth && earth_cloud ) {
+  	//
+  	// 		earth.rotation.set( earth.rotation.x - ( mouse.y - pre_mouse.y ), earth.rotation.y + ( mouse.x - pre_mouse.x ), earth.rotation.z );
+  	// 		earth_cloud.rotation.set( earth_cloud.rotation.x - ( mouse.y - pre_mouse.y ), earth_cloud.rotation.y + ( mouse.x - pre_mouse.x ), earth_cloud.rotation.z );
+  	//
+	// 	}
+  	//
+	// }
+  	// pre_mouse.x = mouse.x;
+  	// pre_mouse.y = mouse.y;
+
+}
+  function onDocumentTouchMove() {
+
+  	is_move = true;
+  	mouse.x = ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1;
+  	mouse.y = - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1;
+  	// if ( is_click ) {
+  	//
+  	// 	if ( earth && earth_cloud ) {
+  	//
+  	// 		earth.rotation.set( earth.rotation.x - ( mouse.y - pre_mouse.y ), earth.rotation.y + ( mouse.x - pre_mouse.x ), earth.rotation.z );
+  	// 		earth_cloud.rotation.set( earth_cloud.rotation.x - ( mouse.y - pre_mouse.y ), earth_cloud.rotation.y + ( mouse.x - pre_mouse.x ), earth_cloud.rotation.z );
+  	//
+	// 	}
+  	//
+	// }
+  	pre_mouse.x = mouse.x;
+  	pre_mouse.y = mouse.y;
+
+}
+function animate() {
+
+	requestAnimationFrame( animate );
+
+	TWEEN.update();
+
+	controls.update();
+
+}
+
+function render() {
+
+	renderer.render( scene, camera );
+
+}
+
+</script>
+</body>
+</html>
+

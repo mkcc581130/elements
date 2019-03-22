@@ -10,6 +10,7 @@
     <style>
         body{
             background-color: #fff;
+            font-family: "Open Sans", sans-serif;
         }
         .hi{
             width: 1000px;
@@ -68,6 +69,10 @@
             content: '';
             z-index: -1;
             border-radius: 16px;
+        }
+        #return,#reset,.pre,.next,.dropdown-title{
+            color: {% if hiele.dark_color %}{{ hiele.dark_color }}{% else %}#21548d{% endif %};
+            border-color: {% if hiele.dark_color %}{{ hiele.dark_color }}{% else %}#21548d{% endif %};
         }
         .hi-left ul{
             padding-right: 20px;
@@ -183,7 +188,7 @@
         </div>
         <div class="hi-right">
 {#            <div class="title">元素使者{{ hiele.ele.atomic_number|two_digits }}：{{ hiele.ele.cn_name }}（{{ symbol }}）</div>#}
-            <div class="img"><img width="100%" src="{% static 'img/' %}{{ symbol }}_1.png" alt=""></div>
+            <div class="img"><img width="100%" src="{% static 'img/hi_big/' %}{{ symbol }}_1.png" alt=""></div>
         </div>
         <div class="clear"></div>
     <div class="happy zi hai">嗨</div>
@@ -241,7 +246,9 @@ function init() {
 	controls.minDistance = 500;
 	controls.maxDistance = 6000;
 	controls.addEventListener( 'change', render );
-
+    document.getElementById( 'reset' ).addEventListener('click', function () {
+        controls.reset();
+    });
 	function scaleCamera() {
 
 		camera.fov = 5000;

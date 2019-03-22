@@ -1,0 +1,497 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>顺口溜周期表</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="{% static 'iconfont/iconfont.css' %}">
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            margin: 0;
+            overflow: hidden;
+            color: #393F44;
+            -webkit-font-smoothing: antialiased; /*chrome、safari*/
+            -moz-osx-font-smoothing: grayscale;/*firefox*/
+            font-family: "Open Sans", sans-serif;
+            background-image: url("{% static 'img/jingle_bk.jpg' %}");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+        }
+
+        a {
+            color: #ffffff;
+        }
+
+        #info {
+            position: absolute;
+            width: 100%;
+            color: #ffffff;
+            padding: 5px;
+            font-family: Monospace;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 1;
+        }
+
+        #menu {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .element {
+            width: 160px;
+            height: 160px;
+            box-shadow: 0px 0px 12px rgba(0,0,0, 0.5);
+            text-align: center;
+            cursor: default;
+            border: 1px solid #e2d1c3;
+            background: -webkit-linear-gradient(top left, #fdfcfb , #e2d1c3); /* Safari 5.1 - 6.0 */
+            background: -o-linear-gradient(bottom right, #fdfcfb , #e2d1c3); /* Opera 11.1 - 12.0 */
+            background: -moz-linear-gradient(bottom right, #fdfcfb , #e2d1c3); /* Firefox 3.6 - 15 */
+            background: linear-gradient(to bottom right, #fdfcfb , #e2d1c3); /* 标准的语法（必须放在最后） */
+            color: rgba(0,0,0,.5);
+            {#font-family: bsFont;#}
+            border-radius: 15px;
+            border-top-left-radius: 0;
+            opacity: .9;
+        }
+
+        .element:hover {
+            color: #fff;
+        }
+        .element .number {
+            position: absolute;
+            top: 13px;
+            left: 13px;
+            font-size: 30px;
+        }
+
+        .element .symbol {
+            position: absolute;
+            top: 58px;
+            left: 0px;
+            right: 0px;
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+        .element .details {
+            position: absolute;
+            bottom: 15px;
+            left: 0px;
+            right: 0px;
+            font-size: 14px;
+            color: rgba(34,139,34, 0.75);
+        }
+
+        button {
+            color: rgba(127, 255, 255, 0.75);
+            background: transparent;
+            outline: 1px solid rgba(127, 255, 255, 0.75);
+            border: 0px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgba(0, 255, 255, 0.5);
+        }
+
+        button:active {
+            color: #000000;
+            background-color: rgba(0, 255, 255, 0.75);
+        }
+        #shadow{
+            position: fixed;
+            width: 100%;
+            height: 2000px;
+            background-color: #000;
+            z-index: 100;
+        }
+        #shadow p{
+            position: absolute;
+            top: 300px;
+            left: 50%;
+            color: #fff;
+            margin-left: -88px;
+        }
+        @media screen and (orientation: portrait) {
+      /*竖屏 css*/
+        #shadow{
+            display: block;
+        }
+    }
+    @media screen and (orientation: landscape) {
+      /*横屏 css*/
+        #shadow{
+            display: none;
+        }
+    }
+        h1.title{
+            position: absolute;
+            top: 50px;
+            left: 400px;
+            font-size: 100px;
+            color: #302678;
+            width: 1000px !important;
+        }
+        .show-modal{
+            position: absolute;
+            width: 700px;
+            height: 400px;
+            top: 50%;
+            left: 50%;
+            margin-left: -350px;
+            margin-top: -200px;
+            background-color: #fff;
+            z-index: 10002;
+            display: none;
+        }
+        .show-modal .left{
+            width: 57.1%;
+            float: left;
+        }
+        .show-modal .right{
+            width: 42.9%;
+            float: left;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .show-modal .right .title{
+            font-size: 30px;
+            text-align: center;
+            padding: 20px 0 30px;
+            border-bottom: 1px solid #393F44;
+        }
+        .show-modal .right .content{
+            box-sizing: border-box;
+            padding: 50px 15px 0;
+            line-height: 30px;
+        }
+        .shadow{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2000px;
+            background-color: rgba(255,255,255,.8);
+            z-index: 10001;
+            display: none;
+        }
+        .show-modal .close{
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 24px;
+            height: 23px;
+            text-align: center;
+            line-height: 25px;
+            -webkit-border-radius: 20px;
+            -moz-border-radius: 20px;
+            border-radius: 20px;
+            border: 1px solid #888;
+            color: #888;
+            cursor: pointer;
+        }
+        .reset{
+            position: absolute;
+            top: 60px;
+            left: -120px;
+            cursor: pointer;
+            font-size: 45px;
+        }
+        .jingle{
+            font-size: 70px;
+            font-weight: bold;
+            width: 1200px;
+        }
+    </style>
+</head>
+<body>
+<script src="{% static 'js/three.min.js' %}"></script>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script src="{% static 'js/libs/tween.min.js' %}"></script>
+<script src="{% static 'js/controls/TrackballControls.js' %}"></script>
+<script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
+{% include 'left_nav.html' %}
+<div id="shadow"><p>请横屏使用，效果更佳！</p></div>
+<div id="container">
+
+</div>
+    <div class="shadow"></div>
+
+<script>
+  function appFinishiLoad() {
+	//写要自动运行的JS，如横屏
+	BSL.AppScreen('2'); //横屏
+    }
+  var mouse = {}, pre_mouse = {};
+
+var table = [
+    {% for e in ei_list %}
+	"{{ e.ele__symbol }}", "{{ e.ele__atomic_number }}", {{ e.ele__across }}, {{ e.ele__vertical }}, "{{ e.jingle|safe }}",
+    {% endfor %}
+];
+
+
+var camera, scene, renderer;
+var controls;
+
+
+var objects = [];
+var targets = { table: [], sphere: [], helix: [], grid: [] };
+
+init();
+animate();
+
+function init() {
+
+	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+	camera.position.z = 3000;
+  	var dragging = false;
+	scene = new THREE.Scene();
+
+    //重置
+    var poem = document.createElement( 'div' );
+    poem.className = 'jingle';
+    poem.style.textAlign = 'center';
+    var object = new THREE.CSS3DObject( poem );
+    object.position.x = -400;
+    object.position.y = 650;
+    object.position.z = 0;
+    scene.add( object );
+	// table
+
+	for ( var i = 0; i < table.length; i += 5 ) {
+
+		let item = table[ i ];
+		let jingle = table[ i+4 ];
+		var element = document.createElement( 'div' );
+		element.className = 'element';
+		if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+            element.addEventListener( 'touchend', function () {
+
+                if ( dragging ) {
+
+                    return;
+
+                }
+                $(".jingle").html(jingle);
+            }, false );
+            element.addEventListener( 'touchstart', function () {
+
+                dragging = false;
+
+            }, false );
+            element.addEventListener( 'touchmove', function () {
+
+                dragging = true;
+
+            }, false );
+        } else {
+            element.addEventListener( 'mouseover', function () {
+                $(".jingle").html(jingle);
+            }, false );
+            element.addEventListener( 'mouseout', function () {
+                $(".jingle").html("");
+            }, false );
+        }
+
+		var number = document.createElement( 'div' );
+		number.className = 'number';
+		number.textContent = table[ i+1 ];
+		element.appendChild( number );
+
+		var symbol = document.createElement( 'div' );
+		symbol.className = 'symbol';
+		symbol.textContent = item;
+		element.appendChild( symbol );
+
+		var object = new THREE.CSS3DObject( element );
+		object.position.x = Math.random() * 4000 - 2000;
+		object.position.y = Math.random() * 4000 - 2000;
+		object.position.z = Math.random() * 4000 - 2000;
+		scene.add( object );
+
+		objects.push( object );
+
+		//
+
+		var object = new THREE.Object3D();
+		object.position.x = ( table[ i + 2 ] * 180 - 1730 );
+  		object.position.y = - ( table[ i + 3 ] * 180 ) + 990;
+
+		targets.table.push( object );
+
+	}
+
+	//
+
+	renderer = new THREE.CSS3DRenderer();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.getElementById( 'container' ).appendChild( renderer.domElement );
+
+	//
+
+	controls = new THREE.TrackballControls( camera, renderer.domElement );
+	controls.rotateSpeed = 1;
+	controls.minDistance = 500;
+	controls.maxDistance = 6000;
+	controls.addEventListener( 'change', render );
+
+
+	function scaleCamera() {
+
+		camera.fov = 5000;
+		camera.updateProjectionMatrix();
+		renderer.render( scene, camera );
+
+	}
+
+
+
+    transform( targets.table, 2000 );
+
+	window.addEventListener( 'resize', onWindowResize, false );
+  	// document.addEventListener( 'mouseup', onDocumentMouseUp, false );
+  	document.onmousedown = onDocumentMouseUp;
+	document.addEventListener( 'touthmove', onDocumentTouchMove, false );
+
+}
+
+function transform( targets, duration ) {
+
+	TWEEN.removeAll();
+
+	for ( var i = 0; i < objects.length; i ++ ) {
+
+		var object = objects[ i ];
+		var target = targets[ i ];
+
+		new TWEEN.Tween( object.position )
+			.to( {
+				x: target.position.x,
+				y: target.position.y,
+				z: target.position.z
+			}, Math.random() * duration + duration )
+			.easing( TWEEN.Easing.Exponential.InOut )
+			.start();
+
+		new TWEEN.Tween( object.rotation )
+			.to( {
+				x: target.rotation.x,
+				y: target.rotation.y,
+				z: target.rotation.z
+			}, Math.random() * duration + duration )
+			.easing( TWEEN.Easing.Exponential.InOut )
+			.start();
+
+	}
+
+	new TWEEN.Tween( this )
+		.to( {}, duration * 2 )
+		.onUpdate( render )
+		.start();
+
+}
+
+function onWindowResize() {
+
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
+	render();
+
+}
+  function onDocumentMouseUp( event ) {
+
+  	event.preventDefault();
+  	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  	console.info( mouse );
+  	//适配手机
+  	if ( event.touches ) {
+
+  		mouse.x = ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1;
+  		mouse.y = - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1;
+  		pre_mouse.x = mouse.x;
+  		pre_mouse.y = mouse.y;
+
+	}
+
+  }
+
+
+
+
+
+function onDocumentMouseMove( event ) {
+
+  	// is_move = true;
+  	// mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  	// mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+  	// if ( is_click ) {
+  	//
+  	// 	if ( earth && earth_cloud ) {
+  	//
+  	// 		earth.rotation.set( earth.rotation.x - ( mouse.y - pre_mouse.y ), earth.rotation.y + ( mouse.x - pre_mouse.x ), earth.rotation.z );
+  	// 		earth_cloud.rotation.set( earth_cloud.rotation.x - ( mouse.y - pre_mouse.y ), earth_cloud.rotation.y + ( mouse.x - pre_mouse.x ), earth_cloud.rotation.z );
+  	//
+	// 	}
+  	//
+	// }
+  	// pre_mouse.x = mouse.x;
+  	// pre_mouse.y = mouse.y;
+
+}
+  function onDocumentTouchMove() {
+
+  	is_move = true;
+  	mouse.x = ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1;
+  	mouse.y = - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1;
+  	// if ( is_click ) {
+  	//
+  	// 	if ( earth && earth_cloud ) {
+  	//
+  	// 		earth.rotation.set( earth.rotation.x - ( mouse.y - pre_mouse.y ), earth.rotation.y + ( mouse.x - pre_mouse.x ), earth.rotation.z );
+  	// 		earth_cloud.rotation.set( earth_cloud.rotation.x - ( mouse.y - pre_mouse.y ), earth_cloud.rotation.y + ( mouse.x - pre_mouse.x ), earth_cloud.rotation.z );
+  	//
+	// 	}
+  	//
+	// }
+  	pre_mouse.x = mouse.x;
+  	pre_mouse.y = mouse.y;
+
+}
+function animate() {
+
+	requestAnimationFrame( animate );
+
+	TWEEN.update();
+
+	controls.update();
+
+}
+
+function render() {
+
+	renderer.render( scene, camera );
+
+}
+
+</script>
+</body>
+</html>
+

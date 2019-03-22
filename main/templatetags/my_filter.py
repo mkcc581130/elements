@@ -9,4 +9,14 @@ def two_digits(num):
         return str(num)
 
 
+def digits(flo, num=2):
+    if isinstance(num, int):
+        try:
+            flo.index('.')
+            return round(float(flo.replace(' ', '')), num)
+        except ValueError:
+            return flo
+
+
 register.filter(two_digits)
+register.filter(digits)

@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/comm.css' %}">
     <style>
+        body{
+            font-family: "Open Sans", sans-serif;
+        }
         .ele{
             width: 1000px;
             padding: 50px 20px;
@@ -142,7 +145,7 @@
                 </div>
             </div>
             <div class="ele_right">
-                <div class="ele_img"><img src="/static/img/{{ ele.symbol }}_0.JPG" width="100%" alt=""></div>
+                <div class="ele_img"><img src="/static/img/info/{{ ele.symbol }}_0.JPG" width="100%" alt=""></div>
                 <div class="ele_extra">{{ ele.extra }}</div>
             </div>
             <div class="clear"></div>
@@ -205,7 +208,9 @@ function init() {
 	controls.minDistance = 500;
 	controls.maxDistance = 6000;
 	controls.addEventListener( 'change', render );
-
+    document.getElementById( 'reset' ).addEventListener('click', function () {
+        controls.reset();
+    });
 	function scaleCamera() {
 
 		camera.fov = 5000;

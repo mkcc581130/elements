@@ -1,0 +1,726 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ eme.compound }}--物质界面</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'iconfont/iconfont.css' %}" rel="stylesheet">
+    <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <style>
+        body, html {
+            padding: 0;
+            margin: 0;
+            position: relative;
+            background-color: #eee;
+            -webkit-text-size-adjust:none;
+            font-family: "Open Sans", sans-serif;
+        }
+
+        /* Reset */
+        *,
+        *:after,
+        *:before {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        ul,li{
+            list-style: none;
+        }
+        .navbar-nav {
+          float: none;
+          text-align:left;
+            margin-top: 0.34rem;
+            padding-left: 0.45rem;
+        }
+        ul.nav.navbar-nav li {
+            float:none;
+            display: inline-block;
+            margin-right: 0.3rem;
+
+        }
+        .nav>li>a:focus, .nav>li>a:hover{
+            text-decoration: none;
+            background-color: rgba(0,0,0,.4);
+            top: 0.01rem;
+        }
+        .nav .open>a, .nav .open>a:focus, .nav .open>a:hover{
+            background-color: rgba(0,0,0,.4);
+            color: #fff;
+            top: 0.01rem;
+
+        }
+        .navbar-nav>li>a{
+            color: #fff;
+            padding-top: 0.2rem;
+            padding-bottom: 0.2rem;
+            font-size: 0.3rem;
+            font-weight: bold;
+        }
+        header{
+            position: relative;
+            z-index: 100;
+        }
+        header .container{
+            position: relative;
+
+        }
+        .main{
+            font-size: 0.16rem;
+
+        }
+        .main .container{
+            border-top: none;
+            position: relative;
+            background-color: #fff;
+            padding: 0;
+        }
+        .main .container .box{
+            padding: 1.4rem 0.7rem 0 0.7rem;
+            border-left: 0.3rem solid;
+            border-right: 0.3rem solid;
+            border-image: -webkit-linear-gradient(top, #4150d1,#302e84) 30;
+            border-image: -moz-linear-gradient(bottom, #4150d1,#302e84) 30;
+            border-image: linear-gradient(to bottom, #4150d1,#302e84) 30;
+        }
+        .main .container .back{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 98;
+        }
+        </style>
+        <style>
+        .info{
+            border-bottom: 0.03rem solid;
+            border-image: -webkit-linear-gradient(left, #4249d1,#fc5c62) 30;
+            border-image: -moz-linear-gradient(right, #4249d1,#fc5c62) 30;
+            border-image: linear-gradient(to right, #4249d1,#fc5c62) 30;
+            padding-bottom: 0.3rem;
+        }
+        .info .top{
+            position: relative;
+            z-index: 100;
+        }
+        .info .top .left{
+            float: left;
+            position: relative;
+            z-index: 100;
+        }
+        .info .top .left .cn{
+            font-size: 0.6rem;
+            line-height: 0.6rem;
+            margin-bottom: 0;
+            background-image: -webkit-gradient(linear, left top, right top, from(#4249d1), to(#26225c));
+            -webkit-background-clip: text; /*必需加前缀 -webkit- 才支持这个text值 */
+            -webkit-text-fill-color: transparent; /*text-fill-color会覆盖color所定义的字体颜色： */
+        }
+        .info .top .left .en{
+            font-size: 0.45rem;
+            line-height: 0.45rem;
+            margin-bottom: 0;
+            background-image: -webkit-gradient(linear, left top, right top, from(#4249d1), to(#26225c));
+            -webkit-background-clip: text; /*必需加前缀 -webkit- 才支持这个text值 */
+            -webkit-text-fill-color: transparent; /*text-fill-color会覆盖color所定义的字体颜色： */
+        }
+        .info .top .right{
+            float: left;
+            position: relative;
+            z-index: 100;
+            font-size: 1.05rem;
+            line-height: 1.05rem;
+            font-weight: bold;
+            background-image: -webkit-gradient(linear, left top, right top, from(#4249d1), to(#26225c));
+            -webkit-background-clip: text; /*必需加前缀 -webkit- 才支持这个text值 */
+            -webkit-text-fill-color: transparent; /*text-fill-color会覆盖color所定义的字体颜色： */
+        }
+        .info .top .en_name{
+            color: rgba(242,242,242,0.8);
+            font-size: 0.67rem;
+            position: absolute;
+            top: -0.54rem;
+            left: 0;
+            z-index: 90;
+            font-weight: bold;
+        }
+        .info .top .interval{
+            color: #4249d1;
+            font-size: 1rem;
+            line-height: 1rem;
+            float: left;
+            position: relative;
+            top: -0.02rem;
+            z-index: 102;
+            margin-left: 0.1rem;
+        }
+        .info .title{
+            font-size: 0.42rem;
+            font-weight: bold;
+            margin-top: 0.8rem;
+            margin-bottom: 0.2rem;
+        }
+        .info .title .cn{
+            color: #2a286e;
+        }
+        .info .title .en{
+            color: #d9d9d9;
+        }
+        .info .content .left{
+            float: left;
+            width: 58%;
+            font-size: 0.32rem;
+            line-height: 0.54rem;
+        }
+        .info .content .left img{
+            height: 2rem;
+        }
+        .info .content .right{
+            float: left;
+            width: 42%;
+            font-size: 0.3rem;
+        }
+        .info .content .right .point{
+            font-weight: bold;
+            color: #2f2574;
+            font-size: 0.5rem;
+            line-height: 0.2rem;
+            margin-right: 0.24rem;
+        }
+        .info .content .right ul{
+            padding-left: 0.36rem;
+        }
+        .info .content .right li{
+            margin-left: 0.2rem;
+            margin-bottom: 0.1rem;
+        }
+    </style>
+
+    <style>
+        .allotrope{
+            margin-top: 0.8rem;
+            position: relative;
+            border-bottom: 0.03rem solid;
+            border-image: -webkit-linear-gradient(left, #4249d1,#fc5c62) 30;
+            border-image: -moz-linear-gradient(right, #4249d1,#fc5c62) 30;
+            border-image: linear-gradient(to right, #4249d1,#fc5c62) 30;
+        }
+        .allotrope .title .cn{
+            font-size: 0.36rem;
+            color: #29286a;
+            font-weight: bold;
+            margin-bottom: 0.1rem;
+        }
+        .allotrope .title .bar{
+            background-color: #fc5c62;
+            width: 0.9rem;
+            height: 0.14rem;
+            border-radius: 0.7rem;
+        }
+        .allotrope .content .item{
+            padding: 0.4rem 0 0.2rem;
+            font-size: 0.3rem;
+            border-bottom: 1px solid #d9d9d9;
+        }
+        .allotrope .content .item strong{
+            font-weight: bold;
+            color: #29286a;
+        }
+        .allotrope .content .item .left{
+            float: left;
+            width: 74%;
+        }
+        .allotrope .content .item .right{
+            float: left;
+            width: 26%;
+            text-align: right;
+            position: relative;
+        }
+        .allotrope .content .item .right .circle{
+            width: 1.6rem;
+        }
+        .allotrope .content .item .right .play{
+            width: 0.6rem;
+            position: absolute;
+            right: 0.05rem;
+            top: 1.1rem;
+            z-index: 99;
+            cursor: pointer;
+        }
+        .allotrope .content .item .right .material{
+            width: 1.4rem;
+            position: absolute;
+            right: 0.3rem;
+            top: 0.3rem;
+            z-index: 98;
+        }
+        .allotrope .title-sup{
+            position: absolute;
+            top: -0.5rem;
+            right: 0;
+            width: 2.3rem;
+        }
+
+    </style>
+    <style>
+        .application{
+            margin-top: 0.8rem;
+            position: relative;
+            border-bottom: 0.03rem solid;
+            border-image: -webkit-linear-gradient(left, #4249d1,#fc5c62) 30;
+            border-image: -moz-linear-gradient(right, #4249d1,#fc5c62) 30;
+            border-image: linear-gradient(to right, #4249d1,#fc5c62) 30;
+        }
+        .application .title .cn{
+            font-size: 0.36rem;
+            color: #29286a;
+            font-weight: bold;
+            margin-bottom: 0.1rem;
+        }
+        .application .title .bar{
+            background-color: #fc5c62;
+            width: 0.9rem;
+            height: 0.14rem;
+            border-radius: 0.07rem;
+        }
+        .application .title-sup{
+            position: absolute;
+            top: -0.7rem;
+            right: 0;
+            width: 7rem;
+        }
+        .application .content{
+            padding-top: 0.6rem;
+        }
+        .application .item{
+            width: 100%;
+            height: 1.4rem;
+            margin-bottom: 0.1rem;
+            background-color: #f2f2f2;
+            border-radius: 0.2rem;
+            position: relative;
+            display: flex;
+            display: -webkit-flex;
+            align-items:center;
+            font-size: 0.3rem;
+            padding-left: 1.6rem;
+            padding-right: 0.4rem;
+        }
+        .application .item .shade{
+            width: 0.7rem;
+            height: 1.4rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #fff;
+        }
+        .application .item .play{
+            position: absolute;
+            left: 0.95rem;
+            bottom: 0;
+            width: 0.6rem;
+            z-index: 103;
+            cursor: pointer;
+        }
+        .application .item .img{
+            width: 1.4rem;
+            height: 1.4rem;
+            border-radius: 1.4rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #fff;
+            padding: 0.1rem;
+            overflow: hidden;
+        }
+        .application .item .img .line{
+            width: 1.2rem;
+            height: 1.2rem;
+            border-radius: 1.2rem;
+            padding: 0.1rem;
+            overflow: hidden;
+            background: -webkit-linear-gradient(top, #4249d1 , #fc5c62); /* Safari 5.1 - 6.0 */
+            background: -o-linear-gradient(bottom, #4249d1 , #fc5c62); /* Opera 11.1 - 12.0 */
+            background: -moz-linear-gradient(bottom, #4249d1 , #fc5c62); /* Firefox 3.6 - 15 */
+            background: linear-gradient(to bottom, #4249d1 , #fc5c62); /* 标准的语法（必须放在最后） */
+        }
+        .application .item .img .line .circle{
+            width: 1rem;
+            height: 1rem;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .application .item .img .line .circle img{
+            width: 100%;
+        }
+        footer{
+            position: absolute;
+            bottom: -0.8rem;
+            left: -0.49rem;
+            width: 104.2%;
+            z-index: 99;
+        }
+        footer img{
+            position: relative;
+            z-index: 99;
+        }
+        @media screen and (max-width: 1170px) {
+            body, html{
+                background-color: #fff;
+            }
+            .navbar-nav{
+                padding-left: 0;
+            }
+        }
+        .video-modal{
+            position: fixed;
+            width: 5rem;
+            height: 5rem;
+            top: 50%;
+            left: 50%;
+            margin-left: -2.5rem;
+            margin-top: -2.5rem;
+            z-index: 500;
+            display: none;
+        }
+        .shadow{
+            background-color: rgba(0,0,0,0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50rem;
+            z-index: 499;
+            display: none;
+        }
+        a.icon-close{
+            position: absolute;
+            top: 0.2rem;
+            right: 0.2rem;
+            width: 0.4rem;
+            height: 0.4rem;
+            font-size: 0.4rem;
+            line-height: 0.4rem;
+            text-align: center;
+            color: #fc5c62;
+            z-index: 400;
+            text-decoration: none;
+        }
+        .icon-leftarrow,.icon-rightarrow{
+            position: fixed;
+            top: 50%;
+
+            margin-top: -0.3rem;
+            display: inline-block;
+            width: 0.6rem;
+            height: 0.6rem;
+            font-size: 0.6rem;
+            line-height: 0.6rem;
+            text-align: center;
+            color: #fc5c62;
+            z-index: 400;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .icon-leftarrow{
+            left: 50%;
+            margin-left: -5.5rem;
+        }
+        .icon-rightarrow{
+            right: 50%;
+            margin-right: -5.5rem;
+        }
+    </style>
+    <style>
+        .experiment_video{
+            margin-top: 0.8rem;
+            position: relative;
+            margin-bottom: 2.4rem;
+            z-index: 400;
+        }
+        .experiment_video .title .cn{
+            font-size: 0.36rem;
+            color: #29286a;
+            font-weight: bold;
+            margin-bottom: 0.1rem;
+        }
+        .experiment_video .title .bar{
+            background-color: #fc5c62;
+            width: 0.9rem;
+            height: 0.14rem;
+            border-radius: 0.7rem;
+        }
+        .experiment_video .content{
+            margin: 0.3rem 0.6rem 0 0.6rem;
+            text-align: center;
+
+        }
+        .experiment_video .item{
+            border-bottom: 1px solid #dedede;
+            padding-bottom: 0.2rem;
+        }
+        .experiment_video .intro{
+            font-size: 0.2rem;
+            text-align: center;
+            text-indent: 0.4rem;
+            padding: 0.1rem 0.16rem;
+            text-align: left;
+        }
+        .experiment_video .content video{
+            display: inline-block;
+            z-index: 400;
+            box-shadow: 0 3px 10px rgba(0,0,0,.8);
+        }
+    </style>
+</head>
+<body>
+
+<div class="video-modal">
+    <video width="100%" autoplay loop muted>
+        <source src="/static/img/material/video/C_1_1_Steel_plate.mp4" type="video/mp4">
+    您的浏览器不支持 video 标签。
+    </video>
+</div>
+<div class="shadow"></div>
+    <header>
+        <div class="container">
+            <a class="iconfont icon-close" href="{% url 'ele_info' %}?symbol={{ symbol }}"></a>
+
+            <nav class="navbar" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        {% if pre_ele %}<a class="iconfont icon-leftarrow" href="{% url 'ele_material' %}?symbol={{ pre_ele.0.symbol }}"></a>{% endif %}
+                        {% if next_ele %}<a class="iconfont icon-rightarrow" href="{% url 'ele_material' %}?symbol={{ next_ele.0.symbol }}"></a>{% endif %}
+                    </div>
+                    <div>
+                        <ul class="nav navbar-nav">
+                            {% if eme.has_allotrope %}<li><a href="#structure">介绍</a></li>{% else %}
+                            <li><a href="#structure">结构</a></li>{% endif %}
+                            <li><a href="#property">性质</a></li>
+                            <li><a href="#application">用途</a></li>
+                            <li><a href="#experiment">实验视频</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="main">
+        <div class="container">
+            <img class="back" src="{% static 'img/material/back1.png' %}" width="100%" alt="back1">
+            <div class="box">
+            <div class="info">
+                <div class="top">
+                    <div class="left"><p class="cn">{{ eme.other_name }}</p><p class="en">{{ eme.other_en_name }}</p></div>
+                    <div class="interval">|</div>
+                    <div class="right">{{ eme.compound }}</div>
+                    <div class="clearfix"></div>
+                    <div class="en_name">{{ ele.en_name|upper }}</div>
+
+                </div>
+                <div class="title" id="structure">
+                    <span class="cn">{{ eme.compound }}的{% if eme.has_allotrope %}介绍{% else %}结构{% endif %}</span>
+                    <span class="en">{% if eme.has_allotrope %}INTRODUCTION{% else %}STRUCTURE{% endif %}</span>
+                </div>
+                <div class="content">
+                    <div class="left"><p>{{ eme.introduction }}</p><img src="{% static 'img/material/structure/' %}{{ eme.structure_img }}" alt=" " onerror="this.style.display='none'"></div>
+                    <div class="right">
+                        <ul>
+                            <li><span class="point">·</span> 化学式：{{ eme.chemical_formula|safe }}</li>
+                            <li><span class="point">·</span> 化学式量：{{ eme.relative_molecular_mass }}</li>
+                            <li><span class="point">·</span> 熔点：{{ eme.melting_point }}</li>
+                            <li><span class="point">·</span> 沸点：{{ eme.boiling_point }}</li>
+                            {% if eme.density %}<li><span class="point">·</span> 密度：{{ eme.density|safe }}</li>{% endif %}
+                            {% if eme.caloric %}<li><span class="point">·</span> 热值：{{ eme.caloric|safe }}</li>{% endif %}
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="allotrope">
+                <div class="title" id="property">
+                    <div class="cn">{{ eme.compound }}的{% if eme.has_allotrope %}同素异形体{% else %}性质{% endif %}</div>
+                    <div class="bar"></div>
+                </div>
+                <div class="content">
+                    {% for a in allotrope_list %}
+                    <div class="item">
+                        <div class="left">
+                            {% if a.0 %}<strong>{{ a.0 }}</strong>{% endif %}{{ a.1|safe }}
+                        </div>
+                        <div class="right">
+                            <img class="circle" src="{% static 'img/material/sup2.png' %}" alt="">
+                            {% if a.3 %}<img class="play j_play" data-src="{% static 'img/material/video/' %}{{ a.3 }}" src="{% static 'img/material/sup3.png' %}" alt="">{% endif %}
+                            <img class="material" src="{% static 'img/material/img/' %}{{ a.2 }}" alt="">
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    {% endfor %}
+{#                    <div class="item">#}
+{#                        <div class="left">#}
+{#                            <strong>石墨</strong>是一种非常软的矿物，可以直接用做炭笔，也可以与粘土按一定比例混合做成不同硬度的铅芯，还可以作为润滑剂使用。石墨的英文名graphite源于希腊语graphein一词，意为“书写”。#}
+{#                        </div>#}
+{#                        <div class="right">#}
+{#                            <img class="circle" src="{% static 'img/material/sup2.png' %}" alt="">#}
+{#                            <img class="material" src="{% static 'img/material/img/C 2_2.png' %}" alt="">#}
+{#                        </div>#}
+{#                        <div class="clearfix"></div>#}
+{#                    </div>#}
+{#                    <div class="item">#}
+{#                        <div class="left">#}
+{#                            <strong>富勒烯</strong>（又名足球烯、巴基球、C60）是一种由60个碳原子构成的分子，是大自然鬼斧神工的结果，名字取自美国建筑师理查德•巴克明斯特•富勒，他设计的大圆线网格穹顶与这种分子的结构有异曲同工之妙#}
+{#                        </div>#}
+{#                        <div class="right">#}
+{#                            <img class="circle" src="{% static 'img/material/sup2.png' %}" alt="">#}
+{#                            <img class="play" src="{% static 'img/material/sup3.png' %}" alt="">#}
+{#                            <img class="material" src="{% static 'img/material/img/C 2_3.png' %}" alt="">#}
+{#                        </div>#}
+{#                        <div class="clearfix"></div>#}
+{#                    </div>#}
+{#                    <div class="item">#}
+{#                        <div class="left">#}
+{#                            2004年，曼彻斯特大学两位科学家杰姆和诺沃肖洛夫从石墨中剥离出石墨片，将薄片粘在一种特殊的胶带上，撕开胶带，就能把石墨片一分为二，不断重复该操作，最后得到仅由一层碳原子构成的薄片，即石墨烯。两人因此获得2010年诺贝尔物理学奖。#}
+{#                        </div>#}
+{#                        <div class="right">#}
+{#                            <img class="circle" src="{% static 'img/material/sup2.png' %}" alt="">#}
+{#                            <img class="material" src="{% static 'img/material/img/C 2_4.png' %}" alt="">#}
+{#                        </div>#}
+{#                        <div class="clearfix"></div>#}
+{#                    </div>#}
+{#                    <div class="item">#}
+{#                        <div class="left">#}
+{#                            <strong>碳纳米管</strong>可以看做是卷成圆筒状的石墨烯，宽度通常只有几纳米，但长度却能超过1毫米，重量轻，六边形结构连结完美，具有许多异常的力学、电学和化学性能。#}
+{#                        </div>#}
+{#                        <div class="right">#}
+{#                            <img class="circle" src="{% static 'img/material/sup2.png' %}" alt="">#}
+{#                            <img class="material" src="{% static 'img/material/img/C 2_5.png' %}" alt="">#}
+{#                        </div>#}
+{#                        <div class="clearfix"></div>#}
+{#                    </div>#}
+                </div>
+                <div class="title-sup"><img width="100%" src="{% static 'img/material/sup1.png' %}" alt=""></div>
+            </div>
+            <div class="application">
+                <div class="title" id="application">
+                    <div class="cn">{{ eme.compound }}的用途</div>
+                    <div class="bar"></div>
+                </div>
+                <div class="content">
+                    {% for a in application_list %}
+                    <div class="item">
+                        <div class="shade"></div>
+                        {% if a.2 %}<img class="play j_play" data-src="{% static 'img/material/video/' %}{{ a.2 }}" src="{% static 'img/material/sup3.png' %}" alt="">{% endif %}
+                        <div class="img">
+
+                            <div class="line">
+                                <div class="circle">
+                                    <img width="100%" src="{% static 'img/material/img/' %}{{ a.1 }}" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div>{{ a.0|safe }}</div>
+                    </div>
+                    {% endfor %}
+{#                    <div class="item">#}
+{#                        <div class="shade"></div>#}
+{#                        <div class="img">#}
+{#                            <div class="line">#}
+{#                                <div class="circle">#}
+{#                                    <img width="100%" src="{% static 'img/material/img/C 2_7.png' %}" alt="">#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div>碳纤维布料，作为一种强化机制，用于复合材料中。</div>#}
+{#                    </div>#}
+{#                    <div class="item">#}
+{#                        <div class="shade"></div>#}
+{#                        <div class="img">#}
+{#                            <div class="line">#}
+{#                                <div class="circle">#}
+{#                                    <img width="100%" src="{% static 'img/material/img/C 2_8.png' %}" alt="">#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div>包铜的石墨焊接电极在任何焊接商店都能买到。</div>#}
+{#                    </div>#}
+{#                    <div class="item">#}
+{#                        <div class="shade"></div>#}
+{#                        <div class="img">#}
+{#                            <div class="line">#}
+{#                                <div class="circle">#}
+{#                                    <img width="100%" src="{% static 'img/material/img/C 2_9.png' %}" alt="">#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div>包埋在这个钢制圆盘中的微小的工业金刚石使它成为一个强有力的碾磨轮。</div>#}
+{#                    </div>#}
+{#                    <div class="item">#}
+{#                        <div class="shade"></div>#}
+{#                        <div class="img">#}
+{#                            <div class="line">#}
+{#                                <div class="circle">#}
+{#                                    <img width="100%" src="{% static 'img/material/img/C 2_10.png' %}" alt="">#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div>“智能药丸”，由碳纳米管制成的无线电天线以及用于分散药剂的碳纳米管电动机。</div>#}
+{#                    </div>#}
+                </div>
+                <div class="title-sup">
+                    <img width="100%" src="{% static 'img/material/sup4.png' %}" alt="">
+                </div>
+            </div>
+            <div class="experiment_video" id="experiment">
+                <div class="title">
+                    <div class="cn">{{ eme.compound }}的实验视频</div>
+                    <div class="bar"></div>
+                </div>
+                <div class="content">
+                    {% for e in experiment_list %}
+                    <div class="item">
+                        <p class="intro">{{ e.1|safe }}</p>
+                        <video width="100%" controls preload>
+                        <source src="/static/img/material/Experiments/{{ e.0 }}" type="video/mp4">
+                        您的浏览器不支持 video 标签。
+                        </video>
+
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <footer><img width="100%" src="{% static 'img/material/back2.png' %}" alt=""></footer>
+        </div>
+    </div>
+</body>
+<script>
+    $(function () {
+        var $w = $(window).width();
+        if($w<1170){
+            $('html').css('font-size',($w/1170*100).toFixed(1) + 'px');
+        }else{
+            $('html').css('font-size','100px');
+        }
+        $(".main .container .back").css('top', '-'+$('header').css('height'));
+        $(".j_play").on('click', function () {
+            var src = $(this).data('src'), $modal = $(".video-modal");
+            $modal.empty();
+            var html = "<video width=\"100%\" autoplay loop muted>\n" +
+                "        <source src=\""+src+"\" type=\"video/mp4\">\n" +
+                "    您的浏览器不支持 video 标签。\n" +
+                "    </video>";
+            $modal.append(html);
+            $modal.fadeIn();
+            $(".shadow").show();
+        })
+        $(".shadow").on('click', function () {
+            $(".video-modal").fadeOut();
+            $(".shadow").hide();
+        });
+    })
+
+</script>
+</html>

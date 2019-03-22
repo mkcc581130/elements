@@ -1,16 +1,217 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.contrib import auth
+from django.urls import reverse
 from django.contrib.auth.hashers import make_password, check_password
 import pytz
 import datetime
-from .models import Elements,HiElements, HiElementItems, ElementHistory, ElementRepresentative, ElementRepresentativeItem, ElementIsotope
+import os
+from django.contrib.auth.models import User
+from .models import Elements, HiElements, HiElementItems, ElementHistory, ElementRepresentative, \
+    ElementRepresentativeItem, ElementIsotope, ElementMaterial, ElementPoem, ElementIdiom, ElementNameSource, \
+    ElementCartoon, ElementCollection, ElementJingle, ElementLovePoem, PageIndex, UserProfile
 from .comm import visit_count, re_find
+from .forms import RegistrationForm, LoginForm
+from elements.settings import STATIC_ROOT
 # Create your views here.
+from PIL import Image, ImageFont, ImageDraw
 
 
-@visit_count
+def register(request):
+    if request.method == 'POST':
+
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password2']
+
+            # 使用内置User自带create_user方法创建用户，不需要使用save()
+            user = User.objects.create_user(username=username, password=password, email=email)
+
+            # 如果直接使用objects.create()方法后不需要使用save()
+            user_profile = UserProfile(user=user)
+            user_profile.save()
+
+            return HttpResponseRedirect("/login/")
+
+    else:
+        form = RegistrationForm()
+
+    return render(request, 'register.html', {'form': form})
+
+
+def login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
+            user = auth.authenticate(username=username, password=password)
+
+            if user is not None and user.is_active:
+                auth.login(request, user)
+                return HttpResponseRedirect(reverse('users:profile', args=[user.id]))
+
+            else:
+                # 登陆失败
+                return render(request, 'login.html', {'form': form, 'message': 'Wrong password. Please try again.'})
+    else:
+        form = LoginForm()
+
+    return render(request, 'login.html', {'form': form})
+
+
+def get_love_poem_poster(request, img_name):
+    img_num = request.GET.get("img_num")
+    poem_num = request.GET.get("poem_num")
+    symbol = request.GET.get("symbol")
+    top_img = Image.open(os.path.join(STATIC_ROOT, 'img/love_poem/love_poem_modal'+img_num+'.jpg'))
+    (x, y) = top_img.size  # read image size
+    x_s = 800  # define standard width
+    y_s = y * x_s / x
+    top_img = top_img.resize((x_s, int(y_s)), Image.ANTIALIAS)
+    img = Image.new(top_img.mode, (800, 850), "#ffffff")
+    img.paste(top_img, box=(0, 0))
+
+    ttfont = ImageFont.truetype(os.path.join(STATIC_ROOT, 'font/baiqi.ttf'), 42)
+    draw = ImageDraw.Draw(img)
+    ele = ElementLovePoem.objects.get(ele__symbol=symbol)
+    poem = ele.poem
+    cn_name = ele.ele.cn_name
+    poem_list = poem.split("|")
+    po = poem_list[int(poem_num)]
+    po_list = po.split('.')
+    for p in range(len(po_list)):
+        content = po_list[p]
+        length = len(content)
+        utf8_length = len(content.encode('utf-8'))  # 获取放入的文字编码后的长度
+        length = (utf8_length - length) / 2 + length  # 汉字是2个字节 英文和数字是单字节
+        an = (800 - length * 21) / 2
+        draw.text((an, 530 + 75*p), content, fill=(57, 63, 68), font=ttfont)
+    draw.text((690, 750), "--"+cn_name, fill=(57, 63, 68), font=ttfont)
+    img.save(os.path.join(STATIC_ROOT, 'img/love_poem/poster.png'), quality=95)
+
+    with open(os.path.join(STATIC_ROOT, 'img/love_poem/poster.png'), 'rb') as f:
+
+        response = HttpResponse(f.read(), content_type='image/png')
+        response['Content-Disposition'] = 'attachment; filename='+img_name
+        return response
+
+
+def get_page(page_name):
+    page_list = PageIndex.objects.all().order_by('index')
+    pre_page = None
+    next_page = None
+    next_flag = 0
+    for p in page_list:
+        if next_flag:
+            next_page = p
+            break
+        if p.en_name == page_name:
+            next_flag = 1
+        else:
+            pre_page = p
+    return {'page_list': page_list, 'pre_page': pre_page, 'next_page': next_page}
+
+
 def index(request):
-    return render(request, 'index.html')
+    page_name = 'index'
+    page_info = get_page(page_name)
+    return render(request, 'index.html', locals())
+
+
+def comic(request):
+    page_name = 'comic'
+    page_info = get_page(page_name)
+    return render(request, 'comic.html', locals())
+
+
+def cartoon(request):
+    page_name = 'cartoon'
+    page_info = get_page(page_name)
+    ei_list = ElementCartoon.objects.all().values('ele__symbol', 'ele__atomic_number', 'ele__cn_name', 'ele__across', 'ele__vertical',
+                                                  'cn_introduction')
+    return render(request, 'cartoon.html', locals())
+
+
+def collection(request):
+    page_name = 'collection'
+    page_info = get_page(page_name)
+    ei_list = ElementCollection.objects.all().values('ele__symbol', 'ele__atomic_number', 'ele__across', 'ele__vertical',
+                                                     'introduction')
+    return render(request, 'collection.html', locals())
+
+
+def hi(request):
+    page_name = 'hi'
+    page_info = get_page(page_name)
+    ei_list = Elements.objects.all().values('symbol', 'atomic_number', 'across', 'vertical')
+    return render(request, 'hi.html', locals())
+
+
+def representative(request):
+    page_name = 'representative'
+    page_info = get_page(page_name)
+    ei_list = Elements.objects.all().values('symbol', 'atomic_number', 'across', 'vertical')
+    return render(request, 'representative.html', locals())
+
+
+def jingle(request):
+    page_name = 'jingle'
+    page_info = get_page(page_name)
+    ei_list = ElementJingle.objects.all().values('ele__symbol', 'ele__atomic_number',
+                                                 'ele__across', 'ele__vertical', 'jingle')
+    return render(request, 'jingle.html', locals())
+
+
+def name_source(request):
+    page_name = 'name_source'
+    page_info = get_page(page_name)
+    ei_list = ElementNameSource.objects.all().values('ele__symbol', 'ele__atomic_number', 'ele__relative_atomic_mass',
+                                                     'ele__cn_name', 'ele__pinyin', 'ele__en_name',
+                                                     'ele__across', 'ele__vertical', 'category', 'introduction')
+    return render(request, 'name_source.html', locals())
+
+
+def structure(request):
+    page_name = 'structure'
+    page_info = get_page(page_name)
+    ei_list = Elements.objects.all().values('symbol', 'atomic_number', 'relative_atomic_mass', 'element_type',
+                                            'outer_electron', 'electron_configuration', 'cn_name', 'en_name', 'across',
+                                            'vertical')
+    return render(request, 'structure.html', locals())
+
+
+def animation(request):
+    page_name = 'animation'
+    page_info = get_page(page_name)
+    return render(request, 'animation.html', locals())
+
+
+def idiom(request):
+    page_name = 'idiom'
+    page_info = get_page(page_name)
+    ei_list = ElementIdiom.objects.all().values('ele__symbol', 'ele__atomic_number', 'ele__across', 'ele__vertical',
+                                               'idiom', 'pre_idiom', 'introduction')
+    return render(request, 'idiom.html', locals())
+
+
+def poem(request):
+    page_name = 'poem'
+    page_info = get_page(page_name)
+    ep_list = ElementPoem.objects.all().values('ele__symbol', 'ele__cn_name', 'ele__en_name', 'ele__atomic_number',
+                                               'ele__across', 'ele__vertical', 'poem', 'en_poem')
+    return render(request, 'poem.html', locals())
+
+
+def love_poem(request):
+    page_name = 'love_poem'
+    page_info = get_page(page_name)
+    ep_list = ElementLovePoem.objects.all().values('ele__symbol', 'ele__cn_name', 'ele__en_name', 'ele__atomic_number',
+                                               'ele__across', 'ele__vertical', 'poem')
+    return render(request, 'love_poem.html', locals())
 
 
 def ele_info(request):
@@ -83,3 +284,68 @@ def ele_isotope(request):
     next_ele = Elements.objects.filter(atomic_number=ele.atomic_number + 1)
     pre_ele = Elements.objects.filter(atomic_number=ele.atomic_number - 1)
     return render(request, 'element/ele_isotope.html', locals())
+
+
+def ele_material(request):
+    symbol = request.GET.get("symbol")
+    ele = Elements.objects.get(symbol=symbol)
+    eme = ElementMaterial.objects.get(ele_id=ele.id, is_compound=False)
+    pre_allotrope_list = eme.allotrope.split('|')
+    allotrope_list = []
+    pre_application_list = eme.application.split('|')
+    application_list = []
+    experiment_video_list = eme.experiment_video.split('|')
+    experiment_list = []
+    if eme.experiment_video:
+        video_list = eme.experiment_video.split(",")
+    for p in pre_allotrope_list:
+        if p:
+            li = re_find('^(.*?) 介绍：(.*?) 图片：(.*?) 视频：(.*?)$', p)
+            allotrope_list.append([li[0], li[1], li[2], li[3]])
+    for p in pre_application_list:
+        if p:
+            li = re_find('^(.*?) 图片：(.*?) 视频：(.*?)$', p)
+            application_list.append([li[0], li[1], li[2]])
+    for p in experiment_video_list:
+        if p:
+            li = re_find('^(.*?) 介绍：(.*?)$', p)
+            experiment_list.append([li[0], li[1]])
+
+    next_ele = Elements.objects.filter(atomic_number=ele.atomic_number + 1)
+    pre_ele = Elements.objects.filter(atomic_number=ele.atomic_number - 1)
+    return render(request, 'element/ele_material.html', locals())
+
+
+def ele_compound(request):
+    symbol = request.GET.get("symbol")
+    compound_id = request.GET.get("cid")
+    ele = Elements.objects.get(symbol=symbol)
+    em = ElementMaterial.objects.filter(ele_id=ele.id, is_compound=True)
+    if not compound_id:
+        eme = em[0]
+    else:
+        eme = em.filter(pk=compound_id)[0]
+    pre_allotrope_list = eme.allotrope.split('|')
+    allotrope_list = []
+    pre_application_list = eme.application.split('|')
+    application_list = []
+    experiment_video_list = eme.experiment_video.split('|')
+    experiment_list = []
+    if eme.experiment_video:
+        video_list = eme.experiment_video.split(",")
+    for p in pre_allotrope_list:
+        if p:
+            li = re_find('^(.*?) 介绍：(.*?) 图片：(.*?) 视频：(.*?)$', p)
+            allotrope_list.append([li[0], li[1], li[2], li[3]])
+    for p in pre_application_list:
+        if p:
+            li = re_find('^(.*?) 图片：(.*?) 视频：(.*?)$', p)
+            application_list.append([li[0], li[1], li[2]])
+    for p in experiment_video_list:
+        if p:
+            li = re_find('^(.*?) 介绍：(.*?)$', p)
+            experiment_list.append([li[0], li[1]])
+
+    next_ele = Elements.objects.filter(atomic_number=ele.atomic_number + 1)
+    pre_ele = Elements.objects.filter(atomic_number=ele.atomic_number - 1)
+    return render(request, 'element/ele_compound.html', locals())
