@@ -1,4 +1,5 @@
 {% load static %}
+{% load my_filter %}
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -397,7 +398,7 @@
             z-index: 499;
             display: none;
         }
-        a.icon-close{
+        a.iconclose{
             position: absolute;
             top: 0.2rem;
             right: 0.2rem;
@@ -410,7 +411,7 @@
             z-index: 400;
             text-decoration: none;
         }
-        .icon-leftarrow,.icon-rightarrow{
+        .iconleftarrow,.iconrightarrow{
             position: fixed;
             top: 50%;
 
@@ -426,11 +427,11 @@
             text-decoration: none;
             font-weight: bold;
         }
-        .icon-leftarrow{
+        .iconleftarrow{
             left: 50%;
             margin-left: -5.5rem;
         }
-        .icon-rightarrow{
+        .iconrightarrow{
             right: 50%;
             margin-right: -5.5rem;
         }
@@ -465,7 +466,6 @@
         }
         .experiment_video .intro{
             font-size: 0.2rem;
-            text-align: center;
             text-indent: 0.4rem;
             padding: 0.1rem 0.16rem;
             text-align: left;
@@ -474,6 +474,10 @@
             display: inline-block;
             z-index: 400;
             box-shadow: 0 3px 10px rgba(0,0,0,.8);
+        }
+        .ifram-video iframe{
+            width: 8.36rem;
+            height: 5.90rem;
         }
     </style>
 </head>
@@ -488,14 +492,14 @@
 <div class="shadow"></div>
     <header>
         <div class="container">
-            <a class="iconfont icon-close" href="{% url 'ele_info' %}?symbol={{ symbol }}"></a>
+            <a class="iconfont iconclose" href="{% url 'ele_info' %}?symbol={{ symbol }}"></a>
 
             <nav class="navbar" role="navigation">
                 <div class="container">
-                    <div class="navbar-header">
-                        {% if pre_ele %}<a class="iconfont icon-leftarrow" href="{% url 'ele_material' %}?symbol={{ pre_ele.0.symbol }}"></a>{% endif %}
-                        {% if next_ele %}<a class="iconfont icon-rightarrow" href="{% url 'ele_material' %}?symbol={{ next_ele.0.symbol }}"></a>{% endif %}
-                    </div>
+{#                    <div class="navbar-header">#}
+{#                        {% if pre_ele %}<a class="iconfont iconleftarrow" href="{% url 'ele_material' %}?symbol={{ pre_ele.0.symbol }}"></a>{% endif %}#}
+{#                        {% if next_ele %}<a class="iconfont iconrightarrow" href="{% url 'ele_material' %}?symbol={{ next_ele.0.symbol }}"></a>{% endif %}#}
+{#                    </div>#}
                     <div>
                         <ul class="nav navbar-nav">
                             {% if eme.has_allotrope %}<li><a href="#structure">介绍</a></li>{% else %}
@@ -532,8 +536,8 @@
                         <ul>
                             <li><span class="point">·</span> 化学式：{{ eme.chemical_formula|safe }}</li>
                             <li><span class="point">·</span> 化学式量：{{ eme.relative_molecular_mass }}</li>
-                            <li><span class="point">·</span> 熔点：{{ eme.melting_point }}</li>
-                            <li><span class="point">·</span> 沸点：{{ eme.boiling_point }}</li>
+                            {% if eme.melting_point %}<li><span class="point">·</span> 熔点：{{ eme.melting_point }}</li>{% endif %}
+                            {% if eme.boiling_point %}<li><span class="point">·</span> 沸点：{{ eme.boiling_point }}</li>{% endif %}
                             {% if eme.density %}<li><span class="point">·</span> 密度：{{ eme.density|safe }}</li>{% endif %}
                             {% if eme.caloric %}<li><span class="point">·</span> 热值：{{ eme.caloric|safe }}</li>{% endif %}
                         </ul>
@@ -683,11 +687,14 @@
                     {% for e in experiment_list %}
                     <div class="item">
                         <p class="intro">{{ e.1|safe }}</p>
-                        <video width="100%" controls preload>
+                        {% if e.0|type_of:'.mp4' %}
+                        <video width="100%" controls preload="none">
                         <source src="/static/img/material/Experiments/{{ e.0 }}" type="video/mp4">
                         您的浏览器不支持 video 标签。
                         </video>
-
+                    {% else %}
+                            <div class="ifram-video">{{ e.0|safe }}</div>
+                    {% endif %}
                     </div>
                     {% endfor %}
                 </div>
@@ -695,6 +702,7 @@
             <footer><img width="100%" src="{% static 'img/material/back2.png' %}" alt=""></footer>
         </div>
     </div>
+    {% include 'element/material_nav.html' %}
 </body>
 <script>
     $(function () {
@@ -720,6 +728,10 @@
             $(".video-modal").fadeOut();
             $(".shadow").hide();
         });
+        //$("iframe").load(function () {
+        //    $(this).contents().find(".bilibili-player-video-sendjumpbar").remove();
+        //})
+
     })
 
 </script>

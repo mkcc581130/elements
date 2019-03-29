@@ -1,0 +1,215 @@
+<style>
+.nav_sidebar {
+    position: fixed;
+    right: .25rem;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: .88rem;
+    height: 176px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-top:29px;
+    z-index: 999;
+}
+
+.nav_sidebar__item {
+    position: absolute;
+    z-index: 10;
+    width: 21px;
+    height: 21px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    top: 50px;
+    left: -.52rem;
+    border: 8px solid transparent;
+    cursor: pointer;
+    display: inline-block;
+    -webkit-transition: background-color .3s ease, border-color .3s ease, -webkit-box-shadow .3s ease;
+    -moz-transition: background-color .3s ease, border-color .3s ease, -moz-box-shadow .3s ease;
+    -o-transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease;
+    transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.nav_sidebar__item:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    margin: auto;
+    height: 5px;
+    width: 5px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background-color: #f95e65
+}
+
+.nav_sidebar__item:hover, .nav_sidebar__item.state-active {
+    border-color: #f95e65;
+    -webkit-box-shadow: 1px 1.7px 4px rgba(64, 69, 73, 0.4);
+    -moz-box-shadow: 1px 1.7px 4px rgba(64, 69, 73, 0.4);
+    box-shadow: 1px 1.7px 4px rgba(64, 69, 73, 0.4)
+}
+
+.nav_sidebar__item:hover:before, .nav_sidebar__item.state-active:before {
+    background-color: white
+}
+
+.nav_sidebar__item:hover .nav_sidebar__badge {
+    -webkit-transform: translateY(-100%);
+    -moz-transform: translateY(-100%);
+    -ms-transform: translateY(-100%);
+    -o-transform: translateY(-100%);
+    transform: translateY(-100%);
+    display: block;
+    opacity: 1
+}
+
+.nav_sidebar__item:hover .nav_sidebar__badge--center, .nav_sidebar__item.state-active .nav_sidebar__badge--center {
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%)
+}
+
+.nav_sidebar__item:hover .nav_sidebar__badge--bot, .nav_sidebar__item.state-active .nav_sidebar__badge--bot {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0)
+}
+
+
+.nav_sidebar__badge {
+    width: initial !important;
+    position: absolute;
+    display: none;
+    top: 15px;
+    right: 25px;
+    padding: 3px 14px;
+    line-height: 22px;
+    background-color: #292930;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-box-shadow: 5px 8.7px 22px rgba(64, 69, 73, 0.4);
+    -moz-box-shadow: 5px 8.7px 22px rgba(64, 69, 73, 0.4);
+    box-shadow: 5px 8.7px 22px rgba(64, 69, 73, 0.4);
+    -webkit-transform: scale(0.8) translateY(-100%);
+    -moz-transform: scale(0.8) translateY(-100%);
+    -ms-transform: scale(0.8) translateY(-100%);
+    -o-transform: scale(0.8) translateY(-100%);
+    transform: scale(0.8) translateY(-100%);
+    opacity: 0;
+    -webkit-transform-origin: right center;
+    -moz-transform-origin: right center;
+    -ms-transform-origin: right center;
+    -o-transform-origin: right center;
+    transform-origin: right center;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    transition: all .2s ease;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    white-space:nowrap;
+    z-index: 20;
+}
+
+.nav_sidebar__badge--center {
+    -webkit-transform: scale(0.8) translateY(-50%);
+    -moz-transform: scale(0.8) translateY(-50%);
+    -ms-transform: scale(0.8) translateY(-50%);
+    -o-transform: scale(0.8) translateY(-50%);
+    transform: scale(0.8) translateY(-50%)
+}
+
+.nav_sidebar__badge--bot {
+    -webkit-transform: scale(0.8) translateY(0);
+    -moz-transform: scale(0.8) translateY(0);
+    -ms-transform: scale(0.8) translateY(0);
+    -o-transform: scale(0.8) translateY(0);
+    transform: scale(0.8) translateY(0)
+}
+.arrow:hover{
+    text-decoration:none;
+    color: rgba(0, 0, 0, 0.95);
+}
+.arrow{
+   position: fixed;
+   top: 50%;
+   margin-top: -25px;
+    right: .5rem;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius: 130px;
+    line-height: 46px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.75);
+    text-decoration: none;
+    cursor: pointer;
+   box-sizing: border-box;
+    font-weight: bold;
+    z-index: 999;
+        font-size: 50px;
+    font-style: normal;
+}
+.arrow.left {
+        right: initial;
+        left: .5rem;
+        transform: rotate(-180deg);
+    }
+    @media screen and ( max-width: 1400px ) {
+        .nav_sidebar{
+            right: -.3rem;
+        }
+        .arrow{
+            right: 0.1rem;
+        }
+        .arrow.left {
+            right: initial;
+            left: .1rem;
+        }
+    }
+
+</style>
+<div class="nav_sidebar">
+    {% for p in eme_list %}
+    <a href="{% if p.is_compound %}{% url 'ele_compound' %}{% else %}{% url 'ele_material' %}{% endif %}?symbol={{ symbol }}&cid={{ p.id }}" class="nav_sidebar__item {% if eme.id == p.id %}state{% endif %}">
+        <div class="nav_sidebar__badge">{% if p.is_compound %}{{ p.compound }}{% else %}{{ p.ele.cn_name }}单质{% endif %}</div>
+    </a>
+    {% endfor %}
+
+</div>
+{% if pre_ele %}<a href="{% if p.is_compound %}{% url 'ele_compound' %}{% else %}{% url 'ele_material' %}{% endif %}?symbol={{ pre_ele.0.symbol }}" class="arrow left iconfont iconyoujian"></a>{% endif %}
+{% if next_ele %}<a href="{% if p.is_compound %}{% url 'ele_compound' %}{% else %}{% url 'ele_material' %}{% endif %}?symbol={{ next_ele.0.symbol }}" class="arrow right iconfont iconyoujian"></a>{% endif %}
+<script>
+    $(function () {
+        $(".nav_sidebar .nav_sidebar__item").each(function (i, e) {
+            var $t = $(this),len = (9-{{ eme_length }})/2;
+            $t.css('left', Math.sin(-3.14/8*(8-i-len)) * 88 + 44 - 1.5).css('top', Math.cos(-3.14/8*(8-i-len)) * 88 + 44 - 1.5);
+        })
+        setTimeout(function () {
+            $(".nav_sidebar .nav_sidebar__item.state").addClass("state-active");
+        }, 500)
+    })
+</script>

@@ -38,21 +38,15 @@
 {% csrf_token %}
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label">周期表名称</label>
+            <label class="layui-form-label">图片名称</label>
             <div class="layui-input-inline">
-                <input type="text" name="cn_name" value="{% if ele.cn_name %}{{ ele.cn_name }}{% endif %}" lay-verify="required" placeholder="请输入周期表名称" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">周期表代号</label>
-            <div class="layui-input-inline">
-                <input type="text" name="en_name" value="{% if ele.en_name %}{{ ele.en_name }}{% endif %}" lay-verify="required" placeholder="请输入周期表代号" autocomplete="off" class="layui-input">
+                <input type="text" name="file_name" value="{% if ele.file_name %}{{ ele.file_name }}{% endif %}" lay-verify="required" placeholder="请输入图片名称" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">排序</label>
             <div class="layui-input-inline">
-                <input type="text" name="index" value="{{ ele.index }}" placeholder="请输入排序" autocomplete="off" class="layui-input">
+                <input type="text" name="sort" value="{{ ele.sort }}" placeholder="请输入排序" autocomplete="off" class="layui-input">
             </div>
         </div>
     </div>

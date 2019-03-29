@@ -57,7 +57,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">漫画标题</label>
             <div class="layui-input-inline">
-                <input type="text" name="title" value="{% if ele.title %}{{ ele.title }}{% endif %}" lay-verify="required" placeholder="请输入漫画标题" autocomplete="off" class="layui-input">
+                <input type="text" name="title" value="{% if ele.title %}{{ ele.title }}{% endif %}" placeholder="请输入漫画标题" autocomplete="off" class="layui-input">
             </div>
         </div>
     </div>
@@ -95,9 +95,6 @@
             // 监控变化，同步更新到 textarea
             $text.html(html);
         }
-        // 配置服务器端地址
-        editor.customConfig.uploadImgServer = '/admin/upload_img/?source=isotope';
-        editor.customConfig.uploadFileName = 'file';
         editor.create();
     })
 </script>

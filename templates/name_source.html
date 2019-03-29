@@ -321,23 +321,6 @@ function init() {
 	camera.position.z = 3000;
   	var dragging = false;
 	scene = new THREE.Scene();
-    //标题
-    var title = document.createElement( 'h1' );
-    title.className = 'title';
-    title.innerText = "元素名称来源周期表";
-    var object = new THREE.CSS3DObject( title );
-    object.position.x = -1150;
-    object.position.y = 700;
-    object.position.z = 0;
-    scene.add( object );
-    //重置
-    var introduction = document.createElement( 'div' );
-    introduction.className = 'introduction';
-    var object = new THREE.CSS3DObject( introduction );
-    object.position.x = -750;
-    object.position.y = 600;
-    object.position.z = 0;
-    scene.add( object );
 	// table
 
 	for ( var i = 0; i < table.length; i += 10 ) {
@@ -359,11 +342,11 @@ function init() {
           break;
         case 3:
             rgb = "69,137,148";
-            category_name = "人名";
+            category_name = "神名";
           break;
           case 4:
             rgb = "64,116,52";
-            category_name = "神名";
+            category_name = "人名";
           break;
           case 5:
             rgb = "116,97,152";
@@ -501,6 +484,9 @@ function init() {
 	controls.rotateSpeed = 1;
 	controls.minDistance = 500;
 	controls.maxDistance = 6000;
+	//是否不平移
+    controls.noPan = true;
+    controls.noRotate = true;
 	controls.addEventListener( 'change', render );
 
 

@@ -33,6 +33,8 @@ class Elements(models.Model):
     electronic_affinity = models.CharField(default='', max_length=100, verbose_name="电子亲和能", null=True, blank=True)
     introduction = models.TextField(verbose_name="元素简介", null=True, blank=True)
     extra = models.TextField(verbose_name="额外信息", null=True, blank=True)
+    relate_video = models.TextField(verbose_name="相关视频", null=True, blank=True)
+    relate_video_name = models.TextField(verbose_name="相关视频名称", null=True, blank=True)
     color = models.CharField(default="", max_length=100, verbose_name="卡片颜色", null=True, blank=True)
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
     across = models.CharField(default="", max_length=20, verbose_name="横向位置", null=True, blank=True)
@@ -316,8 +318,21 @@ class HiTheater(models.Model):
         return self.title
 
     class Meta:
-        verbose_name = "嗨元素小剧场"
-        verbose_name_plural = "嗨元素小剧场列表"
+        verbose_name = "嗨元素长漫画"
+        verbose_name_plural = "嗨元素长漫画列表"
+
+
+class HiWallpaper(models.Model):
+    sort = models.IntegerField(verbose_name="排序", null=True)
+    file_name = models.CharField(max_length=200, verbose_name="文件名")
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+
+    def __unicode__(self):
+        return self.file_name
+
+    class Meta:
+        verbose_name = "嗨元素壁纸"
+        verbose_name_plural = "嗨元素壁纸列表"
 
 
 class IMG(models.Model):

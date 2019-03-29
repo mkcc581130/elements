@@ -3,24 +3,22 @@
     {% if pre_ele %}<a href="?symbol={{ pre_ele.0.symbol }}" class="pre">
         <<
     </a>{% endif %}
-    <div class="dropdown">
-        <div class="dropdown-title">原子</div>
-        <ul class="dropdown-menu">
-            <li>2D模型</li>
-            <li>3D模型</li>
-            <li>应用</li>
-        </ul>
-    </div>
+
     <div class="dropdown">
         <div class="dropdown-title">元素</div>
         <ul class="dropdown-menu">
             <li><a href="{% url 'ele_info' %}?symbol={{ symbol }}">基本资料</a></li>
+            <li><a href="{% url 'ele_isotope' %}?symbol={{ symbol }}">同位素</a></li>
             <li><a href="{% url 'hi_ele' %}?symbol={{ symbol }}">嗨元素漫画</a></li>
             <li><a href="{% url 'ele_history' %}?symbol={{ symbol }}">发现史</a></li>
             <li><a href="{% url 'ele_representative' %}?symbol={{ symbol }}">学者代言</a></li>
-            <li><a href="{% url 'ele_isotope' %}?symbol={{ symbol }}">同位素</a></li>
+            <li><a href="/tech/">科技前沿</a></li>
+
         </ul>
     </div>
+    <a href="{% url 'structure' %}" id="return">
+        原子
+    </a>
     <div class="dropdown">
         <div class="dropdown-title">物质</div>
         <ul class="dropdown-menu">
@@ -29,7 +27,7 @@
         </ul>
     </div>
     <a href="/" id="return">
-        周期表
+        主页
     </a>
     <a href="javascript:void(0)" id="reset">
         重置

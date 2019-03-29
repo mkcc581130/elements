@@ -369,10 +369,10 @@
                             UV_data = data['UV_data']
                         }
                         else{
-                            layui.msg("请求失败")
+                            console.error("请求失败")
                         }
                     },error:function (data) {
-                        layui.msg("请求失败")
+                        console.error("请求失败")
                     }
                 });
             }
@@ -437,10 +437,10 @@
                             UV_data2 = data['UV_data2']
                         }
                         else{
-                            layui.msg("请求失败")
+                            console.error("请求失败")
                         }
                     },error:function (data) {
-                        layui.msg("请求失败")
+                        console.error("请求失败")
                     }
                 });
             }
@@ -509,10 +509,10 @@
                             renderDataView(0);
                         }
                         else{
-                            layui.msg("请求失败")
+                            console.error("请求失败")
                         }
                     },error:function (data) {
-                        layui.msg("请求失败")
+                        console.error("请求失败")
                     }
                 });
             }
@@ -534,10 +534,10 @@
                             renderDataView(1);
                         }
                         else{
-                            layui.msg("请求失败")
+                            console.error("请求失败")
                         }
                     },error:function (data) {
-                        layui.msg("请求失败")
+                        console.error("请求失败")
                     }
                 });
             }
@@ -585,10 +585,10 @@
                         $_t.removeClass('layui-btn-primary').siblings().addClass('layui-btn-primary')
                     }
                     else{
-                        layui.msg("请求失败")
+                        console.error("请求失败")
                     }
                 },error:function (data) {
-                    layui.msg("请求失败")
+                    console.error("请求失败")
                 }
             });
         })

@@ -54,4 +54,6 @@ urlpatterns = [
     re_path('^ele_page_index_list/(edit|add)+/$', admin_views.ele_page_index_mod, name='ele_page_index_mod'),
     re_path('^ele_hi_theater_list/$', admin_views.ele_hi_theater_list, name='ele_hi_theater_list'),
     re_path('^ele_hi_theater_list/(edit|add)+/$', admin_views.ele_hi_theater_mod, name='ele_hi_theater_mod'),
+    re_path('^ele_hi_wallpaper_list/$', admin_views.ele_hi_wallpaper_list, name='ele_hi_wallpaper_list'),
+    re_path('^ele_hi_wallpaper_list/(edit|add)+/$', admin_views.ele_hi_wallpaper_mod, name='ele_hi_wallpaper_mod'),
 ]

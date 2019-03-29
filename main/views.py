@@ -6,10 +6,9 @@ from django.contrib.auth.hashers import make_password, check_password
 import pytz
 import datetime
 import os
+import json
 from django.contrib.auth.models import User
-from .models import Elements, HiElements, HiElementItems, ElementHistory, ElementRepresentative, \
-    ElementRepresentativeItem, ElementIsotope, ElementMaterial, ElementPoem, ElementIdiom, ElementNameSource, \
-    ElementCartoon, ElementCollection, ElementJingle, ElementLovePoem, PageIndex, UserProfile
+from .models import *
 from .comm import visit_count, re_find
 from .forms import RegistrationForm, LoginForm
 from elements.settings import STATIC_ROOT
@@ -253,10 +252,14 @@ def ele_history(request):
 
 def ele_representative(request):
     symbol = request.GET.get("symbol")
-    ele = Elements.objects.get(symbol=symbol)
-    ere = ElementRepresentative.objects.get(ele_id=ele.id)
+    try:
+        ele = Elements.objects.get(symbol=symbol)
+        ere = ElementRepresentative.objects.get(ele_id=ele.id)
+    except ElementRepresentative.DoesNotExist:
+        return page_forbidden(request)
     item_list = ElementRepresentativeItem.objects.filter(representative_id=ere.id)
     duty_list = ere.duty.split("|")
+    symbol = request.GET.get("symbol")
     for i in item_list:
         if i.img_info:
             img_info_list = i.img_info.split('|')
@@ -290,6 +293,8 @@ def ele_material(request):
     symbol = request.GET.get("symbol")
     ele = Elements.objects.get(symbol=symbol)
     eme = ElementMaterial.objects.get(ele_id=ele.id, is_compound=False)
+    eme_list = ElementMaterial.objects.filter(ele_id=ele.id)
+    eme_length = len(eme_list)
     pre_allotrope_list = eme.allotrope.split('|')
     allotrope_list = []
     pre_application_list = eme.application.split('|')
@@ -321,6 +326,8 @@ def ele_compound(request):
     compound_id = request.GET.get("cid")
     ele = Elements.objects.get(symbol=symbol)
     em = ElementMaterial.objects.filter(ele_id=ele.id, is_compound=True)
+    eme_list = ElementMaterial.objects.filter(ele_id=ele.id)
+    eme_length = len(eme_list)
     if not compound_id:
         eme = em[0]
     else:
@@ -349,3 +356,55 @@ def ele_compound(request):
     next_ele = Elements.objects.filter(atomic_number=ele.atomic_number + 1)
     pre_ele = Elements.objects.filter(atomic_number=ele.atomic_number - 1)
     return render(request, 'element/ele_compound.html', locals())
+
+
+def ele_hi_comic(request):
+    type = request.GET.get("type", "1")
+    hua = request.GET.get("hua")
+    if type == '1':
+        if not hua:
+            hua = "001"
+        hi_comic = HiTheater.objects.get(type=type, hua=hua)
+    elif type == '2':
+        if not hua:
+            hua = "000_1"
+        elif len(hua) == 3:
+            hua += "_1"
+        hi_comic = HiTheater.objects.get(type=type, hua=hua)
+    comic_list = HiTheater.objects.filter(type=type)
+    return render(request, 'element/ele_hi_comic.html', locals())
+
+
+def ele_hi_wallpaper(request):
+    page = request.GET.get("page")
+    if not page:
+        wallpaper_list = HiWallpaper.objects.all().order_by('sort')[:8]
+    else:
+        page = int(page)
+        wallpaper_list = HiWallpaper.objects.all().order_by('sort')[page*4:page*4+4].values('file_name')
+        return HttpResponse(json.dumps({"list": list(wallpaper_list)}))
+    return render(request, 'element/ele_hi_wallpaper.html', locals())
+
+
+def page_not_found(request, **kwargs):
+    error_code = 404
+    error_info = '未找到相应页面，请确认后重试！'
+    response = render(request, 'error.html', locals())
+    response.status_code = error_code
+    return response
+
+
+def page_error(request, **kwargs):
+    error_code = 500
+    error_info = '服务器错误，等待程序猿ing'
+    response = render(request, 'error.html', locals())
+    response.status_code = error_code
+    return response
+
+
+def page_forbidden(request, **kwargs):
+    error_code = 403
+    error_info = '此页面尚未完善，无法访问哦，点击返回'
+    response = render(request, 'error.html', locals())
+    response.status_code = error_code
+    return response

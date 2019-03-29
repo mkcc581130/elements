@@ -41,6 +41,14 @@ urlpatterns = [
     re_path('^ele_isotope/$', main_views.ele_isotope, name='ele_isotope'),
     re_path('^ele_material/$', main_views.ele_material, name='ele_material'),
     re_path('^ele_compound/$', main_views.ele_compound, name='ele_compound'),
+    re_path('^ele_hi_comic/$', main_views.ele_hi_comic, name='ele_hi_comic'),
+    re_path('^ele_hi_wallpaper/$', main_views.ele_hi_wallpaper, name='ele_hi_wallpaper'),
     re_path('^get_love_poem_poster/(.*?).png$', main_views.get_love_poem_poster, name='get_love_poem_poster'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler403 = main_views.page_forbidden
+
+handler404 = main_views.page_not_found
+
+handler500 = main_views.page_error

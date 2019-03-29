@@ -5,9 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 
-from main.models import Elements, IonizationEnergy, VisitLog, HiElements, HiElementItems, ElementHistory, \
-    ElementRepresentative, ElementRepresentativeItem, ElementIsotope, IMG, ElementMaterial, ElementPoem, ElementIdiom, \
-    ElementNameSource, ElementCartoon, ElementCollection, ElementJingle, ElementLovePoem, PageIndex, HiTheater
+from main.models import *
 from main.comm import re_find
 from django.views.decorators.csrf import csrf_exempt
 
@@ -172,6 +170,8 @@ def ele_mod(request, action):
         if ionizationenergy:
             ie_list = ionizationenergy.split('|')
         extra = post.get('extra', "")
+        relate_video = post.get('relate_video', "")
+        relate_video_name = post.get('relate_video_name', "")
         cn_name = post.get('cn_name', "")
         en_name = post.get('en_name', "")
         pinyin = post.get('pinyin', "")
@@ -185,8 +185,8 @@ def ele_mod(request, action):
                                           atomic_radius_type=atomic_radius_type, electronegativity=electronegativity,
                                           electronic_affinity=electronic_affinity, introduction=introduction,
                                           extra=extra, cn_name=cn_name, outer_electron=outer_electron, color=color,
-                                          en_name=en_name, pinyin=pinyin,electron_configuration=electron_configuration,
-                                          element_type=element_type)
+                                          en_name=en_name, pinyin=pinyin, electron_configuration=electron_configuration,
+                                          element_type=element_type, relate_video=relate_video, relate_video_name=relate_video_name)
             for i in ie_list:
                 IonizationEnergy.objects.create(ele=ele, energy=i)
             return JsonResponse({"code": 0, "msg": "add_success"})
@@ -201,7 +201,7 @@ def ele_mod(request, action):
                                                        introduction=introduction, extra=extra, cn_name=cn_name,
                                                        outer_electron=outer_electron, color=color, en_name=en_name,
                                                        pinyin=pinyin, electron_configuration=electron_configuration,
-                                                       element_type=element_type)
+                                                       element_type=element_type, relate_video=relate_video, relate_video_name=relate_video_name)
                 IonizationEnergy.objects.filter(ele_id=eid).delete()
                 for i in ie_list:
                     IonizationEnergy.objects.create(ele_id=eid, energy=i)
@@ -903,19 +903,18 @@ def ele_page_index_mod(request, action):
     post = request.POST
     iid = request.GET.get("id")
     if post:
-        ele_id = post.get('ele_id')
         page_index = post.get('index')
         cn_name = post.get('cn_name')
         en_name = post.get('en_name')
         if action == 'add':
-            PageIndex.objects.create(ele_id=ele_id, index=page_index, cn_name=cn_name, en_name=en_name)
+            PageIndex.objects.create(index=page_index, cn_name=cn_name, en_name=en_name)
         elif action == 'edit':
             if iid:
-                er = ElementJingle.objects.filter(pk=iid).update(ele_id=ele_id, index=page_index, cn_name=cn_name, en_name=en_name)
+                er = PageIndex.objects.filter(pk=iid).update(index=page_index, cn_name=cn_name, en_name=en_name)
         return JsonResponse({"code": 0, "msg": action + "_success"})
     if action == 'edit':
         if iid:
-            ele = ElementJingle.objects.get(id=iid)
+            ele = PageIndex.objects.get(id=iid)
     elements_list = Elements.objects.all().order_by('atomic_number')
     return render(request, 'admin/ele_page_index_form.html', locals())
 
@@ -924,10 +923,15 @@ def ele_hi_theater_list(request):
     list_name = '嗨元素长漫画'
     page = request.GET.get('page')
     limit = request.GET.get('limit')
+    type = request.GET.get('type')
     if page and limit:
         page = int(page)
         limit = int(limit)
-        elements_list = HiTheater.objects.all().values('id', 'type', 'hua', 'title')
+        query_dict = {}
+        elements_list = HiTheater.objects.all()
+        if type:
+            query_dict['type'] = type
+        elements_list = elements_list.filter(**query_dict).values('id', 'type', 'hua', 'title')
         count = elements_list.count()
         elements_list = elements_list[limit * (page - 1): limit * page]
         return JsonResponse({"code": 0, "msg": "", "count": count, "data": list(elements_list)})
@@ -963,6 +967,48 @@ def ele_hi_theater_mod(request, action):
             ele = HiTheater.objects.get(id=iid)
     elements_list = Elements.objects.all().order_by('atomic_number')
     return render(request, 'admin/ele_hi_theater_form.html', locals())
+
+
+def ele_hi_wallpaper_list(request):
+    list_name = '嗨元素壁纸'
+    page = request.GET.get('page')
+    limit = request.GET.get('limit')
+    if page and limit:
+        page = int(page)
+        limit = int(limit)
+        elements_list = HiWallpaper.objects.all().values('id', 'file_name', 'sort')
+        count = elements_list.count()
+        elements_list = elements_list[limit * (page - 1): limit * page]
+        return JsonResponse({"code": 0, "msg": "", "count": count, "data": list(elements_list)})
+    # 删除操作
+    del_data = request.GET.getlist('del_data[]')
+    if del_data:
+        for i in del_data:
+            e = HiWallpaper.objects.filter(pk=i)
+            if e:
+                e.delete()
+        return JsonResponse({"code": 0, "msg": "del_success"})
+    return render(request, 'admin/ele_hi_wallpaper_list.html', locals())
+
+
+def ele_hi_wallpaper_mod(request, action):
+    list_name = '嗨元素壁纸'
+    post = request.POST
+    iid = request.GET.get("id")
+    if post:
+        file_name = post.get('file_name')
+        sort = post.get('sort')
+        if action == 'add':
+            HiWallpaper.objects.create(file_name=file_name, sort=sort)
+        elif action == 'edit':
+            if iid:
+                HiWallpaper.objects.filter(pk=iid).update(file_name=file_name, sort=sort)
+        return JsonResponse({"code": 0, "msg": action + "_success"})
+    if action == 'edit':
+        if iid:
+            ele = HiWallpaper.objects.get(id=iid)
+    elements_list = Elements.objects.all().order_by('atomic_number')
+    return render(request, 'admin/ele_hi_wallpaper_form.html', locals())
 
 
 @csrf_exempt

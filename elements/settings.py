@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^3wlr@7201)h0y(bgnk58j16&^+c@rcx*k!pbq)mwl+h9iwcab'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'elements',
         'USER': 'root',
         'PASSWORD': 'qq123456',
-        'HOST': '47.99.144.183',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {
             'charset': 'utf8mb4'

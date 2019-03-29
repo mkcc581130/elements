@@ -256,6 +256,9 @@ var mouse = {}, pre_mouse = {};
         controls.rotateSpeed = 1;
         controls.minDistance = 500;
         controls.maxDistance = 6000;
+        //是否不平移
+        controls.noPan = true;
+        controls.noRotate = true;
         controls.addEventListener('change', render);
 
 

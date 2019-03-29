@@ -103,12 +103,23 @@
                 </select>
             </div>
         </div>
-
+        <div class="layui-inline">
+            <label class="layui-form-label">电负性</label>
+            <div class="layui-input-inline">
+                <input type="text" name="electronegativity" id="electronegativity" value="{% if ele.electronegativity %}{{ ele.electronegativity }}{% endif %}" placeholder="请输入电负性" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">元素相关<br>视频名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="relate_video_name" value="{% if ele.relate_video_name %}{{ ele.relate_video_name }}{% endif %}" placeholder="请输入相关视频名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
     </div>
     <div class="layui-form-item">
-            <label class="layui-form-label">电负性</label>
+            <label class="layui-form-label">元素<br>相关视频</label>
             <div class="layui-input-block">
-                <textarea name="electronegativity" id="electronegativity" class="layui-textarea" placeholder="请输入电负性">{% if ele.electronegativity %}{{ ele.electronegativity }}{% endif %}</textarea>
+                <textarea name="relate_video" id="relate_video" class="layui-textarea" placeholder="请输入元素相关视频" style="height: 38px;">{% if ele.relate_video %}{{ ele.relate_video }}{% endif %}</textarea>
             </div>
     </div>
     <div class="layui-form-item">

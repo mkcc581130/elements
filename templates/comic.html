@@ -420,27 +420,6 @@ function init() {
   	var dragging = false;
 	scene = new THREE.Scene();
 
-	//标题
-    var title = document.createElement( 'h1' );
-    title.className = 'title';
-    title.innerText = "卡通漫画元素周期表";
-    var object = new THREE.CSS3DObject( title );
-    object.position.x = -1150;
-    object.position.y = 700;
-    object.position.z = 0;
-    scene.add( object );
-    //重置
-    var reset = document.createElement( 'h1' );
-    reset.className = 'reset';
-    reset.innerText = "重置";
-    reset.addEventListener('click', function () {
-        controls.reset();
-    });
-    var object = new THREE.CSS3DObject( reset );
-    object.position.x = -150;
-    object.position.y = 700;
-    object.position.z = 0;
-    scene.add( object );
 	// table
 
 	for ( var i = 0; i < table.length; i += 6 ) {
@@ -527,6 +506,9 @@ function init() {
 	controls.rotateSpeed = 1;
 	controls.minDistance = 500;
 	controls.maxDistance = 6000;
+	//是否不平移
+    controls.noPan = true;
+    controls.noRotate = true;
 	controls.addEventListener( 'change', render );
 
 

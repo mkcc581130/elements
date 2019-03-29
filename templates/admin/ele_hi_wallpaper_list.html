@@ -15,33 +15,14 @@
 
 <div class="layui-fluid">
     <div class="layui-card">
-        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">漫画类型</label>
-                    <div class="layui-input-inline">
-                        <select name="type">
-                            <option value="">不限</option>
-                            <option value="1">小剧场</option>
-                            <option value="2">奇幻旅程</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <button class="layui-btn layuiadmin-submit-btn" lay-submit lay-filter="list-search">
-                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
         <div class="layui-card-body">
             <div style="padding-bottom: 10px;">
                 <button class="layui-btn layuiadmin-btn-useradmin" data-type="batchdel">删除</button>
                 <button class="layui-btn layuiadmin-btn-useradmin" data-type="addone">新增</button>
             </div>
             <table id="list-manage" lay-filter="list-manage"></table>
-            <script type="text/html" id="typeTpl">
-                {% verbatim %}{{#  if(d.type==1){ }}小剧场{{#  } else { }}奇幻旅程{{#  } }}{% endverbatim %}
+            <script type="text/html" id="urlTpl">
+                <a href="{% verbatim %}{{ d.url }}">{{ d.url }}{% endverbatim %}</a>
             </script>
             <script type="text/html" id="table-useradmin-webuser">
                 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
@@ -72,9 +53,8 @@
             url: location.pathname, // request get: ?page=1&limit=30 response: {code: 0,msg: "",count: 1000,data: []}
             cols: [[{type: "checkbox", fixed: "left"},
                 {field: "id", title: "id", sort: !0},
-                {field: "type", title: "漫画类型", align: "center",templet: "#typeTpl"},
-                {field: "hua", title: "漫画话数", align: "center"},
-                {field: "title", title: "漫画标题", align: "center"},
+                {field: "file_name", title: "图片名称", align: "center"},
+                {field: "sort", title: "排序（从小到大）", align: "center"},
                 {title: "操作", width: 170, align: "center", toolbar: "#table-useradmin-webuser",fixed: "right"}]],
             page: !0,
             limit: 20,
@@ -108,7 +88,7 @@
                     title: "编辑{{ list_name }}",
                     content: location.pathname + "edit?id=" + e.data['id'],
                     maxmin: !0,
-                    area: ["1000px", "550px"],
+                    area: ["300px", "300px"],
                     btn: ["保存", "取消"],
                     shadeClose: true,
                     yes: function (e, t) {
@@ -194,7 +174,7 @@
                     title: "新增{{ list_name }}",
                     content: location.pathname + "add",
                     maxmin: !0,
-                    area: ["1000px", "550px"],
+                    area: ["1000px", "450px"],
                     btn: ["保存", "取消"],
                     shadeClose:true,
                     yes: function (e, t) {

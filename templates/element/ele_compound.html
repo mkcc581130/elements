@@ -1,4 +1,5 @@
 {% load static %}
+{% load my_filter %}
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -397,7 +398,7 @@
             z-index: 499;
             display: none;
         }
-        a.icon-close{
+        a.iconclose{
             position: absolute;
             top: 0.2rem;
             right: 0.2rem;
@@ -410,7 +411,7 @@
             z-index: 400;
             text-decoration: none;
         }
-        .icon-leftarrow,.icon-rightarrow{
+        .iconleftarrow,.iconrightarrow{
             position: fixed;
             top: 50%;
 
@@ -426,11 +427,11 @@
             text-decoration: none;
             font-weight: bold;
         }
-        .icon-leftarrow{
+        .iconleftarrow{
             left: 50%;
             margin-left: -5.5rem;
         }
-        .icon-rightarrow{
+        .iconrightarrow{
             right: 50%;
             margin-right: -5.5rem;
         }
@@ -465,7 +466,6 @@
         }
         .experiment_video .intro{
             font-size: 0.2rem;
-            text-align: center;
             text-indent: 0.4rem;
             padding: 0.1rem 0.16rem;
             text-align: left;
@@ -474,6 +474,10 @@
             display: inline-block;
             z-index: 400;
             box-shadow: 0 3px 10px rgba(0,0,0,.8);
+        }
+        .ifram-video iframe{
+            width: 8.36rem;
+            height: 5.90rem;
         }
     </style>
 </head>
@@ -488,14 +492,14 @@
 <div class="shadow"></div>
     <header>
         <div class="container">
-            <a class="iconfont icon-close" href="{% url 'ele_info' %}?symbol={{ symbol }}"></a>
+            <a class="iconfont iconclose" href="{% url 'ele_info' %}?symbol={{ symbol }}"></a>
 
             <nav class="navbar" role="navigation">
                 <div class="container">
-                    <div class="navbar-header">
-                        {% if pre_ele %}<a class="iconfont icon-leftarrow" href="{% url 'ele_material' %}?symbol={{ pre_ele.0.symbol }}"></a>{% endif %}
-                        {% if next_ele %}<a class="iconfont icon-rightarrow" href="{% url 'ele_material' %}?symbol={{ next_ele.0.symbol }}"></a>{% endif %}
-                    </div>
+{#                    <div class="navbar-header">#}
+{#                        {% if pre_ele %}<a class="iconfont iconleftarrow" href="{% url 'ele_material' %}?symbol={{ pre_ele.0.symbol }}"></a>{% endif %}#}
+{#                        {% if next_ele %}<a class="iconfont iconrightarrow" href="{% url 'ele_material' %}?symbol={{ next_ele.0.symbol }}"></a>{% endif %}#}
+{#                    </div>#}
                     <div>
                         <ul class="nav navbar-nav">
                             {% if eme.has_allotrope %}<li><a href="#structure">介绍</a></li>{% else %}
@@ -560,47 +564,6 @@
                         <div class="clearfix"></div>
                     </div>
                     {% endfor %}
-{#                    <div class="item">#}
-{#                        <div class="left">#}
-{#                            <strong>石墨</strong>是一种非常软的矿物，可以直接用做炭笔，也可以与粘土按一定比例混合做成不同硬度的铅芯，还可以作为润滑剂使用。石墨的英文名graphite源于希腊语graphein一词，意为“书写”。#}
-{#                        </div>#}
-{#                        <div class="right">#}
-{#                            <img class="circle" src="{% static 'img/material/sup2.png' %}" alt="">#}
-{#                            <img class="material" src="{% static 'img/material/img/C 2_2.png' %}" alt="">#}
-{#                        </div>#}
-{#                        <div class="clearfix"></div>#}
-{#                    </div>#}
-{#                    <div class="item">#}
-{#                        <div class="left">#}
-{#                            <strong>富勒烯</strong>（又名足球烯、巴基球、C60）是一种由60个碳原子构成的分子，是大自然鬼斧神工的结果，名字取自美国建筑师理查德•巴克明斯特•富勒，他设计的大圆线网格穹顶与这种分子的结构有异曲同工之妙#}
-{#                        </div>#}
-{#                        <div class="right">#}
-{#                            <img class="circle" src="{% static 'img/material/sup2.png' %}" alt="">#}
-{#                            <img class="play" src="{% static 'img/material/sup3.png' %}" alt="">#}
-{#                            <img class="material" src="{% static 'img/material/img/C 2_3.png' %}" alt="">#}
-{#                        </div>#}
-{#                        <div class="clearfix"></div>#}
-{#                    </div>#}
-{#                    <div class="item">#}
-{#                        <div class="left">#}
-{#                            2004年，曼彻斯特大学两位科学家杰姆和诺沃肖洛夫从石墨中剥离出石墨片，将薄片粘在一种特殊的胶带上，撕开胶带，就能把石墨片一分为二，不断重复该操作，最后得到仅由一层碳原子构成的薄片，即石墨烯。两人因此获得2010年诺贝尔物理学奖。#}
-{#                        </div>#}
-{#                        <div class="right">#}
-{#                            <img class="circle" src="{% static 'img/material/sup2.png' %}" alt="">#}
-{#                            <img class="material" src="{% static 'img/material/img/C 2_4.png' %}" alt="">#}
-{#                        </div>#}
-{#                        <div class="clearfix"></div>#}
-{#                    </div>#}
-{#                    <div class="item">#}
-{#                        <div class="left">#}
-{#                            <strong>碳纳米管</strong>可以看做是卷成圆筒状的石墨烯，宽度通常只有几纳米，但长度却能超过1毫米，重量轻，六边形结构连结完美，具有许多异常的力学、电学和化学性能。#}
-{#                        </div>#}
-{#                        <div class="right">#}
-{#                            <img class="circle" src="{% static 'img/material/sup2.png' %}" alt="">#}
-{#                            <img class="material" src="{% static 'img/material/img/C 2_5.png' %}" alt="">#}
-{#                        </div>#}
-{#                        <div class="clearfix"></div>#}
-{#                    </div>#}
                 </div>
                 <div class="title-sup"><img width="100%" src="{% static 'img/material/sup1.png' %}" alt=""></div>
             </div>
@@ -625,50 +588,6 @@
                         <div>{{ a.0|safe }}</div>
                     </div>
                     {% endfor %}
-{#                    <div class="item">#}
-{#                        <div class="shade"></div>#}
-{#                        <div class="img">#}
-{#                            <div class="line">#}
-{#                                <div class="circle">#}
-{#                                    <img width="100%" src="{% static 'img/material/img/C 2_7.png' %}" alt="">#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div>碳纤维布料，作为一种强化机制，用于复合材料中。</div>#}
-{#                    </div>#}
-{#                    <div class="item">#}
-{#                        <div class="shade"></div>#}
-{#                        <div class="img">#}
-{#                            <div class="line">#}
-{#                                <div class="circle">#}
-{#                                    <img width="100%" src="{% static 'img/material/img/C 2_8.png' %}" alt="">#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div>包铜的石墨焊接电极在任何焊接商店都能买到。</div>#}
-{#                    </div>#}
-{#                    <div class="item">#}
-{#                        <div class="shade"></div>#}
-{#                        <div class="img">#}
-{#                            <div class="line">#}
-{#                                <div class="circle">#}
-{#                                    <img width="100%" src="{% static 'img/material/img/C 2_9.png' %}" alt="">#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div>包埋在这个钢制圆盘中的微小的工业金刚石使它成为一个强有力的碾磨轮。</div>#}
-{#                    </div>#}
-{#                    <div class="item">#}
-{#                        <div class="shade"></div>#}
-{#                        <div class="img">#}
-{#                            <div class="line">#}
-{#                                <div class="circle">#}
-{#                                    <img width="100%" src="{% static 'img/material/img/C 2_10.png' %}" alt="">#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div>“智能药丸”，由碳纳米管制成的无线电天线以及用于分散药剂的碳纳米管电动机。</div>#}
-{#                    </div>#}
                 </div>
                 <div class="title-sup">
                     <img width="100%" src="{% static 'img/material/sup4.png' %}" alt="">
@@ -683,10 +602,14 @@
                     {% for e in experiment_list %}
                     <div class="item">
                         <p class="intro">{{ e.1|safe }}</p>
-                        <video width="100%" controls preload>
+                        {% if e.0|type_of:'.mp4' %}
+                        <video width="100%" controls preload="none">
                         <source src="/static/img/material/Experiments/{{ e.0 }}" type="video/mp4">
                         您的浏览器不支持 video 标签。
                         </video>
+                    {% else %}
+                            <div class="ifram-video">{{ e.0|safe }}</div>
+                    {% endif %}
 
                     </div>
                     {% endfor %}
@@ -695,6 +618,7 @@
             <footer><img width="100%" src="{% static 'img/material/back2.png' %}" alt=""></footer>
         </div>
     </div>
+    {% include 'element/material_nav.html' %}
 </body>
 <script>
     $(function () {

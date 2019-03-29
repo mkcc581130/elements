@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
     <link rel="stylesheet" href="{% static 'iconfont/iconfont.css' %}">
+    <link rel="stylesheet" href="{% static 'font/happy_font/happy_font.css' %}">
 
     <style>
         html, body {
@@ -207,6 +208,12 @@
             cursor: pointer;
             font-size: 45px;
         }
+        .item{
+            font-size: 80px;
+            color: #333;
+            cursor: pointer;
+            font-family: happy_font;
+        }
     </style>
 </head>
 <body>
@@ -276,25 +283,39 @@ function init() {
   	var dragging = false;
 	scene = new THREE.Scene();
 
-	//标题
-    var title = document.createElement( 'h1' );
-    title.className = 'title';
-    title.innerText = "嗨元素周期表";
-    var object = new THREE.CSS3DObject( title );
-    object.position.x = -1150;
-    object.position.y = 700;
+    //标题
+    var item = document.createElement( 'div' );
+    item.className = 'item';
+    item.innerText = "小剧场";
+    item.addEventListener('click', function () {
+        location.href = "/ele_hi_comic/";
+    });
+    var object = new THREE.CSS3DObject( item );
+    object.position.x = -1050;
+    object.position.y = 750;
     object.position.z = 0;
     scene.add( object );
-    //重置
-    var reset = document.createElement( 'h1' );
-    reset.className = 'reset';
-    reset.innerText = "重置";
-    reset.addEventListener('click', function () {
-        controls.reset();
+    //标题
+    var item = document.createElement( 'div' );
+    item.className = 'item';
+    item.innerText = "奇幻旅程";
+    item.addEventListener('click', function () {
+        location.href = "/ele_hi_comic/?type=2";
     });
-    var object = new THREE.CSS3DObject( reset );
-    object.position.x = -150;
-    object.position.y = 700;
+    var object = new THREE.CSS3DObject( item );
+    object.position.x = -1010;
+    object.position.y = 620;
+    object.position.z = 0;
+    scene.add( object );//标题
+    var item = document.createElement( 'div' );
+    item.className = 'item';
+    item.innerText = "壁纸";
+    item.addEventListener('click', function () {
+        location.href = "/ele_hi_wallpaper/";
+    });
+    var object = new THREE.CSS3DObject( item );
+    object.position.x = -1090;
+    object.position.y = 490;
     object.position.z = 0;
     scene.add( object );
 	// table
@@ -372,6 +393,9 @@ function init() {
 	controls.rotateSpeed = 1;
 	controls.minDistance = 500;
 	controls.maxDistance = 6000;
+	//是否不平移
+    controls.noPan = true;
+    controls.noRotate = true;
 	controls.addEventListener( 'change', render );
 
 

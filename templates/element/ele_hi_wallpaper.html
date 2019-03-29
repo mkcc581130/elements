@@ -1,0 +1,333 @@
+{% load static %}
+{% load my_filter %}
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="true">
+    <title>嗨元素壁纸</title>
+    <link rel="stylesheet" href="{% static 'iconfont/iconfont.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'font/happy_font/happy_font.css' %}">
+    <style>
+        .nav_sidebar {
+            position: fixed;
+            z-index: 999;
+            left: 1rem;
+            top: .8rem;
+            width: 300px;
+            text-align: left;
+            padding-top: 20px;
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            transform: translateY(-50%);
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            line-height: 0;
+        }
+        @media screen and ( max-width: 736px ) {
+            .nav_sidebar{
+                top: 50%;
+                left: -.3rem;
+            }
+        }
+        .nav_sidebar__item {
+            z-index: 10;
+            width: 21px;
+            height: 21px;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+
+            margin-bottom: 8px;
+            margin-right: 16px;
+            border: 8px solid transparent;
+            cursor: pointer;
+            display: inline-block;
+            -webkit-transition: background-color .3s ease, border-color .3s ease, -webkit-box-shadow .3s ease;
+            -moz-transition: background-color .3s ease, border-color .3s ease, -moz-box-shadow .3s ease;
+            -o-transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease;
+            transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            position: relative;
+            right: 0;
+        }
+
+        .nav_sidebar__item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            margin: auto;
+            height: 5px;
+            width: 5px;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            background-color: #455fff
+        }
+
+        .nav_sidebar__item:hover, .nav_sidebar__item.state-active {
+            border-color: #455fff;
+            -webkit-box-shadow: 1px 1.7px 4px rgba(64, 69, 73, 0.4);
+            -moz-box-shadow: 1px 1.7px 4px rgba(64, 69, 73, 0.4);
+            box-shadow: 1px 1.7px 4px rgba(64, 69, 73, 0.4)
+        }
+
+        .nav_sidebar__item:hover:before, .nav_sidebar__item.state-active:before {
+            background-color: white
+        }
+
+        .nav_sidebar__item:hover .nav_sidebar__badge {
+            -webkit-transform: translateY(-100%);
+            -moz-transform: translateY(-100%);
+            -ms-transform: translateY(-100%);
+            -o-transform: translateY(-100%);
+            transform: translateY(-100%);
+            display: block;
+            opacity: 1
+        }
+
+        .nav_sidebar__item:hover .nav_sidebar__badge--center, .nav_sidebar__item.state-active .nav_sidebar__badge--center {
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            transform: translateY(-50%)
+        }
+
+        .nav_sidebar__item:hover .nav_sidebar__badge--bot, .nav_sidebar__item.state-active .nav_sidebar__badge--bot {
+            -webkit-transform: translateY(0);
+            -moz-transform: translateY(0);
+            -ms-transform: translateY(0);
+            -o-transform: translateY(0);
+            transform: translateY(0)
+        }
+
+
+        .nav_sidebar__badge {
+            width: initial !important;
+            position: absolute;
+            display: block;
+            top: 10px;
+            right: -108px;
+            padding: 3px 14px;
+            line-height: 22px;
+            background-color: #292930;
+            -webkit-border-radius: 6px;
+            -moz-border-radius: 6px;
+            border-radius: 6px;
+            -webkit-box-shadow: 5px 8.7px 22px rgba(64, 69, 73, 0.4);
+            -moz-box-shadow: 5px 8.7px 22px rgba(64, 69, 73, 0.4);
+            box-shadow: 5px 8.7px 22px rgba(64, 69, 73, 0.4);
+            -webkit-transform: scale(0.8) translateY(-100%);
+            -moz-transform: scale(0.8) translateY(-100%);
+            -ms-transform: scale(0.8) translateY(-100%);
+            -o-transform: scale(0.8) translateY(-100%);
+            transform: scale(0.8) translateY(-100%);
+            opacity: 1;
+            -webkit-transform-origin: right center;
+            -moz-transform-origin: right center;
+            -ms-transform-origin: right center;
+            -o-transform-origin: right center;
+            transform-origin: right center;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            -webkit-transition: all .2s ease;
+            -moz-transition: all .2s ease;
+            -o-transition: all .2s ease;
+            transition: all .2s ease;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            white-space: nowrap;
+            z-index: 20;
+        }
+        .nav_sidebar__badge--center {
+            -webkit-transform: scale(0.8) translateY(-50%);
+            -moz-transform: scale(0.8) translateY(-50%);
+            -ms-transform: scale(0.8) translateY(-50%);
+            -o-transform: scale(0.8) translateY(-50%);
+            transform: scale(0.8) translateY(-50%)
+        }
+
+        .nav_sidebar__badge--bot {
+            -webkit-transform: scale(0.8) translateY(0);
+            -moz-transform: scale(0.8) translateY(0);
+            -ms-transform: scale(0.8) translateY(0);
+            -o-transform: scale(0.8) translateY(0);
+            transform: scale(0.8) translateY(0)
+        }
+    </style>
+    <style type="text/css">
+        html{
+            font-size: 100px;
+        }
+        body {
+            text-align: center;
+            font-size: .14rem;
+            line-height: initial;
+            font-family: happy_font;
+        }
+
+        [data-animation] {
+            opacity: 0;
+        }
+
+        [data-animation].animated {
+            opacity: 1;
+        }
+        .photo {
+            position: relative;
+
+        }
+
+        .photos {
+            margin: auto;
+            overflow: hidden;
+        }
+        .photo{
+            -webkit-box-shadow: 0 3px 10px rgba(0,0,0,.8);
+            -moz-box-shadow: 0 3px 10px rgba(0,0,0,.8);
+            box-shadow: 0 3px 6px rgba(0,0,0,.8);
+            position: relative;
+        }
+        .photo .download{
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            color: #3f3f3f;
+            z-index: 9999;
+            display: inline-block;
+            text-decoration: none;
+        }
+        h2.happy{
+            font-size: .6rem;
+            margin-top: .5rem;
+            font-weight: normal;
+        }
+        .load-more{
+            text-align: center;
+            font-size: .3rem;
+            cursor: pointer;
+            margin: .2rem;
+        }
+        .load-more .iconfont{
+            font-size: .26rem;
+
+        }
+    </style>
+
+</head>
+<body>
+<h2 class="happy">嗨元素壁纸</h2>
+<div class="left_nav">
+    <div class="nav_sidebar scroll_content ">
+        <a href="{% url 'hi' %}"
+           class="nav_sidebar__item">
+            <div class="nav_sidebar__badge">返回周期表</div>
+        </a><br>
+        <a href="{% url 'ele_hi_comic' %}?&type=1"
+           class="nav_sidebar__item {% if type == '1' %}state-active{% endif %}">
+            <div class="nav_sidebar__badge">小剧场</div>
+        </a><br>
+        <a href="{% url 'ele_hi_comic' %}?&type=2"
+           class="nav_sidebar__item {% if type == '2' %}state-active{% endif %}">
+            <div class="nav_sidebar__badge">奇幻旅程</div>
+        </a><br>
+        <a href="{% url 'ele_hi_wallpaper' %}"
+           class="nav_sidebar__item {% if not type %}state-active{% endif %}">
+            <div class="nav_sidebar__badge">精美壁纸</div>
+        </a><br>
+    </div>
+</div>
+<div class="jq22-container">
+    <div class="photos xgallerify" data-animation-container>
+        {% for w in wallpaper_list %}
+        <div class="photo" data-animation-child data-animation="fadeInUp" data-animation-delay="{{ forloop.counter|multiplication:300 }}ms">
+            <img src="{% static 'img/hi_ele/hi_wallpaper/small/' %}{{ w.file_name }}" width="100%">
+            <a href="{% static 'img/hi_ele/hi_wallpaper/big/' %}{{ w.file_name }}" download="" class="download iconfont iconxiazai"></a>
+          </div>
+        {% endfor %}
+    </div>
+    <div class="load-more active">加载更多壁纸 <i class="iconfont iconyoujian"></i></div>
+</div>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script src="{% static 'js/jquery.xgallerify.min.js' %}"></script>
+<script src="{% static 'js/jquery.scrollAnimations.min.js' %}"></script>
+<script type="text/javascript">
+    $(function () {
+        var page = 1;
+        $('.photos').gallerify({
+            margin: 10,
+            mode: 'bootstrap',
+            lastRow: 'adjust',
+        })
+        $(".load-more.active").on("click", function () {
+            let $this=$(this), $photo = $(".photos");
+                var i;
+                page +=1;
+                $.get("",{page: page}, function (data) {
+                    if(data){
+                        var wall_list = data.list;
+                        if(wall_list.length === 0){
+                            $this.html("暂无更多壁纸").off("click");
+                        }else{
+                            for(i in wall_list){
+                                var img_url = '{% static 'img/hi_ele/hi_wallpaper/' %}';
+                                $photo.append('<div class="photo" data-animation-child data-animation="fadeInUp" data-animation-delay="'+(i*300+300)+'ms"><img src="'+img_url+'small/'+wall_list[i].file_name+'" width="100%"><a href="'+img_url+'big/'+wall_list[i].file_name+'" download="" class="download iconfont iconxiazai"></a></div>');
+                            }
+                            $photo.gallerify.renderAsyncImages();
+                            $('[data-animation]:not(.animated)').scrollAnimations();
+                        }
+                    }
+                }, "json")
+        })
+
+        var $containers = $('[data-animation]:not([data-animation-child]), [data-animation-container]');
+	    $containers.scrollAnimations();
+    })
+
+    //Demo async loading simulation
+    /*
+    setTimeout(function(){
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        gallery.gallerify.renderAsyncImages();
+    }, 2000);
+    function generateRandomImage(){
+        //return $('<div class="photo"><img src="http://placehold.it//'+ Math.floor((Math.random() * 900) + 200) + 'x' + Math.floor((Math.random() * 900) + 200) + '"><div class="title">random</div></div>');
+    }
+    */
+</script>
+
+</body>
+</html>

@@ -78,8 +78,8 @@
             position: fixed;
             top: 50%;
             width: 100%;
-            max-width: 1140px;
-
+            max-width: 1300px;
+            margin-left: -80px;
         }
         .arrow .left, .arrow .right{
             display: inline-block;
@@ -141,12 +141,14 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'ele_info' %}?symbol={{ symbol }}">基本资料</a></li>
+                        <li><a href="{% url 'ele_isotope' %}?symbol={{ symbol }}">同位素</a></li>
                         <li><a href="{% url 'hi_ele' %}?symbol={{ symbol }}">嗨元素漫画</a></li>
                         <li><a href="{% url 'ele_history' %}?symbol={{ symbol }}">发现史</a></li>
                         <li><a href="{% url 'ele_representative' %}?symbol={{ symbol }}">学者代言</a></li>
-                        <li><a href="{% url 'ele_isotope' %}?symbol={{ symbol }}">同位素</a></li>
+                        <li><a href="/tech/">科技前沿</a></li>
                     </ul>
                 </li>
+                <li><a href="{% url 'structure' %}">原子</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         物质
@@ -170,7 +172,7 @@
             {#                <div class="clearfix"></div>#}
             <div class="col-sm-10" style="padding-left: 92px;padding-right: 0"><img width="100%" src="{% static 'img/isotope/' %}{{ symbol }}_2.png" alt="">
             </div>
-            <div class="col-sm-12 intro">{{ eie.guide }}</div>
+            <div class="col-sm-12 intro">{{ eie.guide|safe }}</div>
             <div class="col-sm-2"></div>
             <div class="col-sm-8">
                 <table class="table table-striped">
