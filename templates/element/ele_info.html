@@ -173,7 +173,7 @@
                         <li>● {% if ele.atomic_radius_type == 1 %}原子共价半径{% elif ele.atomic_radius_type == 2 %}原子范德华半径{% endif %}：{{ ele.atomic_radius }}</li>
                         <li>● 电负性：{{ ele.electronegativity|safe }}</li>
                         {% for i in ie_list %}
-                        <li>● {{ i.label }}：{{ i.energy }}</li>
+                        <li>● {{ i.label }}： {{ i.energy }} kJ/mol</li>
                         {% endfor %}
                         {% if ele.electronic_affinity %}<li>● 电子亲和能：{{ ele.electronic_affinity }}</li>{% endif %}
                     </ul>

@@ -141,6 +141,9 @@
             background-color: #fff;
             z-index: 10002;
             display: none;
+            -webkit-box-shadow: 0 3px 10px rgba(0,0,0,.6);
+            -moz-box-shadow: 0 3px 10px rgba(0,0,0,.6);
+            box-shadow: 0 3px 10px rgba(0,0,0,.6);
         }
         .show-modal .left{
             width: 100%;
@@ -189,19 +192,16 @@
         }
         @media screen and ( max-width: 960px ) {
         .show-modal{
-            width: 350px;
-            height: 200px;
-            margin-left: -175px;
-            margin-top: -100px;
+            width: 150px;
+            margin-left: -75px;
+            margin-top: -150px;
             font-size: 8px;
         }
-        .show-modal .right{
-            width: 42.9%;
-            float: left;
-            padding: 15px;
+            .show-modal .right{
+            width: 100%;
+            padding: 10px;
             box-sizing: border-box;
         }
-
         .show-modal .right .title{
             font-size: 15px;
             text-align: center;
@@ -210,20 +210,11 @@
         }
         .show-modal .right .content{
             box-sizing: border-box;
-            padding: 25px 8px 0;
-            line-height: 16px;
-            text-align: center;
+            padding: 8px 8px 0;
+            line-height: 12px;
         }
         .show-modal .close{
-            width: 12px;
-            height: 12px;
-            line-height: 12px;
-            top: 8px;
-            right: 8px;
-            -webkit-border-radius: 50px;
-            -moz-border-radius: 50px;
-            border-radius: 50px;
-            font-weight: bold;
+            display: none;
         }
         }
         @media screen and ( max-width: 736px ) {
@@ -245,7 +236,7 @@
 <script src="{% static 'js/libs/tween.min.js' %}"></script>
 <script src="{% static 'js/controls/TrackballControls.js' %}"></script>
 <script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
-{% include 'left_nav.html' %}
+{% include 'right_nav.html' %}
 <div id="shadow"><p>请横屏使用，效果更佳！</p></div>
 <div id="container">
 
@@ -308,7 +299,7 @@ function init() {
         let content = table[ i + 5 ];
 		var element = document.createElement( 'div' );
 		element.className = 'element';
-		element.style.background = "url(/static/img/cartoon/small/"+number+"_"+symbol+".png)";
+		element.style.background = "url({% static 'img/cartoon/small/' %}"+number+"_"+symbol+".png)";
 		element.style.backgroundRepeat = "no-repeat";
 		element.style.backgroundSize = "100% 100%";
 		element.style.zIndex = '10000';
@@ -394,7 +385,6 @@ function init() {
 	controls.minDistance = 500;
 	controls.maxDistance = 6000;
 	//是否不平移
-    controls.noPan = true;
     controls.noRotate = true;
 	controls.addEventListener( 'change', render );
 

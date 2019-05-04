@@ -1,0 +1,203 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ list_name }}列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="{% static 'admin/layui/css/layui.css' %}" media="all">
+    <link rel="stylesheet" href="{% static 'admin/css/admin.css' %}" media="all">
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn layuiadmin-btn-useradmin" data-type="batchdel">删除</button>
+                <button class="layui-btn layuiadmin-btn-useradmin" data-type="addone">新增</button>
+            </div>
+            <table id="list-manage" lay-filter="list-manage"></table>
+            <script type="text/html" id="urlTpl">
+                <a href="{% verbatim %}{{ d.url }}">{{ d.url }}{% endverbatim %}</a>
+            </script>
+            <script type="text/html" id="table-useradmin-webuser">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'admin/layui/layui.js' %}"></script>
+<script>
+    layui.config({
+        base: '{% static 'admin' %}/' //静态资源所在路径
+        ,debug: false
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'laydate'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , table = layui.table
+            , laydate = layui.laydate;
+        //加载表单
+        table.render({
+            elem: "#list-manage",
+            url: location.pathname, // request get: ?page=1&limit=30 response: {code: 0,msg: "",count: 1000,data: []}
+            cols: [[{type: "checkbox", fixed: "left"},
+                {field: "id", title: "id", sort: !0},
+                {field: "ele__symbol", title: "元素符号", align: "center"},
+                {field: "number", title: "图片数量", align: "center"},
+                {title: "操作", width: 170, align: "center", toolbar: "#table-useradmin-webuser",fixed: "right"}]],
+            page: !0,
+            limit: 20,
+            text: "对不起，加载出现异常！"
+        }), table.on("tool(list-manage)", function (e) {
+            if ("del" === e.event){
+                layer.confirm('确定删除吗？', function (index) {
+                    var list=[];
+                    list.push(e.data['id']);
+                    layui.view.req({
+                        url:'',
+                        data:{'del_data':list},
+                        success:function (data) {
+                            if(data['msg'] == 'del_success'){
+                                table.reload('list-manage');
+                                layer.msg('已删除');
+                                layer.close(index); //关闭弹层
+                            }
+                            else{
+                                layer.msg('删除失败！');
+                                layer.close(index); //关闭弹层
+                            }
+                        },error:function (data) {
+                            layer.msg('删除失败！');
+                            layer.close(index);
+                        }
+                    });
+            });} else if ("edit" === e.event) {
+                layer.open({
+                    type: 2,
+                    title: "编辑{{ list_name }}",
+                    content: location.pathname + "edit?id=" + e.data['id'],
+                    maxmin: !0,
+                    area: ["1000px", "450px"],
+                    btn: ["保存", "取消"],
+                    shadeClose: true,
+                    yes: function (e, t) {
+                        var l = window["layui-layer-iframe" + e], r = "user-mod-submit",
+                            n = t.find("iframe").contents().find("#" + r);
+                        console.log(e,t);
+                        l.layui.form.on("submit(" + r + ")", function (t) {
+                            layer.close(e);
+                            layer.msg('修改成功！');
+                            setTimeout(function () {
+                                table.reload('list-manage');
+                            },500);
+                        });
+                        n.trigger("click");
+                    }
+                })
+            } else if ("url" === e.event) {
+                layer.open({
+                    type: 2,
+                    title: "跳转url",
+                    content: e.data['url'],
+                    maxmin: !0,
+                    area: ["1000px", "605px"],
+                });
+            }
+        });
+        //监听搜索
+        form.on('submit(list-search)', function (data) {
+            var field = data.field;
+            //执行重载
+            table.reload('list-manage', {
+                where: field
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        });
+        document.onkeydown = function (e) { // 回车提交表单
+        // 兼容FF和IE和Opera
+            var theEvent = window.event || e;
+            var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+            if (code == 13) {
+                $('.layuiadmin-submit-btn').click();
+            }
+        }
+        //事件
+        var active = {
+            batchdel: function () {
+                var checkStatus = table.checkStatus('list-manage')
+                    , checkData = checkStatus.data; //得到选中的数据
+                if (checkData.length === 0) {
+                    return layer.msg('请选择数据');
+                }else{
+                    layer.confirm('确定删除吗？', function (index) {
+                        var list=[];
+                        for(var i=0;i<checkData.length;i++){
+                            list.push(checkData[i]['id']);
+                        }
+                        layui.view.req({
+                            url:'',
+                            data:{'del_data':list},
+                            success:function (data) {
+                                if(data['msg'] == 'del_success'){
+                                    table.reload('list-manage');
+                                    layer.msg('已删除');
+                                    layer.close(index); //关闭弹层
+                                }
+                                else{
+                                    layer.msg('删除失败！');
+                                    layer.close(index); //关闭弹层
+                                }
+                            },error:function (data) {
+                                layer.msg('删除失败！');
+                                layer.close(index);
+                            }
+                        });
+                    });
+                }
+            },
+            addone:function () {
+                layer.open({
+                    type: 2,
+                    title: "新增{{ list_name }}",
+                    content: location.pathname + "add",
+                    maxmin: !0,
+                    area: ["1000px", "450px"],
+                    btn: ["保存", "取消"],
+                    shadeClose:true,
+                    yes: function (e, t) {
+                        var l = window["layui-layer-iframe" + e], r = "user-mod-submit",
+                            n = t.find("iframe").contents().find("#" + r);
+                        console.log(e,t);
+                        l.layui.form.on("submit(" + r + ")", function (t) {
+                            layer.close(e);
+                            layer.msg('新增成功！');
+                            setTimeout(function () {
+                                table.reload('list-manage');
+                            },500);
+                        });
+                        n.trigger("click");
+                    }
+                })
+            }
+        };
+        $('.layui-btn.layuiadmin-btn-useradmin').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+</body>
+</html>

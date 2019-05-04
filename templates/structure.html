@@ -1,34 +1,40 @@
+{#加载静态文件#}
 {% load static %}
+{#加载静态文件合并#}
 {% load compress %}
+{#加载数据过滤器#}
 {% load my_filter %}
 <!DOCTYPE html>
 <html>
 <head>
+    {#标题#}
     <title>元素原子结构周期表</title>
+    {#页面编码#}
     <meta charset="utf-8">
+    {#手机页面自适应宽度#}
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    {# 导入图标样式 #}
     <link rel="stylesheet" href="{% static 'iconfont/iconfont.css' %}">
         <style>
-            html, body {
-                height: 100%;
-            }
-
+            {#整体页面样式#}
             body {
+                {#页面背景色#}
                 background-color: #1a1f2c;
+                {#页面外边距初始化为0#}
                 margin: 0;
+                {#设置统一字体#}
                 font-family: "Open Sans", sans-serif;
+                {#超出页面进行隐藏#}
                 overflow: hidden;
+                {#字体颜色设置#}
                 color: #393F44;
             }
-
+            {#a链接样式#}
             a {
+                {#字体颜色设置#}
                 color: #ffffff;
             }
 
-            @font-face {
-                font-family: hkFont;
-                src: url('{% static 'font/hk_girl.ttf' %}');
-            }
 
             h1.title {
                 font-size: 80px;
@@ -60,25 +66,6 @@
                 font-size: 80px;
                 color: rgba(255, 255, 255, 0.7);
                 font-weight: 300;
-            }
-
-            #info {
-                position: absolute;
-                width: 100%;
-                color: #ffffff;
-                padding: 5px;
-                font-family: Monospace;
-                font-size: 13px;
-                font-weight: bold;
-                text-align: center;
-                z-index: 1;
-            }
-
-            #menu {
-                position: absolute;
-                bottom: 20px;
-                width: 100%;
-                text-align: center;
             }
 
             .element {
@@ -215,15 +202,6 @@
                 color: rgba(255, 255, 255, 0.75) !important;
             }
 
-            @media screen and ( max-width: 960px ) {
-            }
-
-            @media screen and ( max-width: 736px ) {
-            }
-
-            @media screen and ( max-width: 568px ) {
-            }
-
             .reset {
                 position: absolute;
                 top: 60px;
@@ -256,7 +234,7 @@ var table = [
     <script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
     <script src="{% static 'js/custom/structure.js' %}"></script>
 {% endcompress %}
-{% include 'left_nav.html' %}
+{% include 'right_nav.html' %}
 </body>
 </html>
 

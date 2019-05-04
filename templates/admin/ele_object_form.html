@@ -48,29 +48,12 @@
                 </select>
             </div>
         </div>
-    </div>
-    <div class="layui-form-item">
-            <label class="layui-form-label">元素简介</label>
-            <div class="layui-input-block">
-                <textarea name="comic_introduction" id="comic_introduction" class="layui-textarea" placeholder="请输入元素简介">{% if eie.comic_introduction %}{{ eie.comic_introduction }}{% endif %}</textarea>
+        <div class="layui-inline">
+            <label class="layui-form-label">图片数</label>
+            <div class="layui-input-inline">
+                <input type="text" name="number" value="{% if eie.number %}{{ eie.number }}{% else %}1{% endif %}" lay-verify="required" placeholder="请输入图片数" autocomplete="off" class="layui-input">
             </div>
-    </div>
-    <div class="layui-form-item">
-            <label class="layui-form-label">手绘简介</label>
-            <div class="layui-input-block">
-                <textarea name="painted_introduction" id="painted_introduction" class="layui-textarea" placeholder="请输入手绘简介">{% if eie.painted_introduction %}{{ eie.painted_introduction }}{% endif %}</textarea>
-            </div>
-    </div><div class="layui-form-item">
-            <label class="layui-form-label">图片简介</label>
-            <div class="layui-input-block">
-                <textarea name="img_introduction" id="img_introduction" class="layui-textarea" placeholder="请输入图片简介">{% if eie.img_introduction %}{{ eie.img_introduction }}{% endif %}</textarea>
-            </div>
-    </div>
-    <div class="layui-form-item">
-            <label class="layui-form-label">人物简介</label>
-            <div class="layui-input-block">
-                <textarea name="cn_introduction" id="cn_introduction" class="layui-textarea" placeholder="请输入人物简介">{% if eie.cn_introduction %}{{ eie.cn_introduction }}{% endif %}</textarea>
-            </div>
+        </div>
     </div>
     <div class="layui-form-item layui-hide">
         <button class="layui-btn layuiadmin-btn-useradmin" lay-submit id="user-mod-submit" lay-filter="user-mod-submit">

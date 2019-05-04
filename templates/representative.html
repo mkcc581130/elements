@@ -209,7 +209,7 @@
 <script src="{% static 'js/swiper.min.js' %}"></script>
 <script src="{% static 'js/controls/TrackballControls.js' %}"></script>
 <script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
-{% include 'left_nav.html' %}
+{% include 'right_nav.html' %}
 <div id="shadow"><p>请横屏使用，效果更佳！</p></div>
 <div id="container">
 
@@ -345,7 +345,6 @@ function init() {
 	controls.minDistance = 500;
 	controls.maxDistance = 6000;
 	//是否不平移
-    controls.noPan = true;
     controls.noRotate = true;
 	controls.addEventListener( 'change', render );
 

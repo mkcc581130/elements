@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^3wlr@7201)h0y(bgnk58j16&^+c@rcx*k!pbq)mwl+h9iwcab'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -133,7 +133,7 @@ STATICFILES_FINDERS = (
 )
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
-STATIC_URL = '/static/'
+STATIC_URL = '//static.mkcc.top/'
 MEDIA_URL = '/media/'
 COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')

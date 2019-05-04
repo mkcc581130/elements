@@ -1,0 +1,152 @@
+{% load static %}
+{% load my_filter %}
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>{% if ptype == "1" %}学生手绘周期表{% elif ptype == "2" %}其他创意周期表{% endif %}</title>
+    <link rel="stylesheet" href="{% static 'iconfont/iconfont.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <style type="text/css">
+        html{
+            font-size: 100px;
+        }
+        body {
+            text-align: center;
+            font-size: .14rem;
+            line-height: initial;
+            font-family: "Helvetica Neue", Helvetica, "PingFang SC", Tahoma, Arial, sans-serif;
+        }
+
+        [data-animation] {
+            opacity: 0;
+        }
+
+        [data-animation].animated {
+            opacity: 1;
+        }
+        .photo {
+            position: relative;
+
+        }
+
+        .photos {
+            margin: auto;
+            overflow: hidden;
+        }
+        .photo{
+            -webkit-box-shadow: 0 3px 6px rgba(0,0,0,.8);
+            -moz-box-shadow: 0 3px 6px rgba(0,0,0,.8);
+            box-shadow: 0 3px 6px rgba(0,0,0,.8);
+            position: relative;
+        }
+        .photo .download{
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            color: #3f3f3f;
+            z-index: 9999;
+            display: inline-block;
+            text-decoration: none;
+        }
+        h2.happy{
+            font-size: .6rem;
+            margin-top: .5rem;
+            font-weight: normal;
+        }
+        .load-more{
+            text-align: center;
+            font-size: .3rem;
+            cursor: pointer;
+            margin: .2rem;
+        }
+        .load-more .iconfont{
+            font-size: .26rem;
+
+        }
+    </style>
+
+</head>
+<body>
+<h2 class="happy">{% if ptype == "1" %}学生手绘周期表{% elif ptype == "2" %}其他创意周期表{% endif %}</h2>
+
+<div class="jq22-container">
+    <div class="photos xgallerify" data-animation-container>
+        {% for w in wallpaper_list %}
+        <div class="photo" data-animation-child data-animation="fadeInUp" data-animation-delay="{{ forloop.counter|multiplication:300 }}ms">
+            <img src="{% static 'img/periodic_img/' %}{{ w.file_name }}" width="100%">
+            <a href="{% static 'img/periodic_img/' %}{{ w.file_name }}" download="" class="download iconfont iconxiazai"></a>
+          </div>
+        {% endfor %}
+    </div>
+    <div class="load-more active">加载更多 <i class="iconfont iconyoujian"></i></div>
+</div>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script src="{% static 'js/jquery.xgallerify.min.js' %}"></script>
+<script src="{% static 'js/jquery.scrollAnimations.min.js' %}"></script>
+{% include 'right_nav.html' %}
+<script type="text/javascript">
+    $(function () {
+        var page = 1;
+        $('.photos').gallerify({
+            margin: 10,
+            mode: 'bootstrap',
+            lastRow: 'adjust',
+        })
+        $(".load-more.active").on("click", function () {
+            let $this=$(this), $photo = $(".photos");
+                var i;
+                page +=1;
+                $.get("",{page: page}, function (data) {
+                    if(data){
+                        var wall_list = data.list;
+                        if(wall_list.length === 0){
+                            $this.html("暂无更多").off("click");
+                        }else{
+                            for(i in wall_list){
+                                var img_url = '{% static 'img/periodic_img/' %}';
+                                $photo.append('<div class="photo" data-animation-child data-animation="fadeInUp" data-animation-delay="'+(i*300+300)+'ms"><img src="'+img_url+wall_list[i].file_name+'" width="100%"><a href="'+img_url+wall_list[i].file_name+'" download="" class="download iconfont iconxiazai"></a></div>');
+                            }
+                            $photo.gallerify.renderAsyncImages();
+                            $('[data-animation]:not(.animated)').scrollAnimations();
+                        }
+                    }
+                }, "json")
+        })
+
+        var $containers = $('[data-animation]:not([data-animation-child]), [data-animation-container]');
+	    $containers.scrollAnimations();
+    })
+
+    //Demo async loading simulation
+    /*
+    setTimeout(function(){
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        $(".photos").append(generateRandomImage());
+        gallery.gallerify.renderAsyncImages();
+    }, 2000);
+    function generateRandomImage(){
+        //return $('<div class="photo"><img src="http://placehold.it//'+ Math.floor((Math.random() * 900) + 200) + 'x' + Math.floor((Math.random() * 900) + 200) + '"><div class="title">random</div></div>');
+    }
+    */
+</script>
+
+</body>
+</html>

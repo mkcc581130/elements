@@ -38,39 +38,28 @@
 {% csrf_token %}
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label">所属元素</label>
-            <div class="layui-input-inline" style="z-index: 11000">
-                <select name="ele_id" id="ele_id" lay-verify="required">
-                    <option value="">请选择元素</option>
-                    {% for e in elements_list %}
-                        <option value="{{ e.id }}"  {% if eie.ele_id == e.id %}selected{% endif %}>{{ e.atomic_number }}--{{ e.cn_name }}{{ e.symbol }}</option>
-                    {% endfor %}
+            <label class="layui-form-label">图片名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="file_name" value="{% if ele.file_name %}{{ ele.file_name }}{% endif %}" lay-verify="required" placeholder="请输入图片名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-inline">
+                <select name="type" id="type" lay-verify="required">
+                    <option value="">请选择类型</option>
+                    <option value="1"  {% if ele.type == 1 %}selected{% endif %}>学生手绘版</option>
+                    <option value="2"  {% if ele.type == 1 %}selected{% endif %}>其他创意版</option>
                 </select>
             </div>
         </div>
-    </div>
-    <div class="layui-form-item">
-            <label class="layui-form-label">元素简介</label>
-            <div class="layui-input-block">
-                <textarea name="comic_introduction" id="comic_introduction" class="layui-textarea" placeholder="请输入元素简介">{% if eie.comic_introduction %}{{ eie.comic_introduction }}{% endif %}</textarea>
+        <div class="layui-inline">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <input type="text" name="sort" value="{{ ele.sort }}" placeholder="请输入排序" autocomplete="off" class="layui-input">
             </div>
-    </div>
-    <div class="layui-form-item">
-            <label class="layui-form-label">手绘简介</label>
-            <div class="layui-input-block">
-                <textarea name="painted_introduction" id="painted_introduction" class="layui-textarea" placeholder="请输入手绘简介">{% if eie.painted_introduction %}{{ eie.painted_introduction }}{% endif %}</textarea>
-            </div>
-    </div><div class="layui-form-item">
-            <label class="layui-form-label">图片简介</label>
-            <div class="layui-input-block">
-                <textarea name="img_introduction" id="img_introduction" class="layui-textarea" placeholder="请输入图片简介">{% if eie.img_introduction %}{{ eie.img_introduction }}{% endif %}</textarea>
-            </div>
-    </div>
-    <div class="layui-form-item">
-            <label class="layui-form-label">人物简介</label>
-            <div class="layui-input-block">
-                <textarea name="cn_introduction" id="cn_introduction" class="layui-textarea" placeholder="请输入人物简介">{% if eie.cn_introduction %}{{ eie.cn_introduction }}{% endif %}</textarea>
-            </div>
+        </div>
+
     </div>
     <div class="layui-form-item layui-hide">
         <button class="layui-btn layuiadmin-btn-useradmin" lay-submit id="user-mod-submit" lay-filter="user-mod-submit">

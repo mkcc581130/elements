@@ -779,11 +779,20 @@ def ele_cartoon_mod(request, action):
     if post:
         ele_id = post.get('ele_id')
         cn_introduction = post.get('cn_introduction')
+        comic_introduction = post.get('comic_introduction')
+        painted_introduction = post.get('painted_introduction')
+        img_introduction = post.get('img_introduction')
         if action == 'add':
-            ElementCartoon.objects.create(ele_id=ele_id, cn_introduction=cn_introduction)
+            ElementCartoon.objects.create(ele_id=ele_id, cn_introduction=cn_introduction,
+                                          comic_introduction=comic_introduction,
+                                          painted_introduction=painted_introduction,
+                                          img_introduction=img_introduction)
         elif action == 'edit':
             if iid:
-                er = ElementCartoon.objects.filter(pk=iid).update(ele_id=ele_id, cn_introduction=cn_introduction)
+                er = ElementCartoon.objects.filter(pk=iid).update(ele_id=ele_id, cn_introduction=cn_introduction,
+                                                                  comic_introduction=comic_introduction,
+                                                                  painted_introduction=painted_introduction,
+                                                                  img_introduction=img_introduction)
         return JsonResponse({"code": 0, "msg": action + "_success"})
     if action == 'edit':
         if iid:
@@ -834,6 +843,48 @@ def ele_collection_mod(request, action):
     return render(request, 'admin/ele_collection_form.html', locals())
 
 
+def ele_object_list(request):
+    list_name = '实物'
+    page = request.GET.get('page')
+    limit = request.GET.get('limit')
+    if page and limit:
+        page = int(page)
+        limit = int(limit)
+        elements_list = ElementObject.objects.all().values('id', 'ele__symbol', 'number')
+        count = elements_list.count()
+        elements_list = elements_list[limit * (page - 1): limit * page]
+        return JsonResponse({"code": 0, "msg": "", "count": count, "data": list(elements_list)})
+    # 删除操作
+    del_data = request.GET.getlist('del_data[]')
+    if del_data:
+        for i in del_data:
+            e = ElementObject.objects.filter(pk=i)
+            if e:
+                e.delete()
+        return JsonResponse({"code": 0, "msg": "del_success"})
+    return render(request, 'admin/ele_object_list.html', locals())
+
+
+def ele_object_mod(request, action):
+    list_name = '实物'
+    post = request.POST
+    iid = request.GET.get("id")
+    if post:
+        ele_id = post.get('ele_id')
+        number = post.get('number')
+        if action == 'add':
+            ElementObject.objects.create(ele_id=ele_id, number=number)
+        elif action == 'edit':
+            if iid:
+                er = ElementObject.objects.filter(pk=iid).update(ele_id=ele_id, number=number)
+        return JsonResponse({"code": 0, "msg": action + "_success"})
+    if action == 'edit':
+        if iid:
+            eie = ElementObject.objects.get(id=iid)
+    elements_list = Elements.objects.all().order_by('atomic_number')
+    return render(request, 'admin/ele_object_form.html', locals())
+
+
 def ele_jingle_list(request):
     list_name = '顺口溜'
     page = request.GET.get('page')
@@ -874,6 +925,50 @@ def ele_jingle_mod(request, action):
             eie = ElementJingle.objects.get(id=iid)
     elements_list = Elements.objects.all().order_by('atomic_number')
     return render(request, 'admin/ele_jingle_form.html', locals())
+
+
+def ele_family_list(request):
+    list_name = '元素家族'
+    page = request.GET.get('page')
+    limit = request.GET.get('limit')
+    if page and limit:
+        page = int(page)
+        limit = int(limit)
+        elements_list = ElementFamily.objects.all().values('id', 'ele__symbol', 'feature')
+        count = elements_list.count()
+        elements_list = elements_list[limit * (page - 1): limit * page]
+        return JsonResponse({"code": 0, "msg": "", "count": count, "data": list(elements_list)})
+    # 删除操作
+    del_data = request.GET.getlist('del_data[]')
+    if del_data:
+        for i in del_data:
+            e = ElementFamily.objects.filter(pk=i)
+            if e:
+                e.delete()
+        return JsonResponse({"code": 0, "msg": "del_success"})
+    return render(request, 'admin/ele_family_list.html', locals())
+
+
+def ele_family_mod(request, action):
+    list_name = '元素家族'
+    post = request.POST
+    iid = request.GET.get("id")
+    if post:
+        ele_id = post.get('ele_id')
+        feature = post.get('feature')
+        record = post.get('record')
+        back_color = post.get('back_color')
+        if action == 'add':
+            ElementFamily.objects.create(ele_id=ele_id, feature=feature, record=record, back_color=back_color)
+        elif action == 'edit':
+            if iid:
+                er = ElementFamily.objects.filter(pk=iid).update(ele_id=ele_id, feature=feature, record=record, back_color=back_color)
+        return JsonResponse({"code": 0, "msg": action + "_success"})
+    if action == 'edit':
+        if iid:
+            eie = ElementFamily.objects.get(id=iid)
+    elements_list = Elements.objects.all().order_by('atomic_number')
+    return render(request, 'admin/ele_family_form.html', locals())
 
 
 def ele_page_index_list(request):
@@ -1007,8 +1102,49 @@ def ele_hi_wallpaper_mod(request, action):
     if action == 'edit':
         if iid:
             ele = HiWallpaper.objects.get(id=iid)
-    elements_list = Elements.objects.all().order_by('atomic_number')
     return render(request, 'admin/ele_hi_wallpaper_form.html', locals())
+
+
+def ele_periodic_img_list(request):
+    list_name = '周期表图片'
+    page = request.GET.get('page')
+    limit = request.GET.get('limit')
+    if page and limit:
+        page = int(page)
+        limit = int(limit)
+        elements_list = PeriodicImg.objects.all().values('id', 'file_name', 'type', 'sort')
+        count = elements_list.count()
+        elements_list = elements_list[limit * (page - 1): limit * page]
+        return JsonResponse({"code": 0, "msg": "", "count": count, "data": list(elements_list)})
+    # 删除操作
+    del_data = request.GET.getlist('del_data[]')
+    if del_data:
+        for i in del_data:
+            e = PeriodicImg.objects.filter(pk=i)
+            if e:
+                e.delete()
+        return JsonResponse({"code": 0, "msg": "del_success"})
+    return render(request, 'admin/ele_periodic_img_list.html', locals())
+
+
+def ele_periodic_img_mod(request, action):
+    list_name = '周期表图片'
+    post = request.POST
+    iid = request.GET.get("id")
+    if post:
+        file_name = post.get('file_name')
+        sort = post.get('sort')
+        type = post.get('type')
+        if action == 'add':
+            PeriodicImg.objects.create(file_name=file_name, type=type, sort=sort)
+        elif action == 'edit':
+            if iid:
+                PeriodicImg.objects.filter(pk=iid).update(file_name=file_name, type=type, sort=sort)
+        return JsonResponse({"code": 0, "msg": action + "_success"})
+    if action == 'edit':
+        if iid:
+            ele = PeriodicImg.objects.get(id=iid)
+    return render(request, 'admin/ele_periodic_img_form.html', locals())
 
 
 @csrf_exempt

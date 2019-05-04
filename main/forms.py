@@ -19,13 +19,13 @@ class RegistrationForm(forms.Form):
     def clean_username(self):
         username = self.cleaned_data.get('username')
         if len(username) < 6:
-            raise forms.ValidationError("Your username must be at least 6 characters long.")
+            raise forms.ValidationError("用户名至少4位")
         elif len(username) > 50:
-            raise forms.ValidationError("Your username is too long.")
+            raise forms.ValidationError("用户名太长了")
         else:
             filter_result = User.objects.filter(username__exact=username)
             if len(filter_result) > 0:
-                raise forms.ValidationError("Your username already exists.")
+                raise forms.ValidationError("该用户名已存在")
         return username
 
     def clean_email(self):
@@ -33,30 +33,30 @@ class RegistrationForm(forms.Form):
         if email_check(email):
             filter_result = User.objects.filter(email__exact=email)
             if len(filter_result) > 0:
-                raise forms.ValidationError("Your email already exists.")
-            else:
-                raise forms.ValidationError("Please enter a valid email.")
+                raise forms.ValidationError("该邮箱已存在")
+        else:
+            raise forms.ValidationError("请输入有效的邮箱！")
         return email
 
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
         if len(password1) < 6:
-            raise forms.ValidationError("Your password is too short.")
+            raise forms.ValidationError("密码至少6位")
         elif len(password1) > 20:
-            raise forms.ValidationError("Your password is too long.")
+            raise forms.ValidationError("密码至多20位")
         return password1
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
         if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Password mismatch. Please enter again.")
+            raise forms.ValidationError("密码输入不一致")
         return password2
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label='Username', max_length=50)
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+    username = forms.CharField(label='用户名', max_length=50, help_text='请输入用户名邮箱')
+    password = forms.CharField(label='密码', widget=forms.PasswordInput, help_text='请输入密码')
 
     # Use clean methods to define custom validation rules
     def clean_username(self):
@@ -65,10 +65,17 @@ class LoginForm(forms.Form):
         if email_check(username):
             filter_result = User.objects.filter(email__exact=username)
             if not filter_result:
-                raise forms.ValidationError("This email does not exist.")
-            else:
-                filter_result = User.objects.filter(username__exact=username)
-                if not filter_result:
-                    raise forms.ValidationError("This username does not exist. Please register first.")
-
+                raise forms.ValidationError("该邮箱不存在，请注册后重试")
+        else:
+            filter_result = User.objects.filter(username__exact=username)
+            if not filter_result:
+                raise forms.ValidationError("该用户名不存在，请注册后重试")
         return username
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if len(password) < 6:
+            raise forms.ValidationError("密码至少6位")
+        elif len(password) > 20:
+            raise forms.ValidationError("密码至多20位")
+        return password

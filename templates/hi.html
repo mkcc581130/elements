@@ -223,7 +223,7 @@
 <script src="{% static 'js/swiper.min.js' %}"></script>
 <script src="{% static 'js/controls/TrackballControls.js' %}"></script>
 <script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
-{% include 'left_nav.html' %}
+{% include 'right_nav.html' %}
 <div id="shadow"><p>请横屏使用，效果更佳！</p></div>
 <div id="container">
 
@@ -289,6 +289,9 @@ function init() {
     item.innerText = "小剧场";
     item.addEventListener('click', function () {
         location.href = "/ele_hi_comic/";
+    })
+    item.addEventListener('touchend', function () {
+        location.href = "/ele_hi_comic/";
     });
     var object = new THREE.CSS3DObject( item );
     object.position.x = -1050;
@@ -301,6 +304,9 @@ function init() {
     item.innerText = "奇幻旅程";
     item.addEventListener('click', function () {
         location.href = "/ele_hi_comic/?type=2";
+    })
+    item.addEventListener('touchend', function () {
+        location.href = "/ele_hi_comic/?type=2";
     });
     var object = new THREE.CSS3DObject( item );
     object.position.x = -1010;
@@ -311,6 +317,9 @@ function init() {
     item.className = 'item';
     item.innerText = "壁纸";
     item.addEventListener('click', function () {
+        location.href = "/ele_hi_wallpaper/";
+    });
+    item.addEventListener('touchend', function () {
         location.href = "/ele_hi_wallpaper/";
     });
     var object = new THREE.CSS3DObject( item );
@@ -326,7 +335,7 @@ function init() {
         let number = table[ i + 1 ];
 		var element = document.createElement( 'div' );
 		element.className = 'element';
-		element.innerHTML = "<img width=\"100%\" src=\"/static/img/hi_ele/"+symbol+"_1.png\" alt=\"\" onerror=\"this.style.display='none'\" onclick=\"location.href='/hi_ele/?symbol="+symbol+"'\">";
+		element.innerHTML = "<img width=\"100%\" src=\"/static/img/hi_ele/"+symbol+"_1.png\" alt=\"\" onerror=\"this.style.display='none'\">";
 		element.style.zIndex = '10000';
 		if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
             element.addEventListener( 'touchend', function () {
@@ -336,7 +345,7 @@ function init() {
                     return;
 
                 }
-
+                location.href='/hi_ele/?symbol='+symbol;
             }, false );
             element.addEventListener( 'touchstart', function () {
 
@@ -350,7 +359,7 @@ function init() {
             }, false );
         } else {
             element.addEventListener( 'click', function () {
-
+                location.href='/hi_ele/?symbol='+symbol;
 
             }, false );
         }
@@ -394,7 +403,6 @@ function init() {
 	controls.minDistance = 500;
 	controls.maxDistance = 6000;
 	//是否不平移
-    controls.noPan = true;
     controls.noRotate = true;
 	controls.addEventListener( 'change', render );
 
@@ -412,9 +420,6 @@ function init() {
     transform( targets.table, 2000 );
 
 	window.addEventListener( 'resize', onWindowResize, false );
-  	// document.addEventListener( 'mouseup', onDocumentMouseUp, false );
-  	document.onmousedown = onDocumentMouseUp;
-	document.addEventListener( 'touthmove', onDocumentTouchMove, false );
 
 }
 

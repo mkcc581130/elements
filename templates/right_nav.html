@@ -16,7 +16,14 @@
     box-sizing: border-box;
     margin-top:29px;
 }
-
+.nav_sidebar.left{
+    right: initial;
+    left: 48px;
+    top: 50%;
+    width: 44px;
+    height: 88px;
+    margin-top: 14px;
+}
 .nav_sidebar__item {
     position: absolute;
     z-index: 10;
@@ -133,7 +140,10 @@
     white-space:nowrap;
     z-index: 20;
 }
-
+.nav_sidebar.left .nav_sidebar__badge{
+    right: initial;
+    left: 20px;
+}
 .nav_sidebar__badge--center {
     -webkit-transform: scale(0.8) translateY(-50%);
     -moz-transform: scale(0.8) translateY(-50%);
@@ -150,7 +160,7 @@
     transform: scale(0.8) translateY(0)
 }
 .arrow{
-   position: absolute;
+   position: fixed;
    top: 50%;
    margin-top: -25px;
     right: 50px;
@@ -186,22 +196,33 @@
     }
 
 </style>
-<div class="nav_sidebar">
+<div class="nav_sidebar left">
+    {% for p in left_nav %}
+    <a href="{% url p.0 %}" class="nav_sidebar__item {% if page_name2 == p.0 %}state{% endif %}">
+        <div class="nav_sidebar__badge">{{ p.1 }}</div>
+    </a>
+    {% endfor %}
+</div>
+<div class="nav_sidebar right">
     {% for p in page_info.page_list %}
-    <a href="{% url p.en_name %}" class="nav_sidebar__item {% if page_name == p.en_name %}state{% endif %}">
+    <a href="/{{ p.en_name }}/" class="nav_sidebar__item {% if page_name == p.en_name %}state{% endif %}">
         <div class="nav_sidebar__badge">{{ p.cn_name }}</div>
     </a>
     {% endfor %}
-
 </div>
-{% if page_info.pre_page %}<a href="{% url page_info.pre_page.en_name %}" class="arrow left iconfont iconyoujian"></a>{% endif %}
-{% if page_info.next_page %}<a href="{% url page_info.next_page.en_name %}" class="arrow right iconfont iconyoujian"></a>{% endif %}
+{% if page_info.pre_page %}<a href="/{{ page_info.pre_page.en_name }}/" class="arrow left iconfont iconyoujian"></a>{% endif %}
+{% if page_info.next_page %}<a href="/{{ page_info.next_page.en_name }}/" class="arrow right iconfont iconyoujian"></a>{% endif %}
 <script>
     $(function () {
-        $(".nav_sidebar .nav_sidebar__item").each(function (i, e) {
-            var $t = $(this);
-                $t.css('left', Math.sin(-3.14/12*(12-i)) * 88 + 44 - 1.5).css('top', Math.cos(-3.14/12*(12-i)) * 88 + 44 - 1.5);
-        })
+        $(".nav_sidebar.left .nav_sidebar__item").each(function (i, e) {
+            let $t = $(this),len = {{ left_nav|length }}-1;
+                $t.css('left', Math.sin(3.14/len*(len-i)) * 44 + 22 - 1.5).css('top', Math.cos(3.14/len*(len-i)) * 44 + 22 - 1.5);
+        });
+        $(".nav_sidebar.right .nav_sidebar__item").each(function (i, e) {
+            let $t = $(this),len = {{ page_info.page_list|length }}-1;
+                $t.css('left', Math.sin(-3.14/len*(len-i)) * 88 + 44 - 1.5).css('top', Math.cos(-3.14/len*(len-i)) * 88 + 44 - 1.5);
+        });
+
         setTimeout(function () {
             $(".nav_sidebar .nav_sidebar__item.state").addClass("state-active");
         }, 1000)

@@ -29,6 +29,9 @@ class Elements(models.Model):
     atomic_radius = models.CharField(max_length=100, verbose_name="原子半径大小", null=True, blank=True)
     outer_electron = models.CharField(max_length=100, verbose_name="外层电子数", null=True, blank=True)
     electron_configuration = models.CharField(max_length=100, verbose_name="电子排布", null=True, blank=True)
+    density = models.CharField(max_length=100, verbose_name="单质密度", null=True, blank=True)
+    melting_point = models.CharField(max_length=100, verbose_name="单质熔点", null=True, blank=True)
+    boiling_point = models.CharField(max_length=100, verbose_name="单质沸点", null=True, blank=True)
     electronegativity = models.TextField(default='', verbose_name="电负性", null=True, blank=True)
     electronic_affinity = models.CharField(default='', max_length=100, verbose_name="电子亲和能", null=True, blank=True)
     introduction = models.TextField(verbose_name="元素简介", null=True, blank=True)
@@ -73,6 +76,20 @@ class VisitLog(models.Model):
     class Meta:
         verbose_name = "访问记录"
         verbose_name_plural = "访问记录列表"
+
+
+class IPList(models.Model):
+    ip = models.GenericIPAddressField(verbose_name="访问IP")
+    location = models.CharField(max_length=100, verbose_name="访问城市")
+    last_login = models.DateTimeField(auto_now=True, verbose_name="访问时间")
+    first_login = models.DateTimeField(auto_now_add=True, verbose_name="第一次访问时间")
+
+    def __unicode__(self):
+        return self.ip
+
+    class Meta:
+        verbose_name = "访问用户IP记录"
+        verbose_name_plural = "访问用户IP列表"
 
 
 class HiElements(models.Model):
@@ -256,7 +273,10 @@ class ElementNameSource(models.Model):
 
 class ElementCartoon(models.Model):
     ele = models.ForeignKey(Elements, verbose_name="对应元素", on_delete=None)
-    cn_introduction = models.TextField(verbose_name="中文简介", null=True)
+    cn_introduction = models.TextField(verbose_name="人物简介", null=True)
+    comic_introduction = models.TextField(verbose_name="元素简介", null=True)
+    painted_introduction = models.TextField(verbose_name="手绘简介", null=True)
+    img_introduction = models.TextField(verbose_name="图片简介", null=True)
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
 
     def __unicode__(self):
@@ -278,6 +298,19 @@ class ElementCollection(models.Model):
     class Meta:
         verbose_name = "收藏"
         verbose_name_plural = "元素收藏列表"
+
+
+class ElementObject(models.Model):
+    ele = models.ForeignKey(Elements, verbose_name="对应元素", on_delete=None)
+    number = models.TextField(verbose_name="图片数", null=True)
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+
+    def __unicode__(self):
+        return self.ele.cn_name + '——实物'
+
+    class Meta:
+        verbose_name = "实物"
+        verbose_name_plural = "元素实物列表"
 
 
 class ElementJingle(models.Model):
@@ -333,6 +366,35 @@ class HiWallpaper(models.Model):
     class Meta:
         verbose_name = "嗨元素壁纸"
         verbose_name_plural = "嗨元素壁纸列表"
+
+
+class PeriodicImg(models.Model):
+    sort = models.IntegerField(verbose_name="排序", null=True)
+    type = models.IntegerField(verbose_name="类型", null=True)
+    file_name = models.CharField(max_length=200, verbose_name="文件名")
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+
+    def __unicode__(self):
+        return self.file_name
+
+    class Meta:
+        verbose_name = "周期表图片"
+        verbose_name_plural = "周期表图片列表"
+
+
+class ElementFamily(models.Model):
+    ele = models.ForeignKey(Elements, verbose_name="对应元素", on_delete=None)
+    feature = models.TextField(verbose_name="特写", null=True)
+    record = models.TextField(verbose_name="档案", null=True)
+    back_color = models.CharField(max_length=200, verbose_name="背景色")
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+
+    def __unicode__(self):
+        return self.ele.cn_name + "家族"
+
+    class Meta:
+        verbose_name = "元素家族"
+        verbose_name_plural = "元素家族列表"
 
 
 class IMG(models.Model):

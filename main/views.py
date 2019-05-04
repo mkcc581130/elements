@@ -115,41 +115,115 @@ def get_page(page_name):
     return {'page_list': page_list, 'pre_page': pre_page, 'next_page': next_page}
 
 
+@visit_count
 def index(request):
     page_name = 'index'
     page_info = get_page(page_name)
     return render(request, 'index.html', locals())
 
 
+@visit_count
 def comic(request):
     page_name = 'comic'
+    page_name2 = 'comic'
     page_info = get_page(page_name)
+    ei_list = ElementCartoon.objects.all().values('ele__symbol', 'ele__atomic_number', 'ele__cn_name', 'ele__across',
+                                                  'ele__vertical', 'comic_introduction')
+    left_nav = [['comic', '卡通元素周期表'], ['painted', '卡通手绘周期表'], ['cartoon_img', '卡通图片周期表'], ['cartoon', '卡通人物周期表'], ['hi', '嗨元素周期表'], ['family', '元素家族周期表']]
     return render(request, 'comic.html', locals())
 
 
+@visit_count
 def cartoon(request):
-    page_name = 'cartoon'
+    page_name = 'comic'
+    page_name2 = 'cartoon'
     page_info = get_page(page_name)
     ei_list = ElementCartoon.objects.all().values('ele__symbol', 'ele__atomic_number', 'ele__cn_name', 'ele__across', 'ele__vertical',
                                                   'cn_introduction')
+    left_nav = [['comic', '卡通元素周期表'], ['painted', '卡通手绘周期表'], ['cartoon_img', '卡通图片周期表'], ['cartoon', '卡通人物周期表'], ['hi', '嗨元素周期表'], ['family', '元素家族周期表']]
     return render(request, 'cartoon.html', locals())
 
 
+@visit_count
+def family(request):
+    page_name = 'comic'
+    page_name2 = 'family'
+    page_info = get_page(page_name)
+    ei_list = ElementFamily.objects.all().values('ele__symbol', 'ele__atomic_number', 'ele__cn_name', 'ele__across', 'ele__vertical',
+                                                 'feature', 'record', 'back_color')
+    for e in ei_list:
+        li = re_find('^(.*?) 形象：(.*?) 居所：(.*?) 出身：(.*?) 成员：(.*?)$', e['record'])
+        if li:
+            e.update({'character': li[0], 'figure': li[1], 'place': li[2], 'born': li[3], 'member': li[4]})
+
+    left_nav = [['comic', '卡通元素周期表'], ['painted', '卡通手绘周期表'], ['cartoon_img', '卡通图片周期表'], ['cartoon', '卡通人物周期表'], ['hi', '嗨元素周期表'], ['family', '元素家族周期表']]
+    return render(request, 'family.html', locals())
+
+
+@visit_count
+def painted(request):
+    page_name = 'comic'
+    page_name2 = 'painted'
+    page_info = get_page(page_name)
+    ei_list = ElementCartoon.objects.all().values('ele__symbol', 'ele__atomic_number', 'ele__cn_name', 'ele__across', 'ele__vertical',
+                                                  'painted_introduction')
+    left_nav = [['comic', '卡通元素周期表'], ['painted', '卡通手绘周期表'], ['cartoon_img', '卡通图片周期表'], ['cartoon', '卡通人物周期表'], ['hi', '嗨元素周期表'], ['family', '元素家族周期表']]
+    return render(request, 'painted.html', locals())
+
+
+@visit_count
+def cartoon_img(request):
+    page_name = 'comic'
+    page_name2 = 'cartoon_img'
+    page_info = get_page(page_name)
+    ei_list = ElementCartoon.objects.all().values('ele__symbol', 'ele__atomic_number', 'ele__cn_name', 'ele__across', 'ele__vertical',
+                                                  'img_introduction')
+    left_nav = [['comic', '卡通元素周期表'], ['painted', '卡通手绘周期表'], ['cartoon_img', '卡通图片周期表'], ['cartoon', '卡通人物周期表'], ['hi', '嗨元素周期表'], ['family', '元素家族周期表']]
+    return render(request, 'cartoon_img.html', locals())
+
+
+@visit_count
 def collection(request):
-    page_name = 'collection'
+    page_name = 'object'
+    page_name2 = 'collection'
     page_info = get_page(page_name)
     ei_list = ElementCollection.objects.all().values('ele__symbol', 'ele__atomic_number', 'ele__across', 'ele__vertical',
                                                      'introduction')
+    left_nav = [['object', '单质收藏周期表（冥灵版）'], ['collection', '单质收藏周期表（爱好者）'], ['animation', '单质收藏周期表（收藏家）']]
     return render(request, 'collection.html', locals())
 
 
+@visit_count
+def animation(request):
+    page_name = 'object'
+    page_name2 = 'animation'
+    page_info = get_page(page_name)
+    left_nav = [['object', '单质收藏周期表（冥灵版）'], ['collection', '单质收藏周期表（爱好者）'], ['animation', '单质收藏周期表（收藏家）']]
+    return render(request, 'animation.html', locals())
+
+
+@visit_count
+def ele_object(request):
+    page_name = 'object'
+    page_name2 = 'object'
+    page_info = get_page(page_name)
+    ei_list = ElementObject.objects.all().values('ele__symbol', 'ele__atomic_number', 'ele__across', 'ele__vertical',
+                                                 'number')
+    left_nav = [['object', '单质收藏周期表（冥灵版）'], ['collection', '单质收藏周期表（爱好者）'], ['animation', '单质收藏周期表（收藏家）']]
+    return render(request, 'object.html', locals())
+
+
+@visit_count
 def hi(request):
-    page_name = 'hi'
+    page_name = 'comic'
+    page_name2 = 'hi'
     page_info = get_page(page_name)
     ei_list = Elements.objects.all().values('symbol', 'atomic_number', 'across', 'vertical')
+    left_nav = [['comic', '卡通元素周期表'], ['painted', '卡通手绘周期表'], ['cartoon_img', '卡通图片周期表'], ['cartoon', '卡通人物周期表'], ['hi', '嗨元素周期表'], ['family', '元素家族周期表']]
     return render(request, 'hi.html', locals())
 
 
+@visit_count
 def representative(request):
     page_name = 'representative'
     page_info = get_page(page_name)
@@ -157,6 +231,7 @@ def representative(request):
     return render(request, 'representative.html', locals())
 
 
+@visit_count
 def jingle(request):
     page_name = 'jingle'
     page_info = get_page(page_name)
@@ -165,6 +240,7 @@ def jingle(request):
     return render(request, 'jingle.html', locals())
 
 
+@visit_count
 def name_source(request):
     page_name = 'name_source'
     page_info = get_page(page_name)
@@ -174,6 +250,7 @@ def name_source(request):
     return render(request, 'name_source.html', locals())
 
 
+@visit_count
 def structure(request):
     page_name = 'structure'
     page_info = get_page(page_name)
@@ -183,12 +260,18 @@ def structure(request):
     return render(request, 'structure.html', locals())
 
 
-def animation(request):
-    page_name = 'animation'
-    page_info = get_page(page_name)
-    return render(request, 'animation.html', locals())
+@visit_count
+def character(request):
+    page_name = 'character'
+    # page_info = get_page(page_name)
+    ei_list = Elements.objects.all().order_by('atomic_number').values('symbol', 'atomic_number', 'cn_name', 'en_name', 'across',
+                                            'vertical', 'electronegativity', 'atomic_radius',
+                                            'electronic_affinity')
+    ran = range(1, 119)
+    return render(request, 'character.html', locals())
 
 
+@visit_count
 def idiom(request):
     page_name = 'idiom'
     page_info = get_page(page_name)
@@ -197,6 +280,7 @@ def idiom(request):
     return render(request, 'idiom.html', locals())
 
 
+@visit_count
 def poem(request):
     page_name = 'poem'
     page_info = get_page(page_name)
@@ -205,6 +289,7 @@ def poem(request):
     return render(request, 'poem.html', locals())
 
 
+@visit_count
 def love_poem(request):
     page_name = 'love_poem'
     page_info = get_page(page_name)
@@ -213,6 +298,7 @@ def love_poem(request):
     return render(request, 'love_poem.html', locals())
 
 
+@visit_count
 def ele_info(request):
     symbol = request.GET.get("symbol")
     ele = Elements.objects.get(symbol=symbol)
@@ -229,6 +315,7 @@ def ele_info(request):
     return render(request, 'element/ele_info.html', locals())
 
 
+@visit_count
 def hi_ele(request):
     symbol = request.GET.get("symbol")
     hiele = HiElements.objects.get(ele__symbol=symbol)
@@ -238,6 +325,7 @@ def hi_ele(request):
     return render(request, 'element/hi_ele.html', locals())
 
 
+@visit_count
 def ele_history(request):
     symbol = request.GET.get("symbol")
     ele = Elements.objects.get(symbol=symbol)
@@ -250,6 +338,7 @@ def ele_history(request):
     return render(request, 'element/ele_history.html', locals())
 
 
+@visit_count
 def ele_representative(request):
     symbol = request.GET.get("symbol")
     try:
@@ -275,6 +364,7 @@ def ele_representative(request):
     return render(request, 'element/ele_representative.html', locals())
 
 
+@visit_count
 def ele_isotope(request):
     symbol = request.GET.get("symbol")
     ele = Elements.objects.get(symbol=symbol)
@@ -289,6 +379,7 @@ def ele_isotope(request):
     return render(request, 'element/ele_isotope.html', locals())
 
 
+@visit_count
 def ele_material(request):
     symbol = request.GET.get("symbol")
     ele = Elements.objects.get(symbol=symbol)
@@ -321,6 +412,7 @@ def ele_material(request):
     return render(request, 'element/ele_material.html', locals())
 
 
+@visit_count
 def ele_compound(request):
     symbol = request.GET.get("symbol")
     compound_id = request.GET.get("cid")
@@ -358,6 +450,7 @@ def ele_compound(request):
     return render(request, 'element/ele_compound.html', locals())
 
 
+@visit_count
 def ele_hi_comic(request):
     type = request.GET.get("type", "1")
     hua = request.GET.get("hua")
@@ -375,6 +468,7 @@ def ele_hi_comic(request):
     return render(request, 'element/ele_hi_comic.html', locals())
 
 
+@visit_count
 def ele_hi_wallpaper(request):
     page = request.GET.get("page")
     if not page:
@@ -384,6 +478,24 @@ def ele_hi_wallpaper(request):
         wallpaper_list = HiWallpaper.objects.all().order_by('sort')[page*4:page*4+4].values('file_name')
         return HttpResponse(json.dumps({"list": list(wallpaper_list)}))
     return render(request, 'element/ele_hi_wallpaper.html', locals())
+
+
+@visit_count
+def ele_periodic_img(request, ptype):
+    page = request.GET.get("page")
+    page_name = "ele_periodic_img_"+str(ptype)
+    if ptype == "1":
+        wallpaper_list = PeriodicImg.objects.filter(type=1)
+    elif ptype == "2":
+        wallpaper_list = PeriodicImg.objects.filter(type=2)
+    if not page:
+        wallpaper_list = wallpaper_list.order_by('sort')[:8]
+    else:
+        page = int(page)
+        periodic_img_list = wallpaper_list.order_by('sort')[page*4:page*4+4].values('file_name')
+        return HttpResponse(json.dumps({"list": list(periodic_img_list)}))
+    page_info = get_page(page_name)
+    return render(request, 'periodic_img.html', locals())
 
 
 def page_not_found(request, **kwargs):

@@ -4,8 +4,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <title>嗨元素漫画</title>
     <link href="{% static 'iconfont/iconfont.css' %}" rel="stylesheet">
 
@@ -51,6 +50,16 @@
             left: 0;
             width: 100%;
             z-index: 98;
+        }
+        .shadow{
+            background-color: rgba(0,0,0,.5);
+            width: 100%;
+            height: 2000px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: none;
+            z-index: 999;
         }
     </style>
     <style>
@@ -302,9 +311,49 @@
             overflow: auto;
         }
     </style>
+    <style>
+        #preloader{
+            position:fixed;
+            top: 50%;
+            left: 50%;
+            width:30px;
+            height:30px;
+            margin-top: -15px;
+            margin-left: -15px;
+            background:#3498db;
+            border-radius:50px;
+            animation: preloader 1.5s infinite linear;
+            z-index: 99999;
+            display: none;
+        }
+        #preloader:after{
+            position:absolute;
+            width:70px;
+            height:70px;
+            border-top:10px solid #9b59b6;
+            border-bottom:10px solid #9b59b6;
+            border-left:10px solid transparent;
+            border-right:10px solid transparent;
+            border-radius:50px;
+            content:'';
+            top:-20px;
+            left:-20px;
+            animation: preloader_after 1.5s infinite linear;
+        }
+        @keyframes preloader {
+            0% {transform: rotate(0deg);}
+            50% {transform: rotate(180deg);background:#2ecc71;}
+            100% {transform: rotate(360deg);}
+        }
+        @keyframes preloader_after {
+            0% {border-top:10px solid #9b59b6;border-bottom:10px solid #9b59b6;}
+            50% {border-top:10px solid #3498db;border-bottom:10px solid #3498db;}
+            100% {border-top:10px solid #9b59b6;border-bottom:10px solid #9b59b6;}
+        }
+    </style>
 </head>
 <body>
-
+<div id="preloader"></div>
 <div class="shadow"></div>
 <header>
     <div class="container">
@@ -314,7 +363,7 @@
     <div class="container">
         <img src="
                 {% static 'img/hi_ele/hi_comic/' %}{% if type == "1" %}{{ hi_comic.hua|parse_int }} {{ hi_comic.title }}.jpg{% elif type == "2" %}{{ hua }}.jpg{% endif %}"
-             width="100%" alt="back1">
+             width="100%" alt="back1" id="back1">
 
     </div>
 </div>
@@ -342,14 +391,14 @@
     <div class="nav_sidebar scroll_content ">
         {% if type == "1" %}
             {% for c in comic_list %}
-                <a href="?hua={{ c.hua }}&type={{ type }}"
+                <a data-hua="{{ c.hua }}" data-title="{{ c.title }}"
                    class="nav_sidebar__item {% if hua == c.hua %}state-active{% endif %}">
                     <div class="nav_sidebar__badge">{{ c.hua }}话 {{ c.title }}</div>
                 </a><br>
             {% endfor %}
         {% elif type == "2" %}
             {% for c in comic_list %}
-                <a href="?hua={{ c.hua }}&type={{ type }}"
+                <a data-hua="{{ c.hua }}"
                    class="nav_sidebar__item {% if hua == c.hua %}state-active{% endif %} {% if not hua|length == 3 %}second{% endif %}">
                     <div class="nav_sidebar__badge">
                         {% if c.hua|length == 3 %}{{ c.hua }}话 {{ c.title }}{% else %}{{ c.hua }}{% endif %}</div>
@@ -364,6 +413,31 @@
     $(function () {
         var $w = $(window).width();
         $('html').css('font-size', ($w / 1920 * 100).toFixed(1) + 'px');
+        $(".nav_sidebar").on("click", ".nav_sidebar__item", function () {
+            var src="";
+            let $this = $(this),hua = $this.data("hua"),title = $this.data("title");
+            if(!$this.hasClass("state-active")){
+                {% if type == '1' %}
+                src = "https://static.mkcc.top/img/hi_ele/hi_comic/"+parseInt(hua)+" "+title+".jpg";
+                {% elif type == '2' %}
+                    if(hua.length === 3) hua += "_1";
+                    src = "https://static.mkcc.top/img/hi_ele/hi_comic/"+hua+".jpg";
+                {% endif %}
+                $(".shadow,#preloader").fadeIn();
+                var img=new Image();
+                img.src=src;
+                $this.addClass("state-active").siblings().removeClass("state-active");
+                img.onload=function(){
+                    $(".shadow,#preloader").fadeOut();
+                    $("#back1").attr("src", src);
+                    $("html,body").scrollTop(0);
+
+                };
+            }
+
+
+
+        })
     })
 
 </script>

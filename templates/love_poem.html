@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'iconfont/iconfont.css' %}">
     <style>
         html, body {
@@ -310,6 +311,10 @@
         .sp2{
             bottom: -5px !important;
         }
+
+        @media screen and (max-width: 768px) {
+
+        }
     </style>
 </head>
 <body>
@@ -366,7 +371,7 @@
 <script src="{% static 'js/controls/TrackballControls.js' %}"></script>
 <script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
 <script src="{% static 'js/html2canvas.min.js' %}"></script>
-{% include 'left_nav.html' %}
+{% include 'right_nav.html' %}
 <script>
     $(function () {
         $(".download").click(function () {
@@ -374,8 +379,6 @@
             {#    var imgurl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); // 获取生成的图片的url#}
             {#    window.location.href = imgurl; // 下载图片#}
             //{#});#}
-
-
         });
         $(".show-modal .close,.shadow").on("click", function () {
             $(".show-modal").fadeOut();
@@ -440,6 +443,49 @@ function init() {
                     return;
 
                 }
+                var $modal = $(".show-modal"),html="",$down = $(".download");
+                for(var i=0;i<poem_list.length;i++){
+                    let po_list = poem_list[i].split(".");
+                    html += "<div class=\"swiper-slide\" data-id=\""+i+"\">\n" +
+                        "                        <div class=\"content\">\n";
+                    for(var j=0;j<po_list.length;j++) {
+                        html += "<div class=\"item\">" + po_list[j] + "</div>";
+                    }
+                    html += "<div class=\"end\">--"+cn_name+"</div></div></div>"
+                }
+                if(html) $modal.find(".right .swiper-wrapper").empty().html(html);
+                setTimeout(function () {
+                    $(".shadow").show();
+                    $modal.fadeIn();
+                    mySwiper1 = new Swiper ('.sw1', {
+                        on:{
+                            slideChangeTransitionEnd: function(){
+                                var $down =$(".download"), href = $down.attr('href'), img_num = $(".sw1").find(".swiper-slide.swiper-slide-active").data("id");
+                                var match_list = href.match(/img_num=\d+/g);
+                                if (match_list){
+                                    $down.attr('href',href.replace(match_list[0], 'img_num='+img_num))
+                                }
+
+                            },
+                        },pagination: {
+                          el: '.sp1',
+                        },
+                    });
+                    mySwiper2 = new Swiper ('.sw2', {
+                        on:{
+                            slideChangeTransitionEnd: function(){
+                                var $down =$(".download"), href = $down.attr('href'), poem_num = $(".sw2").find(".swiper-slide.swiper-slide-active").data("id");
+                                var match_list = href.match(/poem_num=\d+/g);
+                                if (match_list){
+                                    $down.attr('href',href.replace(match_list[0], 'poem_num='+poem_num))
+                                }
+                            },
+                        },pagination: {
+                          el: '.sp2',
+                        },
+                    });
+                    $down.attr('href', '/get_love_poem_poster/'+cn_name+'元素三行情诗明信片.png?img_num=0&poem_num=0&symbol='+item);
+                }, 100);
             }, false );
             element.addEventListener( 'touchstart', function () {
 
@@ -542,7 +588,6 @@ function init() {
 	controls.minDistance = 500;
 	controls.maxDistance = 6000;
 	//是否不平移
-    controls.noPan = true;
     controls.noRotate = true;
 	controls.addEventListener( 'change', render );
 
@@ -561,8 +606,6 @@ function init() {
 
 	window.addEventListener( 'resize', onWindowResize, false );
   	// document.addEventListener( 'mouseup', onDocumentMouseUp, false );
-  	{#document.onmousedown = onDocumentMouseUp;#}
-	document.addEventListener( 'touthmove', onDocumentTouchMove, false );
 
 }
 
@@ -610,67 +653,6 @@ function onWindowResize() {
 	renderer.setSize( window.innerWidth, window.innerHeight );
 
 	render();
-
-}
-  function onDocumentMouseUp( event ) {
-
-  	event.preventDefault();
-  	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-  	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-  	console.info( mouse );
-  	//适配手机
-  	if ( event.touches ) {
-
-  		mouse.x = ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1;
-  		mouse.y = - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1;
-  		pre_mouse.x = mouse.x;
-  		pre_mouse.y = mouse.y;
-
-	}
-
-  }
-
-
-
-
-
-function onDocumentMouseMove( event ) {
-
-  	// is_move = true;
-  	// mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-  	// mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-  	// if ( is_click ) {
-  	//
-  	// 	if ( earth && earth_cloud ) {
-  	//
-  	// 		earth.rotation.set( earth.rotation.x - ( mouse.y - pre_mouse.y ), earth.rotation.y + ( mouse.x - pre_mouse.x ), earth.rotation.z );
-  	// 		earth_cloud.rotation.set( earth_cloud.rotation.x - ( mouse.y - pre_mouse.y ), earth_cloud.rotation.y + ( mouse.x - pre_mouse.x ), earth_cloud.rotation.z );
-  	//
-	// 	}
-  	//
-	// }
-  	// pre_mouse.x = mouse.x;
-  	// pre_mouse.y = mouse.y;
-
-}
-  function onDocumentTouchMove() {
-
-  	is_move = true;
-  	mouse.x = ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1;
-  	mouse.y = - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1;
-  	// if ( is_click ) {
-  	//
-  	// 	if ( earth && earth_cloud ) {
-  	//
-  	// 		earth.rotation.set( earth.rotation.x - ( mouse.y - pre_mouse.y ), earth.rotation.y + ( mouse.x - pre_mouse.x ), earth.rotation.z );
-  	// 		earth_cloud.rotation.set( earth_cloud.rotation.x - ( mouse.y - pre_mouse.y ), earth_cloud.rotation.y + ( mouse.x - pre_mouse.x ), earth_cloud.rotation.z );
-  	//
-	// 	}
-  	//
-	// }
-  	pre_mouse.x = mouse.x;
-  	pre_mouse.y = mouse.y;
 
 }
 function animate() {

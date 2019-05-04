@@ -1,11 +1,11 @@
 {% load static %}
+{% load my_filter %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>单质收藏周期表</title>
+    <title>元素图片周期表</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
     <link rel="stylesheet" href="{% static 'iconfont/iconfont.css' %}">
     <style>
         html, body {
@@ -44,7 +44,7 @@
         }
 
         .element {
-            width: 160px;
+            width: 112px;
             height: 160px;
             box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.5);
             text-align: center;
@@ -130,29 +130,29 @@
             left: 400px;
             font-size: 100px;
             color: #302678;
-            width: 1300px !important;
+            width: 1000px !important;
         }
         .show-modal{
             position: absolute;
-            width: 400px;
+            width: 300px;
             top: 50%;
             left: 50%;
-            margin-left: -200px;
+            margin-left: -150px;
             margin-top: -350px;
             background-color: #fff;
             z-index: 10002;
             display: none;
+            -webkit-box-shadow: 0 3px 10px rgba(0,0,0,.6);
+            -moz-box-shadow: 0 3px 10px rgba(0,0,0,.6);
+            box-shadow: 0 3px 10px rgba(0,0,0,.6);
         }
         .show-modal .left{
             width: 100%;
-            height: 400px;
         }
         .show-modal .right{
             width: 100%;
             padding: 20px;
             box-sizing: border-box;
-            border: 2px solid #333;
-            border-top: none;
         }
         .show-modal .right .title{
             font-size: 30px;
@@ -163,9 +163,9 @@
         }
         .show-modal .right .content{
             box-sizing: border-box;
+            padding: 30px 15px 0;
             line-height: 30px;
             text-align: center;
-
         }
         .shadow{
             position: absolute;
@@ -188,10 +188,40 @@
             -webkit-border-radius: 20px;
             -moz-border-radius: 20px;
             border-radius: 20px;
-            border: 2px solid #333;
-            color: #333;
+            border: 1px solid #888;
+            color: #888;
             cursor: pointer;
-            z-index: 20;
+        }
+        @media screen and ( max-width: 960px ) {
+        .show-modal{
+            width: 150px;
+            margin-left: -75px;
+            margin-top: -150px;
+            font-size: 8px;
+        }
+            .show-modal .right{
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .show-modal .right .title{
+            font-size: 15px;
+            text-align: center;
+            padding: 10px 0 15px;
+            border-bottom: 1px solid #393F44;
+        }
+        .show-modal .right .content{
+            box-sizing: border-box;
+            padding: 8px 8px 0;
+            line-height: 12px;
+        }
+        .show-modal .close{
+            display: none;
+        }
+        }
+        @media screen and ( max-width: 736px ) {
+        }
+        @media screen and ( max-width: 568px ) {
         }
         .reset{
             position: absolute;
@@ -206,7 +236,6 @@
 <script src="{% static 'js/three.min.js' %}"></script>
 <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
 <script src="{% static 'js/libs/tween.min.js' %}"></script>
-<script src="{% static 'js/swiper.min.js' %}"></script>
 <script src="{% static 'js/controls/TrackballControls.js' %}"></script>
 <script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
 {% include 'right_nav.html' %}
@@ -215,16 +244,12 @@
 
 </div>
     <div class="show-modal">
-        <div class="swiper-container">
-            <div class="swiper-wrapper">
-
-            </div>
-            <!-- 如果需要分页器 -->
-            <div class="swiper-pagination"></div>
-
-
+        <div class="left"><img width="100%" src="" alt=""></div>
+        <div class="right">
+            <div class="title"></div>
+            <div class="content">
+                </div>
         </div>
-
         <div class="close">X</div>
     </div>
     <div class="shadow"></div>
@@ -232,7 +257,6 @@
     $(".show-modal .close,.shadow").on("click", function () {
         $(".show-modal").fadeOut();
         $(".shadow").hide();
-        mySwiper.destroy();
     })
 </script>
 
@@ -245,19 +269,17 @@
 
 var table = [
     {% for e in ei_list %}
-	"{{ e.ele__symbol }}", "{{ e.ele__atomic_number }}", {{ e.ele__across }}, {{ e.ele__vertical }}, "{{ e.introduction|safe }}",
+	"{{ e.ele__symbol }}", "{{ e.ele__atomic_number|three_num }}", "{{ e.ele__cn_name }}", {{ e.ele__across }}, {{ e.ele__vertical }}, "{% if e.img_introduction %}{{ e.img_introduction|safe }}{% else %}无{% endif %}",
     {% endfor %}
 ];
 
 
 var camera, scene, renderer;
 var controls;
-var mySwiper;
 
 
 var objects = [];
 var targets = { table: [], sphere: [], helix: [], grid: [] };
-
 
 init();
 animate();
@@ -265,21 +287,23 @@ animate();
 function init() {
 
 	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
-	camera.position.z = 3000;
+	camera.position.z = 2600;
   	var dragging = false;
 	scene = new THREE.Scene();
 
 	// table
 
-	for ( var i = 0; i < table.length; i += 5 ) {
+	for ( var i = 0; i < table.length; i += 6 ) {
 
 		let symbol = table[ i ];
         let number = table[ i + 1 ];
-        let content = table[ i + 4 ];
-        let content_list = content.split("|");
+        let cn_name = table[ i + 2 ];
+        let content = table[ i + 5 ];
 		var element = document.createElement( 'div' );
 		element.className = 'element';
-		element.innerHTML = "<img width=\"100%\" src=\"/static/img/collection/small/"+symbol+"_1.jpg\" alt=\"\" onerror=\"this.src='/static/img/collection/small/radioactive.jpg'\">";
+		element.style.background = "url({% static 'img/cartoon_pic/' %}e"+number+".png)";
+		element.style.backgroundRepeat = "no-repeat";
+		element.style.backgroundSize = "100% 100%";
 		element.style.zIndex = '10000';
 		if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
             element.addEventListener( 'touchend', function () {
@@ -289,24 +313,13 @@ function init() {
                     return;
 
                 }
-                var $modal = $(".show-modal"),html="";
-                for(var i=0;i<content_list.length;i++){
-                    html += "<div class=\"swiper-slide\"><div class=\"left\"><img width=\"100%\" src=\"/static/img/collection/big/"+symbol+"_"+(i+1)+".jpg\" alt=\"\" onerror=\"this.src='/static/img/collection/big/radioactive.jpg'\"></div>\n" +
-                        "        <div class=\"right\">\n" +
-                        "            <div class=\"content\">111\n" +content_list[i]+
-                        "                </div>\n" +
-                        "        </div></div>"
-                }
-                if(html) $modal.find(".swiper-wrapper").empty().html(html);
-
+                var $modal = $(".show-modal");
+                $modal.find(".left img").attr('src', '{% static 'img/cartoon_pic/' %}e'+number+'.png');
+                $modal.find(".right .title").text(cn_name);
+                $modal.find(".right .content").html(content);
                 setTimeout(function () {
                     $(".shadow").show();
                     $modal.fadeIn();
-                    mySwiper = new Swiper ('.swiper-container', {
-                        pagination: {
-                          el: '.swiper-pagination',
-                        },
-                      });
                 }, 100);
 
             }, false );
@@ -322,45 +335,19 @@ function init() {
             }, false );
         } else {
             element.addEventListener( 'click', function () {
-                var $modal = $(".show-modal"),html="";
-                for(var i=0;i<content_list.length;i++){
-                    html += "<div class=\"swiper-slide\">" +
-                        "<div class=\"left\">" +
-                        "<img width=\"100%\" src=\"/static/img/collection/big/"+symbol+"_"+(i+1)+".jpg\" alt=\"\" onerror=\"this.src='/static/img/collection/big/radioactive.jpg'\">" +
-                        "</div>\n" +
-                        "        <div class=\"right\">\n" +
-                        "            <div class=\"content\">\n" +content_list[i]+
-                        "                </div>\n" +
-                        "        </div></div>"
-                }
-                if(html) $modal.find(".swiper-wrapper").empty().html(html);
-
+                var $modal = $(".show-modal");
+                $modal.find(".left img").attr('src', '{% static 'img/cartoon_pic/' %}e'+number+'.png');
+                $modal.find(".right .title").text(cn_name);
+                $modal.find(".right .content").html(content);
                 setTimeout(function () {
                     $(".shadow").show();
                     $modal.fadeIn();
-                    mySwiper = new Swiper ('.swiper-container', {
-                        pagination: {
-                          el: '.swiper-pagination',
-                        },
-                        navigation: {
-                          nextEl: '.swiper-button-next',
-                          prevEl: '.swiper-button-prev',
-                        },
-                      });
                 }, 100);
 
 
             }, false );
         }
-        var num = document.createElement( 'div' );
-		num.className = 'number';
-		num.textContent = number;
-		element.appendChild( num );
 
-		var sym = document.createElement( 'div' );
-		sym.className = 'symbol';
-		sym.textContent = symbol;
-		element.appendChild( sym );
 		var object = new THREE.CSS3DObject( element );
 		object.position.x = Math.random() * 4000 - 2000;
 		object.position.y = Math.random() * 4000 - 2000;
@@ -372,8 +359,8 @@ function init() {
 		//
 
 		var object = new THREE.Object3D();
-		object.position.x = ( table[ i + 2 ] * 180 - 1730 );
-  		object.position.y = - ( table[ i + 3 ] * 180 ) + 990;
+		object.position.x = ( table[ i + 3 ] * 132 - 1250 );
+  		object.position.y = - ( table[ i + 4 ] * 180 ) + 990;
 
 		targets.table.push( object );
 
@@ -409,9 +396,6 @@ function init() {
     transform( targets.table, 2000 );
 
 	window.addEventListener( 'resize', onWindowResize, false );
-  	// document.addEventListener( 'mouseup', onDocumentMouseUp, false );
-  	document.onmousedown = onDocumentMouseUp;
-	document.addEventListener( 'touthmove', onDocumentTouchMove, false );
 
 }
 

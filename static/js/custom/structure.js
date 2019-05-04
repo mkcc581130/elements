@@ -257,7 +257,6 @@ var mouse = {}, pre_mouse = {};
         controls.minDistance = 500;
         controls.maxDistance = 6000;
         //是否不平移
-        controls.noPan = true;
         controls.noRotate = true;
         controls.addEventListener('change', render);
 
@@ -275,8 +274,6 @@ var mouse = {}, pre_mouse = {};
 
         window.addEventListener('resize', onWindowResize, false);
         // document.addEventListener( 'mouseup', onDocumentMouseUp, false );
-        document.onmousedown = onDocumentMouseUp;
-        document.addEventListener('touthmove', onDocumentTouchMove, false);
 
     }
 
@@ -327,33 +324,7 @@ var mouse = {}, pre_mouse = {};
 
     }
 
-    function onDocumentMouseUp(event) {
 
-        event.preventDefault();
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        console.info(mouse);
-        //适配手机
-        if (event.touches) {
-
-            mouse.x = (event.touches[0].pageX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.touches[0].pageY / window.innerHeight) * 2 + 1;
-            pre_mouse.x = mouse.x;
-            pre_mouse.y = mouse.y;
-
-        }
-
-    }
-
-    function onDocumentTouchMove() {
-
-        is_move = true;
-        mouse.x = (event.touches[0].pageX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.touches[0].pageY / window.innerHeight) * 2 + 1;
-        pre_mouse.x = mouse.x;
-        pre_mouse.y = mouse.y;
-
-    }
 
     function animate() {
 

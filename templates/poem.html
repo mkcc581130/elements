@@ -200,62 +200,7 @@
             color: #888;
             cursor: pointer;
         }
-        @media screen and ( max-width: 960px ) {
-        .arrow {
-            left: 5px;
-            width: 40px;
-            height: 40px;
-            border-radius: 130px;
-            line-height: 35px;
-            font-size: 20px;
-        }
-        .show-modal{
-            width: 350px;
-            height: 200px;
-            margin-left: -175px;
-            margin-top: -100px;
-            font-size: 8px;
-        }
-        .show-modal .right{
-            width: 42.9%;
-            float: left;
-            padding: 15px;
-            box-sizing: border-box;
-        }
-
-        .show-modal .right .title{
-            font-size: 15px;
-            text-align: center;
-            padding: 10px 0 15px;
-            border-bottom: 1px solid #393F44;
-        }
-        .show-modal .right .content{
-            box-sizing: border-box;
-            padding: 25px 8px 0;
-            line-height: 16px;
-        }
-        .show-modal .close{
-            width: 12px;
-            height: 12px;
-            line-height: 12px;
-            top: 8px;
-            right: 8px;
-            -webkit-border-radius: 50px;
-            -moz-border-radius: 50px;
-            border-radius: 50px;
-            font-weight: bold;
-        }
-        }
-        @media screen and ( max-width: 736px ) {
-        }
         @media screen and ( max-width: 568px ) {
-        }
-        .reset{
-            position: absolute;
-            top: 60px;
-            left: -120px;
-            cursor: pointer;
-            font-size: 45px;
         }
         .poem,.en_poem{
             font-size: 50px;
@@ -273,7 +218,7 @@
 <script src="{% static 'js/libs/tween.min.js' %}"></script>
 <script src="{% static 'js/controls/TrackballControls.js' %}"></script>
 <script src="{% static 'js/renderers/CSS3DRenderer.js' %}"></script>
-{% include 'left_nav.html' %}
+{% include 'right_nav.html' %}
 <div id="shadow"><p>请横屏使用，效果更佳！</p></div>
 <div id="container">
 
@@ -452,7 +397,6 @@ function init() {
 	controls.minDistance = 500;
 	controls.maxDistance = 6000;
 	//是否不平移
-    controls.noPan = true;
     controls.noRotate = true;
 	controls.addEventListener( 'change', render );
 
